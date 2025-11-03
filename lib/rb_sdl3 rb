@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+require_relative "rb_sdl3/version"
+require_relative "rb_sdl3/sdl3"
+
+module RbSDL3
+end

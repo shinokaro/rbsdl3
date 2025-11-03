@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/sdl3/version"
+require_relative "lib/rb_sdl3/version"
 
 Gem::Specification.new do |spec|
   spec.name = "rbsdl3"
-  spec.version = SDL3::VERSION
+  spec.version = RbSDL3::VERSION
   spec.authors = ["shinokaro"]
   spec.email = ["shinokaro@hotmail.co.jp"]
 
