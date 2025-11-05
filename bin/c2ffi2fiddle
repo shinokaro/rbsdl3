@@ -1,0 +1,191 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "json"
+require "optparse"
+require "prettyprint"
+
+INDENT_SIZE = 2
+st_types = []
+
+T = -> (x, typ = [], ptr=[], ary=[]) {
+  case x
+  in {tag: ":_Bool"}
+    typ << "bool"
+  in {tag: ":array", size:}
+    ary << "[#{size}]"
+  in {tag: ":enum"}
+    typ << "enum"
+  in {tag: ":function-pointer"}
+    typ << "funcptr"
+  in {tag: ":pointer"}
+    ptr << "*"
+  in {tag: ":struct" | ":union", name:}
+    typ << name
+  in {tag: "struct" | "union", name:}
+    typ << name
+  in {tag: /\A:?(.*)/}
+    typ << $1.gsub("-", " ")
+  end
+
+  if x in {type:}
+    T[type, typ, ptr, ary]
+  else
+    type_repr = (ptr.empty? ? typ : typ << ptr.join).join(" ")
+    if ary.empty?
+      "#{type_repr}"
+    else
+      ["#{type_repr}", "#{ary.reverse.join}"]
+    end
+  end
+}
+
+Entry2PP = -> (entry, q) {
+  case entry
+  
+  # Enum entry
+  #
+  in {tag: "enum", fields:}
+    fields.each do |field|
+      q.breakable
+      q.text "const_set :#{field[:name]}, #{field[:value]}"
+    end
+
+  # Function entry
+  #
+  in {tag: "function" => tag, name:, "storage-class": sc} if sc != "extern"
+    warn "skipping #{tag}: #{name} - no external linkage (#{sc})"
+
+  in {tag: "function" => tag, name:, inline: true}
+    warn "skipping #{tag}: #{name} - inline function"
+
+  in {tag: "function" => tag, name:, variadic:, parameters: [*, {type: {tag: /va_list\z/}}, *]}
+    warn "skipping #{tag}: #{name} - va_list parameter"
+
+  in {tag: "function" => tag, name:, "return-type": {tag: tytag}} if st_types.include?(tytag)
+    warn "skipping #{tag}: #{name} - by-value return (#{tytag})"
+
+  in {tag: "function" => tag, name:, parameters: ps} if !(m = st_types & ps.map { |h| h[:type][:tag] }).empty?
+    warn "skipping #{tag}: #{name} - by-value parameters (#{m.join(", ")})"
+
+  in {tag: "function", name:, variadic:, parameters:, "return-type": rty}     
+    q.breakable
+    q.text "extern \"#{T[rty]} #{name}("
+    e = parameters.to_enum
+    loop do
+      parameter = e.next
+      q.text T[parameter[:type]]
+      e.peek
+      q.text ", "
+    rescue StopIteration
+      q.text ", ..." if variadic
+      break
+    end
+    q.text ")\""
+
+  # Struct / Union entry
+  #
+  in {tag: "struct" | "union" => tag, name:, fields: []}
+    warn "skipping #{tag}: #{name} - opaque #{tag}"
+
+  in {tag: "struct" | "union" => tag, name:, fields:}
+    unless name.empty?
+      q.breakable
+      q.text "const_set :#{name}, " 
+    end
+    q.text "#{tag}(["
+    q.nest INDENT_SIZE do
+      e = fields.to_enum
+      loop do
+        field = e.next
+        q.breakable
+
+        type_repr, ary_suffix = T[field[:type]]
+
+        case field
+        in {name:, type: {tag: "struct" | "union"} => type}
+          q.text "{"
+          q.nest INDENT_SIZE do
+            q.breakable
+            q.text "#{name}#{ary_suffix}: "
+            Entry2PP[type, q]
+          end
+          q.breakable
+          q.text "}"
+        in {name:, type: {tag: tytag}} if st_types.include?(type_repr)
+          q.text "{ '#{name}#{ary_suffix}': #{type_repr} }"
+        in {name:, type:}
+          q.text "\"#{type_repr} #{name}#{ary_suffix}\""
+        end
+        q.text ","
+        e.peek
+      end
+    end
+    q.breakable
+    q.text "])"
+
+  # Typedef entry
+  #
+  in {tag: "typedef" => tag, name:, type: {tag: ":struct" | ":union" => tytag, name: orig}}
+    st_types << name
+    warn "skipping #{tag}: #{name} - alias to #{tytag[1..]} #{orig} not emitted"
+
+  in {tag: "typedef" => tag, name:, type: {tag: "struct" | "union" => tytag, fields: []}}
+    st_types << name
+    warn "skipping #{tag}: #{name} - opaque #{tytag}"
+  
+  in {tag: "typedef" => tag, name:, type: {tag: "struct" | "union"} => type}
+    st_types << name
+    q.breakable
+    Entry2PP[type, q]
+    q.text " => #{name}"
+
+  in {tag: "typedef" => tag, name:, type: {tag: ":enum"}}
+    q.breakable
+    q.text "typealias \"#{name}\", \"enum\""
+
+  in {tag: "typedef" => tag, name:, type: {tag: "enum"} => type}
+    Entry2PP[type, q]
+    q.breakable
+    q.text "typealias \"#{name}\", \"enum\""
+
+  in {tag: "typedef", name:, type:}
+    q.breakable
+    q.text "typealias \"#{name}\", \"#{T[type]}\""
+
+  in {tag: /\A:(.*)/}
+    $1.gsub("-", " ")
+  else
+    raise "unsupported c2ffi tag: #{tag} - entry=#{entry}"
+  end
+}
+
+out = STDOUT.binmode
+
+opt = OptionParser.new
+
+basename_prefix = ""
+opt.on("-B PREFIX", "--only-basename-prefix=PREFIX") { |prefix|
+  basename_prefix = prefix
+}
+opt.parse!(ARGV)
+
+declaration = JSON.load_file(ARGV[0], freeze: true, symbolize_names: true)
+
+PrettyPrint.format(out) { |q|
+  declaration.each { |entry|
+    entry[:location] in /<Spelling=(.+?):\d+:\d+>\z/ | /\A(.+):\d+:\d+\z/
+    basename = File.basename($1)
+
+    next unless basename.match?(/\A#{Regexp.escape(basename_prefix)}/)
+    Entry2PP[entry, q]
+  }
+}
+{ "tag": "struct", "name": "SDL_MessageBoxColor", "fields": [] }
+{ "tag": "typedef", "name": "SDL_MessageBoxColor", "type": { "tag": ":struct", "name": "SDL_MessageBoxColor"} }
+{ "tag": "struct", "name": "SDL_MessageBoxColorScheme", "fields": [
+  { "tag": "field", "name": "colors", "bit-offset": 0, "bit-size": 120, "bit-alignment": 8, "type": {
+    "tag": ":array", "type": { "tag": "SDL_MessageBoxColor" }, "size": 5 } 
+  }
+]}
