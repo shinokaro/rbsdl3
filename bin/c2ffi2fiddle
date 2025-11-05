@@ -94,36 +94,42 @@ Entry2PP = -> (entry, q) {
       q.breakable
       q.text "const_set :#{name}, " 
     end
-    q.text "#{tag}(["
+    q.text "#{tag}("
     q.nest INDENT_SIZE do
-      e = fields.to_enum
-      loop do
-        field = e.next
-        q.breakable
-
-        type_repr, ary_suffix = T[field[:type]]
-
-        case field
-        in {name:, type: {tag: "struct" | "union"} => type}
-          q.text "{"
-          q.nest INDENT_SIZE do
-            q.breakable
-            q.text "#{name}#{ary_suffix}: "
-            Entry2PP[type, q]
-          end
+      q.breakable
+      q.text "["
+      q.nest INDENT_SIZE do
+        e = fields.to_enum
+        loop do
+          field = e.next
           q.breakable
-          q.text "}"
-        in {name:, type: {tag: tytag}} if st_types.include?(type_repr)
-          q.text "{ '#{name}#{ary_suffix}': #{type_repr} }"
-        in {name:, type:}
-          q.text "\"#{type_repr} #{name}#{ary_suffix}\""
+
+          type_repr, ary_suffix = T[field[:type]]
+
+          case field
+          in {name:, type: {tag: "struct" | "union"} => type}
+            q.text "{"
+            q.nest INDENT_SIZE do
+              q.breakable
+              q.text "#{name}#{ary_suffix}: "
+              Entry2PP[type, q]
+            end
+            q.breakable
+            q.text "}"
+          in {name:, type: {tag: tytag}} if st_types.include?(type_repr)
+            q.text "{ \"#{name}#{ary_suffix}\": #{type_repr} }"
+          in {name:, type:}
+            q.text "\"#{type_repr} #{name}#{ary_suffix}\""
+          end
+          q.text ","
+          e.peek
         end
-        q.text ","
-        e.peek
       end
+      q.breakable
+      q.text "]"
     end
     q.breakable
-    q.text "])"
+    q.text ")"
 
   # Typedef entry
   #
