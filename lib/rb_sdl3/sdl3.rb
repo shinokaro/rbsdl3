@@ -8,7 +8,7 @@ module RbSDL3
     extend Fiddle::Importer
     extend WeakExtern
 
-    def dlload(*libs)
+    def self.dlload(*libs)
       super
 
       require_relative "sdl3/bindings"
