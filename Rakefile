@@ -15,15 +15,15 @@ SDL_REPO_URL = "https://github.com/libsdl-org/SDL.git"
 SDL_SRC_DIR = File.join(__dir__, "tmp", "SDL")
 SDL_INCLUDE_DIR = File.join(SDL_SRC_DIR, "include")
 SDL_AST_FILE = File.join(__dir__, "tmp", "sdl.json")
+SDL_HEADERS_MANIFEST_FILE = File.join(__dir__, "dev/manifest/sdl_headers.list")
+SDL3_BINDINGS_TEMPLATE_FILE = File.join(__dir__, "dev/template/sdl3_bindings.erb")
+SDL3_BINDINGS_OUTPUT_FILE = File.join(__dir__, "lib/rb_sdl3/sdl3/bindings.rb")
 
 namespace :generate do
   desc "generate rb_sdl3/sdl3/bindings.rb"
   task :sdl3_bindings, [] do |t, args|
     header_dir = File.join(SDL_INCLUDE_DIR, "SDL3")
-    template_path = File.join(__dir__, "dev/template/sdl3_bindings.erb")
-    bindings_path = File.join(__dir__, "lib/rb_sdl3/sdl3/bindings.rb")
-    headers_manifest_path = File.join(__dir__, "dev/manifest/sdl_headers.list")
-    header_paths = File.binread(headers_manifest_path).split($/).map { |basename|
+    header_paths = File.binread(SDL_HEADERS_MANIFEST_FILE).split($/).map { |basename|
       File.join(header_dir, basename)
     }
 
@@ -50,8 +50,8 @@ namespace :generate do
     buf.puts o.lstrip!
 
     @dsl = buf.string
-    output = ERB.new(File.binread(template_path), trim_mode: "-").result
-    File.binwrite(bindings_path, output)
+    output = ERB.new(File.binread(SDL3_BINDINGS_TEMPLATE_FILE), trim_mode: "-").result
+    File.binwrite(SDL3_BINDINGS_OUTPUT_FILE, output)
   end
 end
 
