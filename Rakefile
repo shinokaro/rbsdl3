@@ -18,7 +18,7 @@ SDL_AST_FILE = File.join(__dir__, "tmp", "sdl.json")
 
 namespace :generate do
   desc "generate rb_sdl3/sdl3/bindings.rb"
-  task :sdl3_bindings, [:header_dir] do |t, args|
+  task :sdl3_bindings, [] do |t, args|
     header_dir = File.join(SDL_INCLUDE_DIR, "SDL3")
     template_path = File.join(__dir__, "dev/template/sdl3_bindings.erb")
     bindings_path = File.join(__dir__, "lib/rb_sdl3/sdl3/bindings.rb")
