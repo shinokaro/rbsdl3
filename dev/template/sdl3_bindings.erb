@@ -114,10 +114,13 @@ module RbSDL3
           const_set :SDL_PROP_THREAD_CREATE_NAME_STRING, "SDL.thread.create.name"
           const_set :SDL_PROP_THREAD_CREATE_USERDATA_POINTER, "SDL.thread.create.userdata"
           const_set :SDL_PROP_THREAD_CREATE_STACKSIZE_NUMBER, "SDL.thread.create.stacksize"
-<%- _indent = _erbout.split($/).last.to_s[/\A\s*/] -%>
-<%=
-  defined?(@dsl) && @dsl.each_line.map { |l| l =~ /\S/ ? _indent + l : $/ }.join
--%>
+<% _indent = _erbout.split($/).last.to_s[/\A\s*/] %>
+          # Macros translated from SDL headers
+          #
+<%= @macros_code.each_line.map { |l| l =~ /\S/ ? _indent + l : $/ }.join %>
+          # C declarations generated from SDL headers
+          #
+<%= @cdecls_code.each_line.map { |l| l =~ /\S/ ? _indent + l : $/ }.join %>
         }
       end
       module_function :included

@@ -5,7 +5,6 @@ task default: %i[]
 
 require "erb"
 require "open3"
-require "stringio"
 
 DEFINE2RB_PATH = File.join(__dir__, "bin/define2rb")
 C2FFIFIDDLE_PATH = File.join(__dir__, "bin/c2ffi2fiddle")
@@ -27,30 +26,20 @@ namespace :generate do
       File.join(header_dir, basename)
     }
 
-    buf = StringIO.new("".dup, "r+b")
-
-    o, s = Open3.capture2("ruby", DEFINE2RB_PATH, *header_paths)
+    @macros_code, s = Open3.capture2("ruby", DEFINE2RB_PATH, *header_paths)
     unless s.success?
       raise "Generation failed: define2rb #{header_dir} (exitstatus=#{s.exitstatus})"
     end
 
-    buf.puts ""
-    buf.puts "# define2rb-translated macros from SDL headers"
-    buf.puts "#"
-    buf.puts o
-
-    o, s = Open3.capture2("ruby", C2FFIFIDDLE_PATH, "--only-basename-prefix=SDL", SDL_AST_FILE)
+    @cdecls_code, s = Open3.capture2("ruby", C2FFIFIDDLE_PATH, "--only-basename-prefix=SDL", SDL_AST_FILE)
     unless s.success?
       raise "Generation failed: c2ffi2fiddle #{SDL_AST_FILE} (exitstatus=#{s.exitstatus})"
     end
+    @cdecls_code.lstrip!
 
-    buf.puts ""
-    buf.puts "# c2ffi-generated C declarations from SDL headers"
-    buf.puts "#"
-    buf.puts o.lstrip!
-
-    @dsl = buf.string
-    output = ERB.new(File.binread(SDL3_BINDINGS_TEMPLATE_FILE), trim_mode: "-").result
+    erb = ERB.new(File.binread(SDL3_BINDINGS_TEMPLATE_FILE))
+    erb.filename = SDL3_BINDINGS_TEMPLATE_FILE
+    output = erb.result
     File.binwrite(SDL3_BINDINGS_OUTPUT_FILE, output)
   end
 end
