@@ -6,14 +6,15 @@ task default: %i[]
 require "erb"
 require "open3"
 
-DEFINE2RB_PATH = File.join(__dir__, "bin/define2rb")
-C2FFIFIDDLE_PATH = File.join(__dir__, "bin/c2ffi2fiddle")
+DEFINE2RB_BIN = File.join(__dir__, "bin/define2rb")
+C2FFIFIDDLE_BIN = File.join(__dir__, "bin/c2ffi2fiddle")
 C2FFI_BIN = File.expand_path("~/c2ffi/build/bin/c2ffi")
 
 SDL_REPO_URL = "https://github.com/libsdl-org/SDL.git"
 SDL_SRC_DIR = File.join(__dir__, "tmp", "SDL")
 SDL_INCLUDE_DIR = File.join(SDL_SRC_DIR, "include")
 SDL_AST_FILE = File.join(__dir__, "tmp", "sdl.json")
+SDL_HEADERS_DIR = File.join(SDL_INCLUDE_DIR, "SDL3")
 SDL_HEADERS_MANIFEST_FILE = File.join(__dir__, "dev/manifest/sdl_headers.list")
 SDL3_BINDINGS_TEMPLATE_FILE = File.join(__dir__, "dev/template/sdl3_bindings.erb")
 SDL3_BINDINGS_OUTPUT_FILE = File.join(__dir__, "lib/rb_sdl3/sdl3/bindings.rb")
@@ -21,27 +22,34 @@ SDL3_BINDINGS_OUTPUT_FILE = File.join(__dir__, "lib/rb_sdl3/sdl3/bindings.rb")
 namespace :generate do
   desc "generate rb_sdl3/sdl3/bindings.rb"
   task :sdl3_bindings, [] do |t, args|
-    header_dir = File.join(SDL_INCLUDE_DIR, "SDL3")
-    header_paths = File.binread(SDL_HEADERS_MANIFEST_FILE).split($/).map { |basename|
-      File.join(header_dir, basename)
-    }
-
-    @macros_code, s = Open3.capture2("ruby", DEFINE2RB_PATH, *header_paths)
-    unless s.success?
-      raise "Generation failed: define2rb #{header_dir} (exitstatus=#{s.exitstatus})"
-    end
-
-    @cdecls_code, s = Open3.capture2("ruby", C2FFIFIDDLE_PATH, "--only-basename-prefix=SDL", SDL_AST_FILE)
-    unless s.success?
-      raise "Generation failed: c2ffi2fiddle #{SDL_AST_FILE} (exitstatus=#{s.exitstatus})"
-    end
-    @cdecls_code.lstrip!
+    @macros_code = generate_macros_code(SDL_HEADERS_DIR, SDL_HEADERS_MANIFEST_FILE)
+    @cdecls_code = generate_cdecls_code(SDL_AST_FILE, "SDL_")
 
     erb = ERB.new(File.binread(SDL3_BINDINGS_TEMPLATE_FILE))
     erb.filename = SDL3_BINDINGS_TEMPLATE_FILE
     output = erb.result
     File.binwrite(SDL3_BINDINGS_OUTPUT_FILE, output)
   end
+end
+
+def generate_macros_code(header_dir, manifest_file)
+  header_files = File.foreach(manifest_file, chomp: true).map { |basename|
+    File.join(header_dir, basename)
+  }
+  o, s = Open3.capture2("ruby", DEFINE2RB_BIN, *header_files)
+  unless s.success?
+    raise "Generation failed: define2rb #{header_dir} (exitstatus=#{s.exitstatus})"
+  end
+  o
+end
+
+def generate_cdecls_code(ast_json_path, prefix)
+  o, s = Open3.capture2("ruby", C2FFIFIDDLE_BIN, "--only-basename-prefix=#{prefix}", ast_json_path)
+  unless s.success?
+    raise "Generation failed: c2ffi2fiddle #{ast_json_path} (exitstatus=#{s.exitstatus})"
+  end
+  o.lstrip!
+  o
 end
 
 namespace :sources do
