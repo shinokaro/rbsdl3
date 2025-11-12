@@ -115,7 +115,7 @@ module RbSDL3
           const_set :SDL_PROP_THREAD_CREATE_USERDATA_POINTER, "SDL.thread.create.userdata"
           const_set :SDL_PROP_THREAD_CREATE_STACKSIZE_NUMBER, "SDL.thread.create.stacksize"
 
-          # define2rb-translated macros from SDL headers
+          # Macros translated from SDL headers
           #
           const_set :SDL_AUDIO_MASK_BITSIZE, (0xFF)
           const_set :SDL_AUDIO_MASK_FLOAT, (1<<8)
@@ -852,7 +852,7 @@ module RbSDL3
           const_set :SDL_WINDOW_SURFACE_VSYNC_DISABLED, 0
           const_set :SDL_WINDOW_SURFACE_VSYNC_ADAPTIVE, (-1)
 
-          # c2ffi-generated C declarations from SDL headers
+          # C declarations generated from SDL headers
           #
           typealias "Sint8", "int8_t"
           typealias "Uint8", "uint8_t"
