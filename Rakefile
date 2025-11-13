@@ -25,11 +25,24 @@ namespace :generate do
     @macros_code = generate_macros_code(SDL_HEADERS_DIR, SDL_HEADERS_MANIFEST_FILE)
     @cdecls_code = generate_cdecls_code(SDL_AST_FILE, "SDL_")
 
-    erb = ERB.new(File.binread(SDL3_BINDINGS_TEMPLATE_FILE))
-    erb.filename = SDL3_BINDINGS_TEMPLATE_FILE
-    output = erb.result
+    output = bindings_renderer(SDL3_BINDINGS_TEMPLATE_FILE).render(@macros_code, @cdecls_code)
     File.binwrite(SDL3_BINDINGS_OUTPUT_FILE, output)
   end
+end
+
+module BindingTemplateHelper
+  def reindent_lines(s, last_line)
+    indent = last_line.split($/).last.to_s[/\A\s*/]
+    s.each_line.map { |l| l =~ /\S/ ? indent + l : $/ }.join
+  end
+end
+
+def bindings_renderer(template_file)
+  erb = ERB.new(File.binread(template_file))
+  erb.filename = template_file
+  klass = erb.def_class(Object, "render(macros_code, cdecls_code)")
+  klass.include(BindingTemplateHelper)
+  klass.new
 end
 
 def generate_macros_code(header_dir, manifest_file)
