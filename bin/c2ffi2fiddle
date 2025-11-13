@@ -188,10 +188,3 @@ PrettyPrint.format(out) { |q|
     Entry2PP[entry, q]
   }
 }
-{ "tag": "struct", "name": "SDL_MessageBoxColor", "fields": [] }
-{ "tag": "typedef", "name": "SDL_MessageBoxColor", "type": { "tag": ":struct", "name": "SDL_MessageBoxColor"} }
-{ "tag": "struct", "name": "SDL_MessageBoxColorScheme", "fields": [
-  { "tag": "field", "name": "colors", "bit-offset": 0, "bit-size": 120, "bit-alignment": 8, "type": {
-    "tag": ":array", "type": { "tag": "SDL_MessageBoxColor" }, "size": 5 } 
-  }
-]}
