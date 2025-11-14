@@ -67,21 +67,37 @@ end
 
 namespace :sources do
   namespace :sdl do
-    desc "Initialize a sparse partial clone of SDL, restricting the working tree to include/ only"
-    task :init, [] do |t, args|
-      git_init(SDL_SRC_DIR, SDL_REPO_URL)
-    end
-
     desc "Fetch and checkout the specified SDL release tag (detached HEAD)"
     task :checkout_tag, [:name] do |t,args|
       unless args[:name]
         raise "name is required, e.g. release-3.x.xx"
       end
-      name = args[:name]
 
-      checkout_tag(SDL_SRC_DIR, name)
+      ensure_official_repo!(SDL_SRC_DIR, SDL_REPO_URL)
+
+      checkout_tag(SDL_SRC_DIR, args[:name])
     end
   end
+end
+
+def ensure_official_repo!(src_dir, repo_url)
+  unless File.exist?(src_dir)
+    git_init(src_dir, repo_url)
+    return
+  end
+
+  unless File.exist?(File.join(src_dir, ".git"))
+    raise "SDL source directory is not a git repository (missing .git): #{src_dir}"
+  end
+
+  origin_url = git_origin_url(src_dir)
+  unless origin_url == repo_url
+    raise "SDL source directory origin URL mismatch: expected #{repo_url}, got #{origin_url} for #{src_dir}"
+  end
+end
+
+def git_origin_url(src_dir)
+  IO.popen(%W[git -C #{src_dir} remote get-url origin], &:read).chomp
 end
 
 def run(cmd)
