@@ -106,13 +106,28 @@ def run(cmd)
 end
 
 def git_init(dir, repo)
-  run %W[git init #{dir}]
-  run %W[git -C #{dir} remote add origin #{repo}]
-  run %W[git -C #{dir} config remote.origin.promisor true]
-  run %W[git -C #{dir} config core.partialCloneFilter blob:none]
-  run %W[git -C #{dir} config advice.detachedHead false]
-  run %W[git -C #{dir} sparse-checkout init --cone]
-  run %W[git -C #{dir} sparse-checkout set include]
+  if File.exist?(dir)
+    raise "Target path already exists and will not be initialized: #{dir}"
+  end
+
+  begin
+    run %W[git init #{dir}]
+    run %W[git -C #{dir} remote add origin #{repo}]
+    run %W[git -C #{dir} config remote.origin.promisor true]
+    run %W[git -C #{dir} config core.partialCloneFilter blob:none]
+    run %W[git -C #{dir} config advice.detachedHead false]
+    run %W[git -C #{dir} sparse-checkout init --cone]
+    run %W[git -C #{dir} sparse-checkout set include]
+  rescue => git_error
+    if File.directory?(dir)
+      begin
+        remove_entry_secure(dir)
+      rescue => e
+        warn "Cleanup failed for #{dir}: #{e.message}"
+      end
+    end
+    raise git_error
+  end
 end
 
 def checkout_tag(dir, name)
