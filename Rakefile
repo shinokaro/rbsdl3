@@ -6,15 +6,22 @@ task default: %i[]
 require "erb"
 require "open3"
 
+TEMP_DIR = File.join(__dir__, "tmp")
+
 DEFINE2RB_BIN = File.join(__dir__, "bin/define2rb")
 C2FFIFIDDLE_BIN = File.join(__dir__, "bin/c2ffi2fiddle")
 C2FFI_BIN = File.expand_path("~/c2ffi/build/bin/c2ffi")
 
-SDL_REPO_URL = "https://github.com/libsdl-org/SDL.git"
-SDL_SRC_DIR = File.join(__dir__, "tmp", "SDL")
-SDL_INCLUDE_DIR = File.join(SDL_SRC_DIR, "include")
-SDL_AST_FILE = File.join(__dir__, "tmp", "sdl.json")
-SDL_HEADERS_DIR = File.join(SDL_INCLUDE_DIR, "SDL3")
+SDL_SPECS = {
+  SDL: { include_subdir: "SDL3" },
+}
+
+def repo_url(name) = "https://github.com/libsdl-org/#{name}.git"
+def src_dir(name) = File.join(TEMP_DIR, name)
+def ast_file(name) = File.join(TEMP_DIR, "#{name}.json")
+def include_dir(name) = File.join(src_dir(name), "include")
+def headers_dir(name) = File.join(include_dir(name), SDL_SPECS.fetch(name.to_sym)[:include_subdir])
+def root_header_file(name) = File.join(headers_dir(name), "#{name}.h")
 SDL_HEADERS_MANIFEST_FILE = File.join(__dir__, "dev/manifest/sdl_headers.list")
 SDL3_BINDINGS_TEMPLATE_FILE = File.join(__dir__, "dev/template/sdl3_bindings.erb")
 SDL3_BINDINGS_OUTPUT_FILE = File.join(__dir__, "lib/rb_sdl3/sdl3/bindings.rb")
@@ -22,8 +29,9 @@ SDL3_BINDINGS_OUTPUT_FILE = File.join(__dir__, "lib/rb_sdl3/sdl3/bindings.rb")
 namespace :generate do
   desc "generate rb_sdl3/sdl3/bindings.rb"
   task :sdl3_bindings, [] do |t, args|
-    @macros_code = generate_macros_code(SDL_HEADERS_DIR, SDL_HEADERS_MANIFEST_FILE)
-    @cdecls_code = generate_cdecls_code(SDL_AST_FILE, "SDL_")
+    spec_name = "SDL"
+    @macros_code = generate_macros_code(headers_dir(spec_name), SDL_HEADERS_MANIFEST_FILE)
+    @cdecls_code = generate_cdecls_code(ast_file(spec_name), "SDL_")
 
     output = bindings_renderer(SDL3_BINDINGS_TEMPLATE_FILE).render(@macros_code, @cdecls_code)
     File.binwrite(SDL3_BINDINGS_OUTPUT_FILE, output)
@@ -73,9 +81,11 @@ namespace :sources do
         raise "name is required, e.g. release-3.x.xx"
       end
 
-      ensure_official_repo!(SDL_SRC_DIR, SDL_REPO_URL)
+      spec_name = "SDL"
+      src = src_dir(spec_name)
+      ensure_official_repo!(src, repo_url(spec_name))
 
-      checkout_tag(SDL_SRC_DIR, args[:name])
+      checkout_tag(src, args[:name])
     end
   end
 end
@@ -138,8 +148,8 @@ end
 namespace :c2ffi_ast do
   desc "Generate C2FFI AST (JSON) from SDL headers (root: SDL3/SDL.h) into tmp/sdl.json"
   task :sdl, [] do |t, args|
-    root_header = File.join(SDL_INCLUDE_DIR, "SDL3", "SDL.h")
-    extract_ast(root_header, [SDL_INCLUDE_DIR], SDL_AST_FILE)
+    spec_name = "SDL"
+    extract_ast(root_header_file(spec_name), [include_dir(spec_name)], ast_file(spec_name))
   end
 end
 
