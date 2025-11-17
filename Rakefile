@@ -17,23 +17,28 @@ C2FFIFIDDLE_BIN = File.join(__dir__, "bin/c2ffi2fiddle")
 C2FFI_BIN = File.expand_path("~/c2ffi/build/bin/c2ffi")
 
 SDL_SPECS = {
-  SDL: { include_subdir: "SDL3", bindings_subdir: "sdl3" },
+  sdl: { lib_name: "SDL", include_subdir: "SDL3", bindings_subdir: "sdl3" },
 }
 
-def repo_url(name) = "https://github.com/libsdl-org/#{name}.git"
-def src_dir(name) = File.join(TEMP_DIR, name)
-def ast_file(name) = File.join(TEMP_DIR, "#{name}.json")
-def include_dir(name) = File.join(src_dir(name), "include")
-def headers_dir(name) = File.join(include_dir(name), SDL_SPECS.fetch(name.to_sym)[:include_subdir])
-def root_header_file(name) = File.join(headers_dir(name), "#{name}.h")
-def headers_manifest_file(name) = File.join(MANIFEST_DIR, SDL_SPECS.fetch(name.to_sym)[:bindings_subdir], "headers.list")
-def bindings_template_file(name) = File.join(TEMPLATE_DIR, SDL_SPECS.fetch(name.to_sym)[:bindings_subdir], "bindings.erb")
-def bindings_rb_file(name) = File.join(RBSDL3_LIB_DIR, SDL_SPECS.fetch(name.to_sym)[:bindings_subdir], "bindings.rb")
+def spec(key) = SDL_SPECS.fetch(key.to_sym)
+def lib_name(key) = spec(key)[:lib_name]
+def include_subdir(key) = spec(key)[:include_subdir]
+def bindings_subdir(key) = spec(key)[:bindings_subdir]
+
+def repo_url(key) = "https://github.com/libsdl-org/#{lib_name(key)}.git"
+def src_dir(key) = File.join(TEMP_DIR, lib_name(key))
+def ast_file(key) = File.join(TEMP_DIR, "#{lib_name(key)}.json")
+def include_dir(key) = File.join(src_dir(key), "include")
+def headers_dir(key) = File.join(include_dir(key), include_subdir(key))
+def root_header_file(key) = File.join(headers_dir(key), "#{lib_name(key)}.h")
+def headers_manifest_file(key) = File.join(MANIFEST_DIR, bindings_subdir(key), "headers.list")
+def bindings_template_file(key) = File.join(TEMPLATE_DIR, bindings_subdir(key), "bindings.erb")
+def bindings_rb_file(key) = File.join(RBSDL3_LIB_DIR, bindings_subdir(key), "bindings.rb")
 
 namespace :generate do
   desc "generate rb_sdl3/sdl3/bindings.rb"
   task :sdl3_bindings, [] do |t, args|
-    spec_name = "SDL"
+    spec_name = "sdl"
     @macros_code = generate_macros_code(headers_dir(spec_name), headers_manifest_file(spec_name))
     @cdecls_code = generate_cdecls_code(ast_file(spec_name), headers_dir(spec_name))
 
@@ -85,7 +90,7 @@ namespace :sources do
         raise "name is required, e.g. release-3.x.xx"
       end
 
-      spec_name = "SDL"
+      spec_name = "sdl"
       src = src_dir(spec_name)
       ensure_official_repo!(src, repo_url(spec_name))
 
@@ -152,7 +157,7 @@ end
 namespace :c2ffi_ast do
   desc "Generate C2FFI AST (JSON) from SDL headers (root: SDL3/SDL.h) into tmp/sdl.json"
   task :sdl, [] do |t, args|
-    spec_name = "SDL"
+    spec_name = "sdl"
     extract_ast(root_header_file(spec_name), [include_dir(spec_name)], ast_file(spec_name))
   end
 end
