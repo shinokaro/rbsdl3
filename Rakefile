@@ -35,7 +35,7 @@ namespace :generate do
   task :sdl3_bindings, [] do |t, args|
     spec_name = "SDL"
     @macros_code = generate_macros_code(headers_dir(spec_name), headers_manifest_file(spec_name))
-    @cdecls_code = generate_cdecls_code(ast_file(spec_name), "SDL_")
+    @cdecls_code = generate_cdecls_code(ast_file(spec_name), headers_dir(spec_name))
 
     output = bindings_renderer(bindings_template_file(spec_name)).render(@macros_code, @cdecls_code)
     File.binwrite(bindings_rb_file(spec_name), output)
@@ -68,8 +68,8 @@ def generate_macros_code(header_dir, manifest_file)
   o
 end
 
-def generate_cdecls_code(ast_json_path, prefix)
-  o, s = Open3.capture2("ruby", C2FFIFIDDLE_BIN, "--only-basename-prefix=#{prefix}", ast_json_path)
+def generate_cdecls_code(ast_json_path, source)
+  o, s = Open3.capture2("ruby", C2FFIFIDDLE_BIN, "--source=#{source}", ast_json_path)
   unless s.success?
     raise "Generation failed: c2ffi2fiddle #{ast_json_path} (exitstatus=#{s.exitstatus})"
   end

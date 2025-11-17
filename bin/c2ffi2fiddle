@@ -171,9 +171,10 @@ out = STDOUT.binmode
 
 opt = OptionParser.new
 
-basename_prefix = ""
-opt.on("-B PREFIX", "--only-basename-prefix=PREFIX") { |prefix|
-  basename_prefix = prefix
+source_re = nil
+opt.on("-s PATH", "--source=PATH") { |path|
+  source_path = File.expand_path(path)
+  source_re = /\A#{Regexp.escape(source_path)}/
 }
 opt.parse!(ARGV)
 
@@ -181,10 +182,11 @@ declaration = JSON.load_file(ARGV[0], freeze: true, symbolize_names: true)
 
 PrettyPrint.format(out) { |q|
   declaration.each { |entry|
-    entry[:location] in /<Spelling=(.+?):\d+:\d+>\z/ | /\A(.+):\d+:\d+\z/
-    basename = File.basename($1)
+    if source_re
+      entry[:location] in /<Spelling=(.+?):\d+:\d+>\z/ | /\A(.+):\d+:\d+\z/
+      next unless $1.match?(source_re)
+    end
 
-    next unless basename.match?(/\A#{Regexp.escape(basename_prefix)}/)
     Entry2PP[entry, q]
   }
 }
