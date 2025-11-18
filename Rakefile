@@ -158,11 +158,13 @@ def checkout_tag(dir, name)
   run %W[git -C #{dir} checkout -f #{name}]
 end
 
-namespace :c2ffi_ast do
-  desc "Generate C2FFI AST (JSON) from SDL headers (root: SDL3/SDL.h) into tmp/sdl.json"
-  task :sdl, [] do |t, args|
-    spec_name = task_spec_key(t)
-    extract_ast(root_header_file(spec_name), [include_dir(spec_name)], ast_file(spec_name))
+namespace :ast do
+  namespace :generate do
+    desc "Generate C2FFI AST (JSON) from SDL headers (root: SDL3/SDL.h) into tmp/sdl.json"
+    task :sdl, [] do |t, args|
+      spec_name = task_spec_key(t)
+      extract_ast(root_header_file(spec_name), [include_dir(spec_name)], ast_file(spec_name))
+    end
   end
 end
 
