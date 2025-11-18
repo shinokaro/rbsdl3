@@ -48,6 +48,7 @@ namespace :bindings do
       output = bindings_renderer(bindings_template_file(spec_name)).render(@macros_code, @cdecls_code)
       File.binwrite(bindings_rb_file(spec_name), output)
     end
+    task :sdl => "ast:generate:sdl"
   end
 end
 
