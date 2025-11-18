@@ -154,9 +154,12 @@ def git_init(dir, repo)
   end
 end
 
-def checkout_tag(dir, name)
-  run %W[git -C #{dir} fetch --depth 1 origin tag #{name}]
-  run %W[git -C #{dir} checkout -f #{name}]
+def checkout_tag(dir, tag)
+  unless system(*%W[git -C #{dir} show-ref --tags --verify refs/tags/#{tag}])
+    run %W[git -C #{dir} fetch --depth 1 origin tag #{tag}]
+  end
+
+  run %W[git -C #{dir} checkout -f tags/#{tag}]
 end
 
 namespace :ast do
