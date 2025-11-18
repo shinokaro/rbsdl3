@@ -88,18 +88,18 @@ def generate_cdecls_code(ast_json_path, source)
 end
 
 namespace :sources do
-  namespace :checkout_tag do
+  namespace :checkout do
     desc "Fetch and checkout the specified SDL release tag (detached HEAD)"
-    task :sdl, [:name] do |t,args|
-      unless args[:name]
-        raise "name is required, e.g. release-3.x.xx"
+    task :sdl, [:tag] do |t, args|
+      unless args[:tag]
+        raise "tag is required, e.g. release-3.x.xx"
       end
 
       spec_name = task_spec_key(t)
       src = src_dir(spec_name)
       ensure_official_repo!(src, repo_url(spec_name))
 
-      checkout_tag(src, args[:name])
+      checkout_tag(src, args[:tag])
     end
   end
 end
