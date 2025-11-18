@@ -35,15 +35,19 @@ def headers_manifest_file(key) = File.join(MANIFEST_DIR, bindings_subdir(key), "
 def bindings_template_file(key) = File.join(TEMPLATE_DIR, bindings_subdir(key), "bindings.erb")
 def bindings_rb_file(key) = File.join(RBSDL3_LIB_DIR, bindings_subdir(key), "bindings.rb")
 
-namespace :generate do
-  desc "generate rb_sdl3/sdl3/bindings.rb"
-  task :sdl3_bindings, [] do |t, args|
-    spec_name = "sdl"
-    @macros_code = generate_macros_code(headers_dir(spec_name), headers_manifest_file(spec_name))
-    @cdecls_code = generate_cdecls_code(ast_file(spec_name), headers_dir(spec_name))
+def task_spec_key(task) = task.name.split(":").last
 
-    output = bindings_renderer(bindings_template_file(spec_name)).render(@macros_code, @cdecls_code)
-    File.binwrite(bindings_rb_file(spec_name), output)
+namespace :bindings do
+  namespace :generate do
+    desc "generate rb_sdl3/sdl3/bindings.rb"
+    task :sdl, [] do |t, args|
+      spec_name = task_spec_key(t)
+      @macros_code = generate_macros_code(headers_dir(spec_name), headers_manifest_file(spec_name))
+      @cdecls_code = generate_cdecls_code(ast_file(spec_name), headers_dir(spec_name))
+
+      output = bindings_renderer(bindings_template_file(spec_name)).render(@macros_code, @cdecls_code)
+      File.binwrite(bindings_rb_file(spec_name), output)
+    end
   end
 end
 
@@ -83,14 +87,14 @@ def generate_cdecls_code(ast_json_path, source)
 end
 
 namespace :sources do
-  namespace :sdl do
+  namespace :checkout_tag do
     desc "Fetch and checkout the specified SDL release tag (detached HEAD)"
-    task :checkout_tag, [:name] do |t,args|
+    task :sdl, [:name] do |t,args|
       unless args[:name]
         raise "name is required, e.g. release-3.x.xx"
       end
 
-      spec_name = "sdl"
+      spec_name = task_spec_key(t)
       src = src_dir(spec_name)
       ensure_official_repo!(src, repo_url(spec_name))
 
@@ -157,7 +161,7 @@ end
 namespace :c2ffi_ast do
   desc "Generate C2FFI AST (JSON) from SDL headers (root: SDL3/SDL.h) into tmp/sdl.json"
   task :sdl, [] do |t, args|
-    spec_name = "sdl"
+    spec_name = task_spec_key(t)
     extract_ast(root_header_file(spec_name), [include_dir(spec_name)], ast_file(spec_name))
   end
 end
