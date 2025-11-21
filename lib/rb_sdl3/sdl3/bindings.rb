@@ -23,7 +23,8 @@ module RbSDL3
           # Map C 'enum' to an int-compatible type (mirrors common ABI layouts)
           #
           typealias "enum", "int"
-          singleton_class.alias_method :enum, :int
+          alias enum int
+          module_function :enum
 
           # Function-pointer alias
           #
@@ -32,19 +33,34 @@ module RbSDL3
           # Aliases for macro-cast emulation (typedefs and enum carriers)
           #
           # enum carriers
-          singleton_class.alias_method :SDL_ChromaLocation, :enum
-          singleton_class.alias_method :SDL_ColorPrimaries, :enum
-          singleton_class.alias_method :SDL_ColorRange, :enum
-          singleton_class.alias_method :SDL_ColorType, :enum
-          singleton_class.alias_method :SDL_MatrixCoefficients, :enum
-          singleton_class.alias_method :SDL_TransferCharacteristics, :enum
+          alias SDL_ChromaLocation enum
+          module_function :SDL_ChromaLocation
+
+          alias SDL_ColorPrimaries enum
+          module_function :SDL_ColorPrimaries
+
+          alias SDL_ColorRange enum
+          module_function :SDL_ColorRange
+
+          alias SDL_ColorType enum
+          module_function :SDL_ColorType
+
+          alias SDL_MatrixCoefficients enum
+          module_function :SDL_MatrixCoefficients
+
+          alias SDL_TransferCharacteristics enum
+          module_function :SDL_TransferCharacteristics
 
           # Uint32 typedeffs
-          singleton_class.alias_method :SDL_AudioDeviceID, :Uint32
-          singleton_class.alias_method :SDL_MouseID, :Uint32
+          alias SDL_AudioDeviceID Uint32
+          module_function :SDL_AudioDeviceID
+
+          alias SDL_MouseID Uint32
+          module_function :SDL_MouseID
 
           # Uint64 typedefs
-          singleton_class.alias_method :SDL_TouchID, :Uint64
+          alias SDL_TouchID Uint64
+          module_function :SDL_TouchID
 
           # SDL_atomic.h
           #  
