@@ -7,17 +7,16 @@ require "erb"
 require "open3"
 
 TEMP_DIR = File.join(__dir__, "tmp")
-DEV_DIR = File.join(__dir__, "dev")
-MANIFEST_DIR = File.join(DEV_DIR, "manifest")
-TEMPLATE_DIR = File.join(DEV_DIR, "template")
-RBSDL3_LIB_DIR = File.join(__dir__, "lib", "rb_sdl3")
+MANIFEST_DIR = File.join(__dir__, "manifest")
+TEMPLATE_DIR = File.join(__dir__, "template")
+LIB_DIR = File.join(__dir__, "lib")
 
 DEFINE2RB_BIN = File.join(__dir__, "bin/define2rb")
 C2FFIFIDDLE_BIN = File.join(__dir__, "bin/c2ffi2fiddle")
 C2FFI_BIN = File.expand_path("~/c2ffi/build/bin/c2ffi")
 
 SDL_SPECS = {
-  sdl: { lib_name: "SDL", include_subdir: "SDL3", bindings_subdir: "sdl3" },
+  sdl: { lib_name: "SDL", include_subdir: "SDL3", bindings_subdir: "rb_sdl3/sdl3" },
 }
 
 def spec(key) = SDL_SPECS.fetch(key.to_sym)
@@ -31,9 +30,9 @@ def ast_file(key) = File.join(TEMP_DIR, "#{lib_name(key)}.json")
 def include_dir(key) = File.join(src_dir(key), "include")
 def headers_dir(key) = File.join(include_dir(key), include_subdir(key))
 def root_header_file(key) = File.join(headers_dir(key), "#{lib_name(key)}.h")
-def headers_manifest_file(key) = File.join(MANIFEST_DIR, bindings_subdir(key), "headers.list")
+def headers_manifest_file(key) = File.join(MANIFEST_DIR, lib_name(key), "headers.list")
 def bindings_template_file(key) = File.join(TEMPLATE_DIR, bindings_subdir(key), "bindings.erb")
-def bindings_rb_file(key) = File.join(RBSDL3_LIB_DIR, bindings_subdir(key), "bindings.rb")
+def bindings_rb_file(key) = File.join(LIB_DIR, bindings_subdir(key), "bindings.rb")
 
 def task_spec_key(task) = task.name.split(":").last
 
