@@ -12,7 +12,6 @@ TEMPLATE_DIR = File.join(__dir__, "template")
 LIB_DIR = File.join(__dir__, "lib")
 
 DEFINE2RB_BIN = File.join(__dir__, "bin/define2rb")
-C2FFIFIDDLE_BIN = File.join(__dir__, "bin/c2ffi2fiddle")
 C2FFI_BIN = File.expand_path("~/c2ffi/build/bin/c2ffi")
 
 SDL_SPECS = {
@@ -78,12 +77,25 @@ def generate_macros_code(header_dir, manifest_file)
 end
 
 def generate_cdecls_code(ast_json_path, source)
-  o, s = Open3.capture2("ruby", C2FFIFIDDLE_BIN, "--source=#{source}", ast_json_path)
-  unless s.success?
-    raise "Generation failed: c2ffi2fiddle #{ast_json_path} (exitstatus=#{s.exitstatus})"
-  end
-  o.lstrip!
-  o
+  require "prettyprint"
+  require_relative "rakelib/ast2rb"
+
+  out = "".dup
+  source_re = /\A#{Regexp.escape(source)}/
+
+  PrettyPrint.format(out) { |q|
+    ee = AST2Rb::EntryEmitter.new(q)
+    AST2Rb.load_file(ast_json_path).each { |entry|
+      if source_re
+        entry[:location] in /<Spelling=(.+?):\d+:\d+>\z/ | /\A(.+):\d+:\d+\z/
+        next unless $1.match?(source_re)
+      end
+
+      ee.emit_entry(entry)
+    }
+  }
+  out.lstrip!
+  out
 end
 
 namespace :sources do
