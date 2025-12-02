@@ -26,10 +26,6 @@ module RbSDL3
           alias enum int
           module_function :enum
 
-          # Function-pointer alias
-          #
-          typealias "funcptr", "void *"
-
           # Aliases for macro-cast emulation (typedefs and enum carriers)
           #
           # enum carriers
@@ -891,10 +887,10 @@ module RbSDL3
           extern "void * SDL_calloc(size_t, size_t)"
           extern "void * SDL_realloc(void *, size_t)"
           extern "void SDL_free(void *)"
-          typealias "SDL_malloc_func", "funcptr"
-          typealias "SDL_calloc_func", "funcptr"
-          typealias "SDL_realloc_func", "funcptr"
-          typealias "SDL_free_func", "funcptr"
+          typealias "SDL_malloc_func", "function (*pointer)()"
+          typealias "SDL_calloc_func", "function (*pointer)()"
+          typealias "SDL_realloc_func", "function (*pointer)()"
+          typealias "SDL_free_func", "function (*pointer)()"
           extern "void SDL_GetOriginalMemoryFunctions(SDL_malloc_func *, SDL_calloc_func *, SDL_realloc_func *, SDL_free_func *)"
           extern "void SDL_GetMemoryFunctions(SDL_malloc_func *, SDL_calloc_func *, SDL_realloc_func *, SDL_free_func *)"
           extern "bool SDL_SetMemoryFunctions(SDL_malloc_func, SDL_calloc_func, SDL_realloc_func, SDL_free_func)"
@@ -912,10 +908,10 @@ module RbSDL3
           extern "char * SDL_getenv_unsafe(char *)"
           extern "int SDL_setenv_unsafe(char *, char *, int)"
           extern "int SDL_unsetenv_unsafe(char *)"
-          typealias "SDL_CompareCallback", "funcptr"
+          typealias "SDL_CompareCallback", "function (*pointer)()"
           extern "void SDL_qsort(void *, size_t, size_t, SDL_CompareCallback)"
           extern "void * SDL_bsearch(void *, void *, size_t, size_t, SDL_CompareCallback)"
-          typealias "SDL_CompareCallback_r", "funcptr"
+          typealias "SDL_CompareCallback_r", "function (*pointer)()"
           extern "void SDL_qsort_r(void *, size_t, size_t, SDL_CompareCallback_r, void *)"
           extern "void * SDL_bsearch_r(void *, void *, size_t, size_t, SDL_CompareCallback_r, void *)"
           extern "int SDL_abs(int)"
@@ -1056,7 +1052,7 @@ module RbSDL3
           extern "int SDL_iconv_close(SDL_iconv_t)"
           extern "size_t SDL_iconv(SDL_iconv_t, char **, size_t *, char **, size_t *)"
           extern "char * SDL_iconv_string(char *, char *, char *, size_t)"
-          typealias "SDL_FunctionPointer", "funcptr"
+          typealias "SDL_FunctionPointer", "function (*pointer)()"
           const_set :SDL_ASSERTION_RETRY, 0
           const_set :SDL_ASSERTION_BREAK, 1
           const_set :SDL_ASSERTION_ABORT, 2
@@ -1075,7 +1071,7 @@ module RbSDL3
             ]
           )
           extern "SDL_AssertState SDL_ReportAssertion(SDL_AssertData *, char *, char *, int)"
-          typealias "SDL_AssertionHandler", "funcptr"
+          typealias "SDL_AssertionHandler", "function (*pointer)()"
           extern "void SDL_SetAssertionHandler(SDL_AssertionHandler, void *)"
           extern "SDL_AssertionHandler SDL_GetDefaultAssertionHandler()"
           extern "SDL_AssertionHandler SDL_GetAssertionHandler(void **)"
@@ -1155,7 +1151,7 @@ module RbSDL3
           extern "bool SDL_CopyProperties(SDL_PropertiesID, SDL_PropertiesID)"
           extern "bool SDL_LockProperties(SDL_PropertiesID)"
           extern "void SDL_UnlockProperties(SDL_PropertiesID)"
-          typealias "SDL_CleanupPropertyCallback", "funcptr"
+          typealias "SDL_CleanupPropertyCallback", "function (*pointer)()"
           extern "bool SDL_SetPointerPropertyWithCleanup(SDL_PropertiesID, char *, void *, SDL_CleanupPropertyCallback, void *)"
           extern "bool SDL_SetPointerProperty(SDL_PropertiesID, char *, void *)"
           extern "bool SDL_SetStringProperty(SDL_PropertiesID, char *, char *)"
@@ -1170,7 +1166,7 @@ module RbSDL3
           extern "float SDL_GetFloatProperty(SDL_PropertiesID, char *, float)"
           extern "bool SDL_GetBooleanProperty(SDL_PropertiesID, char *, bool)"
           extern "bool SDL_ClearProperty(SDL_PropertiesID, char *)"
-          typealias "SDL_EnumeratePropertiesCallback", "funcptr"
+          typealias "SDL_EnumeratePropertiesCallback", "function (*pointer)()"
           extern "bool SDL_EnumerateProperties(SDL_PropertiesID, SDL_EnumeratePropertiesCallback, void *)"
           extern "void SDL_DestroyProperties(SDL_PropertiesID)"
           typealias "SDL_ThreadID", "Uint64"
@@ -1185,7 +1181,7 @@ module RbSDL3
           const_set :SDL_THREAD_DETACHED, 2
           const_set :SDL_THREAD_COMPLETE, 3
           typealias "SDL_ThreadState", "enum"
-          typealias "SDL_ThreadFunction", "funcptr"
+          typealias "SDL_ThreadFunction", "function (*pointer)()"
           extern "SDL_Thread * SDL_CreateThreadRuntime(SDL_ThreadFunction, char *, void *, SDL_FunctionPointer, SDL_FunctionPointer)"
           extern "SDL_Thread * SDL_CreateThreadWithPropertiesRuntime(SDL_PropertiesID, SDL_FunctionPointer, SDL_FunctionPointer)"
           extern "char * SDL_GetThreadName(SDL_Thread *)"
@@ -1196,7 +1192,7 @@ module RbSDL3
           extern "SDL_ThreadState SDL_GetThreadState(SDL_Thread *)"
           extern "void SDL_DetachThread(SDL_Thread *)"
           extern "void * SDL_GetTLS(SDL_TLSID *)"
-          typealias "SDL_TLSDestructorCallback", "funcptr"
+          typealias "SDL_TLSDestructorCallback", "function (*pointer)()"
           extern "bool SDL_SetTLS(SDL_TLSID *, void *, SDL_TLSDestructorCallback)"
           extern "void SDL_CleanupTLS()"
           extern "SDL_Mutex * SDL_CreateMutex()"
@@ -1253,12 +1249,12 @@ module RbSDL3
           const_set :SDL_IOStreamInterface, struct(
             [
               "Uint32 version",
-              "funcptr size",
-              "funcptr seek",
-              "funcptr read",
-              "funcptr write",
-              "funcptr flush",
-              "funcptr close",
+              "function (*size)()",
+              "function (*seek)()",
+              "function (*read)()",
+              "function (*write)()",
+              "function (*flush)()",
+              "function (*close)()",
             ]
           )
           extern "SDL_IOStream * SDL_IOFromFile(char *, char *)"
@@ -1374,12 +1370,12 @@ module RbSDL3
           extern "bool SDL_AudioStreamDevicePaused(SDL_AudioStream *)"
           extern "bool SDL_LockAudioStream(SDL_AudioStream *)"
           extern "bool SDL_UnlockAudioStream(SDL_AudioStream *)"
-          typealias "SDL_AudioStreamCallback", "funcptr"
+          typealias "SDL_AudioStreamCallback", "function (*pointer)()"
           extern "bool SDL_SetAudioStreamGetCallback(SDL_AudioStream *, SDL_AudioStreamCallback, void *)"
           extern "bool SDL_SetAudioStreamPutCallback(SDL_AudioStream *, SDL_AudioStreamCallback, void *)"
           extern "void SDL_DestroyAudioStream(SDL_AudioStream *)"
           extern "SDL_AudioStream * SDL_OpenAudioDeviceStream(SDL_AudioDeviceID, SDL_AudioSpec *, SDL_AudioStreamCallback, void *)"
-          typealias "SDL_AudioPostmixCallback", "funcptr"
+          typealias "SDL_AudioPostmixCallback", "function (*pointer)()"
           extern "bool SDL_SetAudioPostmixCallback(SDL_AudioDeviceID, SDL_AudioPostmixCallback, void *)"
           extern "bool SDL_LoadWAV_IO(SDL_IOStream *, bool, SDL_AudioSpec *, Uint8 **, Uint32 *)"
           extern "bool SDL_LoadWAV(char *, SDL_AudioSpec *, Uint8 **, Uint32 *)"
@@ -1812,8 +1808,8 @@ module RbSDL3
           extern "bool SDL_SetPrimarySelectionText(char *)"
           extern "char * SDL_GetPrimarySelectionText()"
           extern "bool SDL_HasPrimarySelectionText()"
-          typealias "SDL_ClipboardDataCallback", "funcptr"
-          typealias "SDL_ClipboardCleanupCallback", "funcptr"
+          typealias "SDL_ClipboardDataCallback", "function (*pointer)()"
+          typealias "SDL_ClipboardCleanupCallback", "function (*pointer)()"
           extern "bool SDL_SetClipboardData(SDL_ClipboardDataCallback, SDL_ClipboardCleanupCallback, void *, char **, size_t)"
           extern "bool SDL_ClearClipboardData()"
           extern "void * SDL_GetClipboardData(char *, size_t *)"
@@ -1873,8 +1869,8 @@ module RbSDL3
           typealias "SDL_EGLSurface", "void *"
           typealias "SDL_EGLAttrib", "intptr_t"
           typealias "SDL_EGLint", "int"
-          typealias "SDL_EGLAttribArrayCallback", "funcptr"
-          typealias "SDL_EGLIntArrayCallback", "funcptr"
+          typealias "SDL_EGLAttribArrayCallback", "function (*pointer)()"
+          typealias "SDL_EGLIntArrayCallback", "function (*pointer)()"
           const_set :SDL_GL_RED_SIZE, 0
           const_set :SDL_GL_GREEN_SIZE, 1
           const_set :SDL_GL_BLUE_SIZE, 2
@@ -2001,7 +1997,7 @@ module RbSDL3
           const_set :SDL_HITTEST_RESIZE_BOTTOMLEFT, 8
           const_set :SDL_HITTEST_RESIZE_LEFT, 9
           typealias "SDL_HitTestResult", "enum"
-          typealias "SDL_HitTest", "funcptr"
+          typealias "SDL_HitTest", "function (*pointer)()"
           extern "bool SDL_SetWindowHitTest(SDL_Window *, SDL_HitTest, void *)"
           extern "bool SDL_SetWindowShape(SDL_Window *, SDL_Surface *)"
           extern "bool SDL_FlashWindow(SDL_Window *, SDL_FlashOperation)"
@@ -2035,7 +2031,7 @@ module RbSDL3
               "char * pattern",
             ]
           )
-          typealias "SDL_DialogFileCallback", "funcptr"
+          typealias "SDL_DialogFileCallback", "function (*pointer)()"
           extern "void SDL_ShowOpenFileDialog(SDL_DialogFileCallback, void *, SDL_Window *, SDL_DialogFileFilter *, int, char *, bool)"
           extern "void SDL_ShowSaveFileDialog(SDL_DialogFileCallback, void *, SDL_Window *, SDL_DialogFileFilter *, int, char *)"
           extern "void SDL_ShowOpenFolderDialog(SDL_DialogFileCallback, void *, SDL_Window *, char *, bool)"
@@ -2146,14 +2142,14 @@ module RbSDL3
               "SDL_VirtualJoystickTouchpadDesc * touchpads",
               "SDL_VirtualJoystickSensorDesc * sensors",
               "void * userdata",
-              "funcptr Update",
-              "funcptr SetPlayerIndex",
-              "funcptr Rumble",
-              "funcptr RumbleTriggers",
-              "funcptr SetLED",
-              "funcptr SendEffect",
-              "funcptr SetSensorsEnabled",
-              "funcptr Cleanup",
+              "function (*Update)()",
+              "function (*SetPlayerIndex)()",
+              "function (*Rumble)()",
+              "function (*RumbleTriggers)()",
+              "function (*SetLED)()",
+              "function (*SendEffect)()",
+              "function (*SetSensorsEnabled)()",
+              "function (*Cleanup)()",
             ]
           )
           extern "SDL_JoystickID SDL_AttachVirtualJoystick(SDL_VirtualJoystickDesc *)"
@@ -3349,7 +3345,7 @@ module RbSDL3
           extern "bool SDL_WaitEvent(SDL_Event *)"
           extern "bool SDL_WaitEventTimeout(SDL_Event *, Sint32)"
           extern "bool SDL_PushEvent(SDL_Event *)"
-          typealias "SDL_EventFilter", "funcptr"
+          typealias "SDL_EventFilter", "function (*pointer)()"
           extern "void SDL_SetEventFilter(SDL_EventFilter, void *)"
           extern "bool SDL_GetEventFilter(SDL_EventFilter *, void **)"
           extern "bool SDL_AddEventWatch(SDL_EventFilter, void *)"
@@ -3395,7 +3391,7 @@ module RbSDL3
           const_set :SDL_ENUM_SUCCESS, 1
           const_set :SDL_ENUM_FAILURE, 2
           typealias "SDL_EnumerationResult", "enum"
-          typealias "SDL_EnumerateDirectoryCallback", "funcptr"
+          typealias "SDL_EnumerateDirectoryCallback", "function (*pointer)()"
           extern "bool SDL_EnumerateDirectory(char *, SDL_EnumerateDirectoryCallback, void *)"
           extern "bool SDL_RemovePath(char *)"
           extern "bool SDL_RenamePath(char *, char *)"
@@ -4316,7 +4312,7 @@ module RbSDL3
           extern "void SDL_ResetHints()"
           extern "char * SDL_GetHint(char *)"
           extern "bool SDL_GetHintBoolean(char *, bool)"
-          typealias "SDL_HintCallback", "funcptr"
+          typealias "SDL_HintCallback", "function (*pointer)()"
           extern "bool SDL_AddHintCallback(char *, SDL_HintCallback, void *)"
           extern "void SDL_RemoveHintCallback(char *, SDL_HintCallback, void *)"
           typealias "SDL_InitFlags", "Uint32"
@@ -4324,17 +4320,17 @@ module RbSDL3
           const_set :SDL_APP_SUCCESS, 1
           const_set :SDL_APP_FAILURE, 2
           typealias "SDL_AppResult", "enum"
-          typealias "SDL_AppInit_func", "funcptr"
-          typealias "SDL_AppIterate_func", "funcptr"
-          typealias "SDL_AppEvent_func", "funcptr"
-          typealias "SDL_AppQuit_func", "funcptr"
+          typealias "SDL_AppInit_func", "function (*pointer)()"
+          typealias "SDL_AppIterate_func", "function (*pointer)()"
+          typealias "SDL_AppEvent_func", "function (*pointer)()"
+          typealias "SDL_AppQuit_func", "function (*pointer)()"
           extern "bool SDL_Init(SDL_InitFlags)"
           extern "bool SDL_InitSubSystem(SDL_InitFlags)"
           extern "void SDL_QuitSubSystem(SDL_InitFlags)"
           extern "SDL_InitFlags SDL_WasInit(SDL_InitFlags)"
           extern "void SDL_Quit()"
           extern "bool SDL_IsMainThread()"
-          typealias "SDL_MainThreadCallback", "funcptr"
+          typealias "SDL_MainThreadCallback", "function (*pointer)()"
           extern "bool SDL_RunOnMainThread(SDL_MainThreadCallback, void *, bool)"
           extern "bool SDL_SetAppMetadata(char *, char *, char *)"
           extern "bool SDL_SetAppMetadataProperty(char *, char *)"
@@ -4394,7 +4390,7 @@ module RbSDL3
           extern "void SDL_LogError(int, char *, ...)"
           extern "void SDL_LogCritical(int, char *, ...)"
           extern "void SDL_LogMessage(int, SDL_LogPriority, char *, ...)"
-          typealias "SDL_LogOutputFunction", "funcptr"
+          typealias "SDL_LogOutputFunction", "function (*pointer)()"
           extern "SDL_LogOutputFunction SDL_GetDefaultLogOutputFunction()"
           extern "void SDL_GetLogOutputFunction(SDL_LogOutputFunction *, void **)"
           extern "void SDL_SetLogOutputFunction(SDL_LogOutputFunction, void *)"
@@ -4576,17 +4572,17 @@ module RbSDL3
           const_set :SDL_StorageInterface, struct(
             [
               "Uint32 version",
-              "funcptr close",
-              "funcptr ready",
-              "funcptr enumerate",
-              "funcptr info",
-              "funcptr read_file",
-              "funcptr write_file",
-              "funcptr mkdir",
-              "funcptr remove",
-              "funcptr rename",
-              "funcptr copy",
-              "funcptr space_remaining",
+              "function (*close)()",
+              "function (*ready)()",
+              "function (*enumerate)()",
+              "function (*info)()",
+              "function (*read_file)()",
+              "function (*write_file)()",
+              "function (*mkdir)()",
+              "function (*remove)()",
+              "function (*rename)()",
+              "function (*copy)()",
+              "function (*space_remaining)()",
             ]
           )
           extern "SDL_Storage * SDL_OpenTitleStorage(char *, SDL_PropertiesID)"
@@ -4606,7 +4602,7 @@ module RbSDL3
           extern "bool SDL_GetStoragePathInfo(SDL_Storage *, char *, SDL_PathInfo *)"
           extern "Uint64 SDL_GetStorageSpaceRemaining(SDL_Storage *)"
           extern "char ** SDL_GlobStorageDirectory(SDL_Storage *, char *, char *, SDL_GlobFlags, int *)"
-          typealias "SDL_X11EventHook", "funcptr"
+          typealias "SDL_X11EventHook", "function (*pointer)()"
           extern "void SDL_SetX11EventHook(SDL_X11EventHook, void *)"
           extern "bool SDL_SetLinuxThreadPriority(Sint64, int)"
           extern "bool SDL_SetLinuxThreadPriorityAndPolicy(Sint64, int, int)"
@@ -4662,13 +4658,13 @@ module RbSDL3
           extern "void SDL_DelayNS(Uint64)"
           extern "void SDL_DelayPrecise(Uint64)"
           typealias "SDL_TimerID", "Uint32"
-          typealias "SDL_TimerCallback", "funcptr"
+          typealias "SDL_TimerCallback", "function (*pointer)()"
           extern "SDL_TimerID SDL_AddTimer(Uint32, SDL_TimerCallback, void *)"
-          typealias "SDL_NSTimerCallback", "funcptr"
+          typealias "SDL_NSTimerCallback", "function (*pointer)()"
           extern "SDL_TimerID SDL_AddTimerNS(Uint64, SDL_NSTimerCallback, void *)"
           extern "bool SDL_RemoveTimer(SDL_TimerID)"
           typealias "SDL_TrayEntryFlags", "Uint32"
-          typealias "SDL_TrayCallback", "funcptr"
+          typealias "SDL_TrayCallback", "function (*pointer)()"
           extern "SDL_Tray * SDL_CreateTray(SDL_Surface *, char *)"
           extern "void SDL_SetTrayIcon(SDL_Tray *, SDL_Surface *)"
           extern "void SDL_SetTrayTooltip(SDL_Tray *, char *)"

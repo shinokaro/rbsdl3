@@ -228,6 +228,10 @@ class AST2Rb
         q.breakable
         q.text "}"
 
+      in {tag: "field", name:, type: {tag: ":function-pointer"}}
+
+        q.text "\"function (*#{name})()\""
+
       in {tag: "field", name: _, type: _}
         type_repr, field_decl = field_signature(node)
 
@@ -259,6 +263,11 @@ class AST2Rb
         q.breakable
         q.text "typealias \"#{name}\", \"enum\""
 
+      in {tag: "typedef", name:, type: {tag: ":function-pointer"}}
+
+        q.breakable
+        q.text "typealias \"#{name}\", \"function (*pointer)()\""
+
       in {tag: "typedef", name: _, type: _}
         type_repr, field_decl = field_signature(node)
 
@@ -284,7 +293,7 @@ class AST2Rb
       in {tag: ":_Bool"}
         "bool"
       in {tag: ":function-pointer"}
-        "funcptr"
+        "function (*pointer)()"
       in {tag: ":enum" | ":struct" | ":union", name:}
         name
       in {tag: /\A:(.*)/}
