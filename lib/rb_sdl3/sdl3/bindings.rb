@@ -1,8 +1,11 @@
 # frozen_string_literal: true
+require_relative "../bindings_refinement"
 
 module RbSDL3
   module SDL3
     module Bindings
+      using BindingsRefinement
+
       def included(m)
         m.module_eval {
           module_function
