@@ -32,5 +32,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.required_ruby_version = ">= 3.1.0"
-  spec.add_dependency "fiddle", "~> 1.1.8"
+  spec.add_dependency "fiddle", "~> 1.1.7"
 end
