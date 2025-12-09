@@ -140,6 +140,14 @@ class AST2Rb
 
     def emit_function(node)
       case node
+      in {tag: "function", name:, variadic:, parameters: [], "return-type": _}
+        rtype_repr, _ = field_signature(node)
+
+        q.breakable
+        q.text "extern \"#{rtype_repr} #{name}("
+        q.text "void"
+        q.text ")\""
+
       in {tag: "function", name:, variadic:, parameters:, "return-type": _}
         rtype_repr, _ = field_signature(node)
 
