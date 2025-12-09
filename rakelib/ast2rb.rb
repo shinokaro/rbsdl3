@@ -263,10 +263,13 @@ class AST2Rb
         q.breakable
         q.text "typealias \"#{name}\", \"enum\""
 
-      in {tag: "typedef", name:, type: {tag: ":function-pointer"}}
+      in {tag: "typedef", name:, type: {tag: ":function-pointer"}, location:}
 
         q.breakable
         q.text "typealias \"#{name}\", \"function (*pointer)()\""
+        value = canonical_function_signature(location)
+        q.breakable
+        q.text "const_set :#{name}, \"#{value}\""
 
       in {tag: "typedef", name: _, type: _}
         type_repr, field_decl = field_signature(node)
@@ -274,6 +277,49 @@ class AST2Rb
         q.breakable
         q.text "typealias \"#{field_decl}\", \"#{type_repr}\""
 
+      end
+    end
+
+    def parse_source_location(location)
+      location in /<Spelling=(.+?):(\d+):(\d+)>\z/ | /\A(.+?):(\d+):(\d+)\z/
+      [$1, $2.to_i - 1, $3.to_i - 1]
+    end
+
+    def canonical_decl_type(type_decl)
+      type_decl in
+        /(\.\.\.)/ |
+        /\A\s*(.+[\*\s])(\w+)(\s*(?:\[[^\]]*\])*)?\s*\z/ |
+        # fallback for identifier-less type, mainly function return types
+        /(.+)/
+      raw_type, _ident, array_suffix = $1, $2, $3
+      raw_type.split(/(\s+|\b)/).inject("".dup) { |norm, token|
+        case token
+        when "const", /\s+/, ""
+          norm << ""
+        when "..."
+          return token
+        when /\*+/
+          norm << (norm =~ /\w\z/ ? " #{token}" : token)
+        when /\w+/
+          norm << (norm =~ /[\*\w]\z/ ? " #{token}" : token)
+        else
+          raise ArgumentError, "unexpected token '#{token}' in #{type_decl.inspect}"
+        end
+      } << (array_suffix.to_s.empty? ? '' : '*')
+    end
+
+    def canonical_function_signature(location)
+      path, lineno, * = parse_source_location(location)
+      lines = File.open(path, "rb") { |f| f.readlines(chomp: true) }
+      decl_src = "".dup
+      lineno += 1 while (decl_src << lines[lineno]) !~ /\)\s*;/
+      if decl_src in /\A\s*(?:typedef\s+)?([^\(\)]+?)\s*\(\s*(?:\w*)\s*\*\s*(\w+)\s*\)\s*\((.*?)\)\s*;/
+        return_type = canonical_decl_type($1)
+        func_name = $2
+        param_types = $3.split(",").map { |s| canonical_decl_type(s) }.join(", ")
+        "#{return_type} #{func_name}(#{param_types})"
+      else
+        raise "invalid function pointer declaration: #{decl_src.inspect}"
       end
     end
 
