@@ -15,12 +15,13 @@ DEFINE2RB_BIN = File.join(__dir__, "bin/define2rb")
 C2FFI_BIN = File.expand_path("~/c2ffi/build/bin/c2ffi")
 
 SDL_SPECS = {
-  sdl: { lib_name: "SDL", include_subdir: "SDL3", bindings_subdir: "rb_sdl3/sdl3" },
+  sdl: { lib_name: "SDL", include_subdir: "SDL3", module_name: "SDL3", bindings_subdir: "rb_sdl3/sdl3" },
 }
 
 def spec(key) = SDL_SPECS.fetch(key.to_sym)
 def lib_name(key) = spec(key)[:lib_name]
 def include_subdir(key) = spec(key)[:include_subdir]
+def module_name(key) = spec(key)[:module_name]
 def bindings_subdir(key) = spec(key)[:bindings_subdir]
 
 def repo_url(key) = "https://github.com/libsdl-org/#{lib_name(key)}.git"
@@ -30,7 +31,8 @@ def include_dir(key) = File.join(src_dir(key), "include")
 def headers_dir(key) = File.join(include_dir(key), include_subdir(key))
 def root_header_file(key) = File.join(headers_dir(key), "#{lib_name(key)}.h")
 def headers_manifest_file(key) = File.join(MANIFEST_DIR, lib_name(key), "headers.list")
-def bindings_template_file(key) = File.join(TEMPLATE_DIR, bindings_subdir(key), "bindings.erb")
+def bindings_template_file(key) = File.join(TEMPLATE_DIR, "rb_sdl3", "bindings.rb.erb")
+def bindings_manual_code_file(key) = File.join(TEMPLATE_DIR, bindings_subdir(key), "bindings.rb")
 def bindings_rb_file(key) = File.join(LIB_DIR, bindings_subdir(key), "bindings.rb")
 
 def task_spec_key(task) = task.name.split(":").last
@@ -40,11 +42,16 @@ namespace :bindings do
     desc "generate rb_sdl3/sdl3/bindings.rb"
     task :sdl, [] do |t, args|
       spec_name = task_spec_key(t)
-      @macros_code = generate_macros_code(headers_dir(spec_name), headers_manifest_file(spec_name))
-      @cdecls_code = generate_cdecls_code(ast_file(spec_name), headers_dir(spec_name))
 
-      output = bindings_renderer(bindings_template_file(spec_name)).render(@macros_code, @cdecls_code)
-      File.binwrite(bindings_rb_file(spec_name), output)
+      bindings_erb = bindings_renderer(bindings_template_file(spec_name))
+      bindings_erb.instance_eval {
+        @lib_name = lib_name(spec_name)
+        @module_name = module_name(spec_name)
+        @manual_code = File.binread(bindings_manual_code_file(spec_name))
+        @macros_code = generate_macros_code(headers_dir(spec_name), headers_manifest_file(spec_name))
+        @cdecls_code = generate_cdecls_code(ast_file(spec_name), headers_dir(spec_name))
+      }
+      File.binwrite(bindings_rb_file(spec_name), bindings_erb.render)
     end
     task :sdl => "ast:generate:sdl"
   end
@@ -60,7 +67,7 @@ end
 def bindings_renderer(template_file)
   erb = ERB.new(File.binread(template_file))
   erb.filename = template_file
-  klass = erb.def_class(Object, "render(macros_code, cdecls_code)")
+  klass = erb.def_class(Object, "render()")
   klass.include(BindingTemplateHelper)
   klass.new
 end

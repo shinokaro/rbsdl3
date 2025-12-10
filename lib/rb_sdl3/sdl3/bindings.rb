@@ -8,6 +8,8 @@ module RbSDL3
 
       def included(m)
         m.module_eval {
+          # Library-specific bindings and helpers
+          #
           module_function
 
           # Cast helpers to emulate C-style integer casts used in SDL macros
@@ -130,7 +132,7 @@ module RbSDL3
           const_set :SDL_PROP_THREAD_CREATE_USERDATA_POINTER, "SDL.thread.create.userdata"
           const_set :SDL_PROP_THREAD_CREATE_STACKSIZE_NUMBER, "SDL.thread.create.stacksize"
 
-          # Macros translated from SDL headers
+          # Ruby wrappers for SDL macros
           #
           const_set :SDL_AUDIO_MASK_BITSIZE, (0xFF)
           const_set :SDL_AUDIO_MASK_FLOAT, (1<<8)
@@ -867,7 +869,7 @@ module RbSDL3
           const_set :SDL_WINDOW_SURFACE_VSYNC_DISABLED, 0
           const_set :SDL_WINDOW_SURFACE_VSYNC_ADAPTIVE, (-1)
 
-          # C declarations generated from SDL headers
+          # Fiddle declarations for SDL functions, structs, and enums
           #
           typealias "Sint8", "int8_t"
           typealias "Uint8", "uint8_t"

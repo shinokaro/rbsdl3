@@ -1,0 +1,25 @@
+# frozen_string_literal: true
+require_relative "../bindings_refinement"
+
+module RbSDL3
+  module <%= @module_name %>
+    module Bindings
+      using BindingsRefinement
+
+      def included(m)
+        m.module_eval {
+          # Library-specific bindings and helpers
+          #
+<%= reindent_lines(@manual_code, _erbout) %>
+          # Ruby wrappers for <%= @lib_name %> macros
+          #
+<%= reindent_lines(@macros_code, _erbout) %>
+          # Fiddle declarations for <%= @lib_name %> functions, structs, and enums
+          #
+<%= reindent_lines(@cdecls_code, _erbout) %>
+        }
+      end
+      module_function :included
+    end
+  end
+end
