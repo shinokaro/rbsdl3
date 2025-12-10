@@ -2,16 +2,20 @@ module_function
 
 # Cast helpers to emulate C-style integer casts used in SDL macros
 #
-def Sint8(x) = [x].pack("c").unpack1("c")
-def Sint16(x) = [x].pack("s").unpack1("s")
-def Sint32(x) = [x].pack("l").unpack1("l")
-def Sint64(x) = [x].pack("q").unpack1("q")
-def Uint8(x) = [x].pack("C").unpack1("C")
-def Uint16(x) = [x].pack("S").unpack1("S")
-def Uint32(x) = [x].pack("L").unpack1("L")
-def Uint64(x) = [x].pack("Q").unpack1("Q")
-def int(x) = [x].pack("i").unpack1("i")
-def size_t(x) = [x].pack("J").unpack1("J")
+def cast(obj, template)
+  [String === obj ? obj.ord : Kernel.Integer(obj)].pack(template).unpack1(template)
+end
+
+def Sint8(x)  = cast(x, "c")
+def Sint16(x) = cast(x, "s")
+def Sint32(x) = cast(x, "l")
+def Sint64(x) = cast(x, "q")
+def Uint8(x)  = cast(x, "C")
+def Uint16(x) = cast(x, "S")
+def Uint32(x) = cast(x, "L")
+def Uint64(x) = cast(x, "Q")
+def int(x)    = cast(x, "i")
+def size_t(x) = cast(x, "J")
 
 # Map C 'enum' to an int-compatible type (mirrors common ABI layouts)
 #
