@@ -5,11 +5,11 @@ module RbSDL3
   class UnloadedError < Fiddle::DLError; end
 
   module ExternDelegator
-    refine Fiddle::Importer do
-      UNLOADED_STUB_PROC = proc { |*| Kernel.raise(UnloadedError, <<~MSG) }
-        cannot call the function: #{__method__}()
-      MSG
+    UNLOADED_STUB_PROC = proc { |*| Kernel.raise(UnloadedError, <<~MSG) }
+      cannot call the function: #{__method__}()
+    MSG
 
+    refine Fiddle::Importer do
       def extern(signature, *opts)
         begin
           f = super
