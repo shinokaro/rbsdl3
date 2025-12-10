@@ -6,7 +6,7 @@ module RbSDL3
     module Bindings
       using BindingsRefinement
 
-      def included(m)
+      def self.included(m)
         m.module_eval {
           # Library-specific bindings and helpers
           #
@@ -64,7 +64,7 @@ module RbSDL3
           module_function :SDL_TouchID
 
           # SDL_atomic.h
-          #  
+          #
           def SDL_MemoryBarrierRelease() = SDL_MemoryBarrierReleaseFunction()
           def SDL_MemoryBarrierAcquire() = SDL_MemoryBarrierAcquireFunction()
           def SDL_AtomicIncRef(a) = SDL_AddAtomicInt(a, 1)
@@ -4730,7 +4730,6 @@ module RbSDL3
           extern "char * SDL_GetRevision(void)"
         }
       end
-      module_function :included
     end
   end
 end

@@ -6,7 +6,7 @@ module RbSDL3
     module Bindings
       using BindingsRefinement
 
-      def included(m)
+      def self.included(m)
         m.module_eval {
           # Library-specific bindings and helpers
           #
@@ -19,7 +19,6 @@ module RbSDL3
 <%= reindent_lines(@cdecls_code, _erbout) %>
         }
       end
-      module_function :included
     end
   end
 end
