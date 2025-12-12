@@ -43,28 +43,29 @@ class SDLSpec
   def bindings_subdir = File.join("rb_sdl3", include_subdir.downcase)
   def bindings_template_file = File.join(TEMPLATE_DIR, "rb_sdl3", "bindings.rb.erb")
   def bindings_manual_code_file = File.join(TEMPLATE_DIR, bindings_subdir, "bindings.rb")
+  def bindings_rb_dir = File.join(LIB_DIR, bindings_subdir)
   def bindings_rb_file = File.join(LIB_DIR, bindings_subdir, "bindings.rb")
 end
 
-def task_spec_key(task) = task.name.split(":").last
-
 namespace :bindings do
   namespace :generate do
-    desc "generate rb_sdl3/sdl3/bindings.rb"
-    task :sdl, [] do |t, args|
-      spec = SDLSpec.new(task_spec_key(t))
-
-      bindings_erb = bindings_renderer(spec.bindings_template_file)
-      bindings_erb.instance_eval {
-        @lib_name = spec.lib_name
-        @module_name = spec.module_name
-        @manual_code = File.binread(spec.bindings_manual_code_file)
-        @macros_code = generate_macros_code(spec.headers_dir, spec.headers_manifest_file)
-        @cdecls_code = generate_cdecls_code(spec.ast_file, spec.headers_dir)
-      }
-      File.binwrite(spec.bindings_rb_file, bindings_erb.render)
-    end
-    task :sdl => "ast:generate:sdl"
+    SDL_SPECS.keys.each { |name|
+      spec = SDLSpec.new(name)
+      desc "generate #{spec.bindings_subdir}/bindings.rb"
+      task name do
+        bindings_erb = bindings_renderer(spec.bindings_template_file)
+        bindings_erb.instance_eval {
+          @lib_name = spec.lib_name
+          @module_name = spec.module_name
+          @manual_code = File.binread(spec.bindings_manual_code_file)
+          @macros_code = generate_macros_code(spec.headers_dir, spec.headers_manifest_file)
+          @cdecls_code = generate_cdecls_code(spec.ast_file, spec.headers_dir)
+        }
+        mkdir_p(spec.bindings_rb_dir)
+        File.binwrite(spec.bindings_rb_file, bindings_erb.render)
+      end
+      task name => "ast:generate:#{name}"
+    }
   end
 end
 
@@ -118,18 +119,18 @@ end
 
 namespace :sources do
   namespace :checkout do
-    desc "Fetch and checkout the specified SDL release tag (detached HEAD)"
-    task :sdl, [:tag] do |t, args|
-      unless args[:tag]
-        raise "tag is required, e.g. release-3.x.xx"
+    SDL_SPECS.keys.each { |name|
+      spec = SDLSpec.new(name)
+      desc "Fetch and checkout the specified #{spec.lib_name} release tag (detached HEAD)"
+      task name, [:tag] do |t, args|
+        unless args[:tag]
+          raise "tag is required, e.g. release-3.x.xx"
+        end
+        src = spec.src_dir
+        ensure_official_repo!(src, spec.repo_url)
+        checkout_tag(src, args[:tag])
       end
-
-      spec = SDLSpec.new(task_spec_key(t))
-      src = spec.src_dir
-      ensure_official_repo!(src, spec.repo_url)
-
-      checkout_tag(src, args[:tag])
-    end
+    }
   end
 end
 
@@ -193,11 +194,13 @@ end
 
 namespace :ast do
   namespace :generate do
-    desc "Generate C2FFI AST (JSON) from SDL headers (root: SDL3/SDL.h) into tmp/sdl.json"
-    task :sdl, [] do |t, args|
-      spec = SDLSpec.new(task_spec_key(t))
-      extract_ast(spec.root_header_file, [spec.include_dir], spec.ast_file)
-    end
+    SDL_SPECS.keys.each { |name|
+      spec = SDLSpec.new(name)
+      desc "Generate C2FFI AST (JSON) from #{spec.lib_name} headers into tmp/#{spec.lib_name}.json"
+      task name do
+        extract_ast(spec.root_header_file, [spec.include_dir], spec.ast_file)
+      end
+    }
   end
 end
 
