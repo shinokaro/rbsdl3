@@ -42,7 +42,7 @@ class SDLSpec
   def headers_manifest_file = File.join(MANIFEST_DIR, "#{lib_name}_headers")
 
   def bindings_subdir = File.join("rb_sdl3", include_subdir.downcase)
-  def bindings_template_file = File.join(TEMPLATE_DIR, "rb_sdl3", "bindings.rb.erb")
+  def bindings_template_file = File.join(TEMPLATE_DIR, "bindings.rb.erb")
   def bindings_manual_code_file = File.join(TEMPLATE_DIR, bindings_subdir, "bindings.rb")
   def bindings_rb_dir = File.join(LIB_DIR, bindings_subdir)
   def bindings_rb_file = File.join(LIB_DIR, bindings_subdir, "bindings.rb")
