@@ -16,7 +16,7 @@ C2FFI_BIN = File.expand_path("~/c2ffi/build/bin/c2ffi")
 
 SDL_SPECS = {
   sdl: {
-    lib_name: "SDL", include_subdir: "SDL3", module_name: "SDL3"
+    name_suffix: "", module_name: "SDL3"
   }.freeze,
 }.freeze
 
@@ -28,8 +28,9 @@ class SDLSpec
     @spec = SDL_SPECS.fetch(key.to_sym)
   end
 
-  def lib_name        = spec.fetch(:lib_name)
-  def include_subdir  = spec.fetch(:include_subdir)
+  def suffix = spec.fetch(:name_suffix)
+  def lib_name        = "SDL#{suffix}"
+  def include_subdir  = "SDL3#{suffix}"
   def module_name     = spec.fetch(:module_name)
 
   def repo_url = "https://github.com/libsdl-org/#{lib_name}.git"
