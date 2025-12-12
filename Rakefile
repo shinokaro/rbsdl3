@@ -124,14 +124,26 @@ namespace :sources do
       spec = SDLSpec.new(name)
       desc "Fetch and checkout the specified #{spec.lib_name} release tag (detached HEAD)"
       task name, [:tag] do |t, args|
-        unless args[:tag]
+        src_dir = spec.src_dir
+        ensure_official_repo!(src_dir, spec.repo_url)
+
+        tag = args[:tag] || resolve_latest_release_tag(src_dir)
+        unless tag
           raise "tag is required, e.g. release-3.x.xx"
         end
-        src = spec.src_dir
-        ensure_official_repo!(src, spec.repo_url)
-        checkout_tag(src, args[:tag])
+        checkout_tag(src_dir, tag)
       end
     }
+  end
+end
+
+def resolve_latest_release_tag(dir)
+  cmd = %W[git -C #{dir} ls-remote --tags --refs origin refs/tags/release-3.*]
+  IO.popen(cmd) do |ls|
+    ls.readlines(chomp: true).filter_map { |line|
+      next unless line in /\/(release-(\d+\.\d+\.\d+))\z/
+      [Gem::Version.new($2), $1]
+    }.max_by(&:first)&.last
   end
 end
 
