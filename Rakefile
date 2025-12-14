@@ -44,7 +44,7 @@ class SDLSpec
   def module_filename = include_subdir.downcase
   def bindings_relpath = File.join("rb_sdl3", module_filename)
   def bindings_template_file = File.join(TEMPLATE_DIR, "bindings.rb.erb")
-  def bindings_manual_code_file = File.join(TEMPLATE_DIR, bindings_relpath, "bindings.rb")
+  def bindings_manual_code_file = File.join(TEMPLATE_DIR, "#{bindings_relpath}.rb")
   def bindings_rb_file = File.join(LIB_DIR, "#{bindings_relpath}.rb")
 end
 
