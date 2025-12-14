@@ -42,18 +42,17 @@ class SDLSpec
   def headers_manifest_file = File.join(MANIFEST_DIR, "#{lib_name}_headers")
 
   def module_filename = include_subdir.downcase
-  def bindings_subdir = File.join("rb_sdl3", module_filename)
+  def bindings_relpath = File.join("rb_sdl3", module_filename)
   def bindings_template_file = File.join(TEMPLATE_DIR, "bindings.rb.erb")
-  def bindings_manual_code_file = File.join(TEMPLATE_DIR, bindings_subdir, "bindings.rb")
-  def bindings_rb_dir = File.join(LIB_DIR, "rb_sdl3")
-  def bindings_rb_file = File.join(bindings_rb_dir, "#{module_filename}.rb")
+  def bindings_manual_code_file = File.join(TEMPLATE_DIR, bindings_relpath, "bindings.rb")
+  def bindings_rb_file = File.join(LIB_DIR, "#{bindings_relpath}.rb")
 end
 
 namespace :bindings do
   namespace :generate do
     SDL_SPECS.keys.each { |name|
       spec = SDLSpec.new(name)
-      desc "generate #{spec.bindings_subdir}/bindings.rb"
+      desc "generate lib/#{spec.bindings_relpath}.rb"
       task name do
         bindings_erb = bindings_renderer(spec.bindings_template_file)
         bindings_erb.instance_eval {
