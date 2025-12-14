@@ -62,8 +62,9 @@ namespace :bindings do
           @macros_code = generate_macros_code(spec.headers_dir, spec.headers_manifest_file)
           @cdecls_code = generate_cdecls_code(spec.ast_file, spec.headers_dir)
         }
-        mkdir_p(spec.bindings_rb_dir)
-        File.binwrite(spec.bindings_rb_file, bindings_erb.render)
+        module_path = spec.bindings_rb_file
+        mkdir_p(File.dirname(module_path))
+        File.binwrite(module_path, bindings_erb.render)
       end
       task name => "ast:generate:#{name}"
     }
