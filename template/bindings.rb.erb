@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require_relative "../bindings_refinement"
+require "fiddle/import"
+require_relative "bindings_refinement"
 
 module RbSDL3
   module <%= @module_name %>
@@ -8,6 +9,12 @@ module RbSDL3
 
       def self.included(m)
         m.module_eval {
+          module_function
+
+          # Map C 'enum' to an int-compatible type (mirrors common ABI layouts)
+          #
+          typealias "enum", "int"
+
           # Library-specific bindings and helpers
           #
 <%= reindent_lines(@manual_code, _erbout) %>
@@ -20,5 +27,14 @@ module RbSDL3
         }
       end
     end
+
+    extend Fiddle::Importer
+
+    def self.dlload(*libs)
+      super
+      Bindings.included(self)
+    end
+
+    dlload
   end
 end

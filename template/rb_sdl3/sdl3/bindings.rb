@@ -1,5 +1,3 @@
-module_function
-
 # Cast helpers to emulate C-style integer casts used in SDL macros
 #
 def cast(obj, template)
@@ -17,9 +15,8 @@ def Uint64(x) = cast(x, "Q")
 def int(x)    = cast(x, "i")
 def size_t(x) = cast(x, "J")
 
-# Map C 'enum' to an int-compatible type (mirrors common ABI layouts)
+# Treat enum values as int for macro-cast emulation (common ABI)
 #
-typealias "enum", "int"
 alias enum int
 module_function :enum
 
