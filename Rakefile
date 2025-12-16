@@ -16,7 +16,7 @@ C2FFI_BIN = File.expand_path("~/c2ffi/build/bin/c2ffi")
 
 SDL_SPECS = {
   sdl: {
-    name_suffix: "", module_name: "SDL3"
+    name_suffix: "", module_name: "SDL"
   }.freeze,
 }.freeze
 
@@ -41,7 +41,7 @@ class SDLSpec
   def root_header_file = File.join(headers_dir, "#{lib_name}.h")
   def headers_manifest_file = File.join(MANIFEST_DIR, "#{lib_name}_headers")
 
-  def module_filename = include_subdir.downcase
+  def module_filename = module_name.downcase
   def bindings_relpath = File.join("rb_sdl3", module_filename)
   def bindings_template_file = File.join(TEMPLATE_DIR, "bindings.rb.erb")
   def bindings_manual_code_file = File.join(TEMPLATE_DIR, "#{bindings_relpath}.rb")

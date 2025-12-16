@@ -3,7 +3,7 @@ require "fiddle/import"
 require_relative "bindings_refinement"
 
 module RbSDL3
-  module SDL3
+  module SDL
     module Bindings
       using BindingsRefinement
 
