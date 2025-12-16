@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "fiddle"
 
-module RbSDL3
+module SDL3
   class UnloadedError < Fiddle::DLError; end
 
   module BindingsRefinement
