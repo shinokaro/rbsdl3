@@ -1,9 +1,30 @@
 # frozen_string_literal: true
-require_relative "extern_delegator"
+require "fiddle"
 
 module RbSDL3
+  class UnloadedError < Fiddle::DLError; end
+
   module BindingsRefinement
-    include ExternDelegator
+    UNLOADED_STUB_PROC = proc { |*| Kernel.raise(UnloadedError, <<~MSG) }
+      cannot call the function: #{__method__}()
+    MSG
+
+    refine Fiddle::Importer do
+      def extern(signature, *opts)
+        begin
+          f = super
+        rescue Fiddle::DLError
+          name, * = parse_signature(signature, type_alias)
+          define_singleton_method(name, &UNLOADED_STUB_PROC)
+        else
+          name = f.name
+        end
+        this = self
+        define_method(name) { |*a, &b| this.__send__(__method__, *a, &b) }
+        private(name)
+        f
+      end
+    end
 
     refine Module do
       def const_set(name, value)
