@@ -1,40 +1,32 @@
 # frozen_string_literal: true
-require "fiddle/import"
+require_relative "../sdl3"
 require_relative "bindings_refinement"
 
 module SDL3
   module <%= @module_name %>
-    module Bindings
-      using BindingsRefinement
+    using BindingsRefinement
 
-      def self.included(m)
-        m.module_eval {
-          module_function
+    def self.included(m)
+      m.module_eval {
+        module_function
 
-          # Map C 'enum' to an int-compatible type (mirrors common ABI layouts)
-          #
-          typealias "enum", "int"
+        # Map C 'enum' to an int-compatible type (mirrors common ABI layouts)
+        #
+        typealias "enum", "int"
 
-          # Library-specific bindings and helpers
-          #
+        # Library-specific bindings and helpers
+        #
 <%= reindent_lines(@manual_code, _erbout) %>
-          # Ruby wrappers for <%= @lib_name %> macros
-          #
+        # Ruby wrappers for <%= @lib_name %> macros
+        #
 <%= reindent_lines(@macros_code, _erbout) %>
-          # Fiddle declarations for <%= @lib_name %> functions, structs, and enums
-          #
+        # Fiddle declarations for <%= @lib_name %> functions, structs, and enums
+        #
 <%= reindent_lines(@cdecls_code, _erbout) %>
-        }
-      end
+      }
     end
-
-    extend Fiddle::Importer
-
-    def self.dlload(*libs)
-      super
-      Bindings.included(self)
-    end
-
-    dlload
   end
+  private_constant :<%= @module_name %>
+
+  <%= @module_name %>.included(self)
 end
