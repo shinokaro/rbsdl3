@@ -15,14 +15,13 @@ module SDL3
           f = super
         rescue Fiddle::DLError
           name, * = parse_signature(signature, type_alias)
-          define_method(name, &UNLOADED_STUB_PROC)
-          module_function(name)
+          define_singleton_method(name, &UNLOADED_STUB_PROC)
         else
           name = f.name
-          this = self
-          define_method(name) { |*a, &b| this.__send__(__method__, *a, &b) }
-          private(name)
         end
+        this = self
+        define_method(name) { |*a, &b| this.__send__(__method__, *a, &b) }
+        private(name)
         f
       end
     end
