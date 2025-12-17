@@ -19,8 +19,7 @@ module SDL3
         else
           name = f.name
         end
-        this = self
-        define_method(name) { |*a, &b| this.__send__(__method__, *a, &b) }
+        module_eval("def #{name}(...) = SDL3.#{name}(...)")
         private(name)
         f
       end
