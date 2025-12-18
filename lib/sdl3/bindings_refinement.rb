@@ -5,9 +5,13 @@ module SDL3
   class UnloadedError < Fiddle::DLError; end
 
   module BindingsRefinement
-    UNLOADED_STUB_PROC = proc { |*| Kernel.raise(UnloadedError, <<~MSG) }
-      cannot call the function: #{__method__}()
-    MSG
+    UNLOADED_STUB_PROC = proc do |*| 
+      e = UnloadedError.new(<<~MSG.chomp)
+        SDL function unavailable (library not loaded or symbol missing): #{__method__}()
+      MSG
+      e.set_backtrace(caller(2))
+      ::Kernel.raise(e)
+    end
 
     refine Fiddle::Importer do
       def extern(signature, *opts)
