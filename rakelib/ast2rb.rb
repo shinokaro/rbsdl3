@@ -27,23 +27,23 @@ class AST2Rb
       # Function entry
       #
       in {tag: "function" => tag, name:, "storage-class": sc} if sc != "extern"
-        warn "skipping #{tag}: #{name} - no external linkage (#{sc})"
+        puts "skipping #{tag}: #{name} - no external linkage (#{sc})"
         :skip
 
       in {tag: "function" => tag, name:, inline: true}
-        warn "skipping #{tag}: #{name} - inline function"
+        puts "skipping #{tag}: #{name} - inline function"
         :skip
 
       in {tag: "function" => tag, name:, parameters: [*, {type: {tag: /va_list\z/}}, *]}
-        warn "skipping #{tag}: #{name} - va_list parameter"
+        puts "skipping #{tag}: #{name} - va_list parameter"
         :skip
 
       in {tag: "function" => tag, name:, "return-type": {tag: tytag}} if struct_type?(tytag)
-        warn "skipping #{tag}: #{name} - by-value return (#{tytag})"
+        puts "skipping #{tag}: #{name} - by-value return (#{tytag})"
         :skip
 
       in {tag: "function" => tag, name:, parameters: ps} if !(m = ps.map{ _1[:type][:tag] }.select{struct_type?(_1) }).empty?
-        warn "skipping #{tag}: #{name} - by-value parameters (#{m.join(", ")})"
+        puts "skipping #{tag}: #{name} - by-value parameters (#{m.join(", ")})"
         :skip
 
       in {tag: "function"}
@@ -52,7 +52,7 @@ class AST2Rb
       # Struct / Union entry
       #
       in {tag: "struct" | "union" => tag, name:, fields: []}
-        warn "skipping #{tag}: #{name} - opaque #{tag}"
+        puts "skipping #{tag}: #{name} - opaque #{tag}"
         :skip
 
       in {tag: "struct" | "union"}
@@ -62,7 +62,7 @@ class AST2Rb
       #
       in {tag: "typedef" => tag, name:, type: {tag: ":struct" | ":union" => tytag, name: orig}} if name == orig
         @st_types << name
-        warn "skipping #{tag}: #{name} - alias to #{tytag[1..]} #{orig} not emitted"
+        puts "skipping #{tag}: #{name} - alias to #{tytag[1..]} #{orig} not emitted"
         :skip
 
       in {tag: "typedef" => tag, name:, type: {tag: ":struct" | ":union" => tytag, name: orig}}
@@ -71,7 +71,7 @@ class AST2Rb
 
       in {tag: "typedef" => tag, name:, type: {tag: "struct" | "union" => tytag, fields: []}}
         @st_types << name
-        warn "skipping #{tag}: #{name} - opaque #{tytag}"
+        puts "skipping #{tag}: #{name} - opaque #{tytag}"
         :skip
 
       in {tag: "typedef", name:, type: {tag: "struct" | "union"}}
