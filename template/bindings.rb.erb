@@ -8,9 +8,11 @@ module SDL3
 
     def self.included(m)
       m.module_eval {
+<% if @manual_code -%>
         # Library-specific bindings and helpers
         #
 <%= reindent_lines(@manual_code, _erbout) %>
+<% end -%>
         # Ruby wrappers for <%= @lib_name %> macros
         #
 <%= reindent_lines(@macros_code, _erbout) %>
