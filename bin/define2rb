@@ -55,7 +55,7 @@ def row2rb(line)
     body.gsub!(/->/, '.')
     body.gsub!(/\s+/, ' ')
 
-    "def #{name}(#{params}) = #{body}"
+    "module_function def #{name}(#{params}) = #{body}"
 
   else
     nil

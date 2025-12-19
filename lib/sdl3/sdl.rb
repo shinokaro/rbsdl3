@@ -8,26 +8,22 @@ module SDL3
 
     def self.included(m)
       m.module_eval {
-        module_function
-
         # Library-specific bindings and helpers
         #
         # Cast helpers to emulate C-style integer casts used in SDL macros
         #
-        def cast(obj, template)
-          [String === obj ? obj.ord : Kernel.Integer(obj)].pack(template).unpack1(template)
-        end
+        module_function def cast(x, t) = [::String === x ? x.ord : ::Kernel.Integer(x)].pack(t).unpack1(t)
 
-        def Sint8(x)  = cast(x, "c")
-        def Sint16(x) = cast(x, "s")
-        def Sint32(x) = cast(x, "l")
-        def Sint64(x) = cast(x, "q")
-        def Uint8(x)  = cast(x, "C")
-        def Uint16(x) = cast(x, "S")
-        def Uint32(x) = cast(x, "L")
-        def Uint64(x) = cast(x, "Q")
-        def int(x)    = cast(x, "i")
-        def size_t(x) = cast(x, "J")
+        module_function def Sint8(x)  = cast(x, "c")
+        module_function def Sint16(x) = cast(x, "s")
+        module_function def Sint32(x) = cast(x, "l")
+        module_function def Sint64(x) = cast(x, "q")
+        module_function def Uint8(x)  = cast(x, "C")
+        module_function def Uint16(x) = cast(x, "S")
+        module_function def Uint32(x) = cast(x, "L")
+        module_function def Uint64(x) = cast(x, "Q")
+        module_function def int(x)    = cast(x, "i")
+        module_function def size_t(x) = cast(x, "J")
 
         # Treat enum values as int for macro-cast emulation (common ABI)
         #
@@ -68,10 +64,10 @@ module SDL3
 
         # SDL_atomic.h
         #
-        def SDL_MemoryBarrierRelease() = SDL_MemoryBarrierReleaseFunction()
-        def SDL_MemoryBarrierAcquire() = SDL_MemoryBarrierAcquireFunction()
-        def SDL_AtomicIncRef(a) = SDL_AddAtomicInt(a, 1)
-        def SDL_AtomicDecRef(a) = (SDL_AddAtomicInt(a, -1) == 1)
+        module_function def SDL_MemoryBarrierRelease() = SDL_MemoryBarrierReleaseFunction()
+        module_function def SDL_MemoryBarrierAcquire() = SDL_MemoryBarrierAcquireFunction()
+        module_function def SDL_AtomicIncRef(a) = SDL_AddAtomicInt(a, 1)
+        module_function def SDL_AtomicDecRef(a) = (SDL_AddAtomicInt(a, -1) == 1)
 
         # SDL_endian.h
         #
@@ -93,9 +89,9 @@ module SDL3
         # SDL_stdinc.h
         #
         const_set :SDL_SIZE_MAX, (size_t(-1))
-        def SDL_FOURCC(a, b, c, d) = (((Uint32(Uint8(a))) << 0) | ((Uint32(Uint8(b))) << 8) | ((Uint32(Uint8(c))) << 16) | ((Uint32(Uint8(d))) << 24))
-        def SDL_SINT64_C(c) = c
-        def SDL_UINT64_C(c) = c
+        module_function def SDL_FOURCC(a, b, c, d) = (((Uint32(Uint8(a))) << 0) | ((Uint32(Uint8(b))) << 8) | ((Uint32(Uint8(c))) << 16) | ((Uint32(Uint8(d))) << 24))
+        module_function def SDL_SINT64_C(c) = c
+        module_function def SDL_UINT64_C(c) = c
         const_set :SDL_MAX_SINT8, (Sint8(0x7F))
         const_set :SDL_MIN_SINT8, (Sint8(~0x7F))
         const_set :SDL_MAX_UINT8, (Uint8(0xFF))
@@ -122,14 +118,14 @@ module SDL3
         const_set :SDL_ICONV_E2BIG, size_t(-2)
         const_set :SDL_ICONV_EILSEQ, size_t(-3)
         const_set :SDL_ICONV_EINVAL, size_t(-4)
-        def SDL_FunctionPointer(x) = x
+        module_function def SDL_FunctionPointer(x) = x
 
         # SDL_thread.h
         #
         const_set :SDL_BeginThreadFunction, Fiddle::NULL
         const_set :SDL_EndThreadFunction, Fiddle::NULL
-        def SDL_CreateThread(fn, name, data) = SDL_CreateThreadRuntime((fn), (name), (data), SDL_FunctionPointer(SDL_BeginThreadFunction), SDL_FunctionPointer(SDL_EndThreadFunction))
-        def SDL_CreateThreadWithProperties(props) = SDL_CreateThreadWithPropertiesRuntime((props), SDL_FunctionPointer(SDL_BeginThreadFunction), SDL_FunctionPointer(SDL_EndThreadFunction))
+        module_function def SDL_CreateThread(fn, name, data) = SDL_CreateThreadRuntime((fn), (name), (data), SDL_FunctionPointer(SDL_BeginThreadFunction), SDL_FunctionPointer(SDL_EndThreadFunction))
+        module_function def SDL_CreateThreadWithProperties(props) = SDL_CreateThreadWithPropertiesRuntime((props), SDL_FunctionPointer(SDL_BeginThreadFunction), SDL_FunctionPointer(SDL_EndThreadFunction))
         const_set :SDL_PROP_THREAD_CREATE_ENTRY_FUNCTION_POINTER, "SDL.thread.create.entry_function"
         const_set :SDL_PROP_THREAD_CREATE_NAME_STRING, "SDL.thread.create.name"
         const_set :SDL_PROP_THREAD_CREATE_USERDATA_POINTER, "SDL.thread.create.userdata"
@@ -141,18 +137,18 @@ module SDL3
         const_set :SDL_AUDIO_MASK_FLOAT, (1<<8)
         const_set :SDL_AUDIO_MASK_BIG_ENDIAN, (1<<12)
         const_set :SDL_AUDIO_MASK_SIGNED, (1<<15)
-        def SDL_DEFINE_AUDIO_FORMAT(signed, bigendian, flt, size) = ((Uint16(signed) << 15) | (Uint16(bigendian) << 12) | (Uint16(flt) << 8) | ((size) & SDL_AUDIO_MASK_BITSIZE))
-        def SDL_AUDIO_BITSIZE(x) = ((x) & SDL_AUDIO_MASK_BITSIZE)
-        def SDL_AUDIO_BYTESIZE(x) = (SDL_AUDIO_BITSIZE(x) / 8)
-        def SDL_AUDIO_ISFLOAT(x) = ((x) & SDL_AUDIO_MASK_FLOAT)
-        def SDL_AUDIO_ISBIGENDIAN(x) = ((x) & SDL_AUDIO_MASK_BIG_ENDIAN)
-        def SDL_AUDIO_ISLITTLEENDIAN(x) = (!SDL_AUDIO_ISBIGENDIAN(x))
-        def SDL_AUDIO_ISSIGNED(x) = ((x) & SDL_AUDIO_MASK_SIGNED)
-        def SDL_AUDIO_ISINT(x) = (!SDL_AUDIO_ISFLOAT(x))
-        def SDL_AUDIO_ISUNSIGNED(x) = (!SDL_AUDIO_ISSIGNED(x))
+        module_function def SDL_DEFINE_AUDIO_FORMAT(signed, bigendian, flt, size) = ((Uint16(signed) << 15) | (Uint16(bigendian) << 12) | (Uint16(flt) << 8) | ((size) & SDL_AUDIO_MASK_BITSIZE))
+        module_function def SDL_AUDIO_BITSIZE(x) = ((x) & SDL_AUDIO_MASK_BITSIZE)
+        module_function def SDL_AUDIO_BYTESIZE(x) = (SDL_AUDIO_BITSIZE(x) / 8)
+        module_function def SDL_AUDIO_ISFLOAT(x) = ((x) & SDL_AUDIO_MASK_FLOAT)
+        module_function def SDL_AUDIO_ISBIGENDIAN(x) = ((x) & SDL_AUDIO_MASK_BIG_ENDIAN)
+        module_function def SDL_AUDIO_ISLITTLEENDIAN(x) = (!SDL_AUDIO_ISBIGENDIAN(x))
+        module_function def SDL_AUDIO_ISSIGNED(x) = ((x) & SDL_AUDIO_MASK_SIGNED)
+        module_function def SDL_AUDIO_ISINT(x) = (!SDL_AUDIO_ISFLOAT(x))
+        module_function def SDL_AUDIO_ISUNSIGNED(x) = (!SDL_AUDIO_ISSIGNED(x))
         const_set :SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, (SDL_AudioDeviceID(0xFFFFFFFF))
         const_set :SDL_AUDIO_DEVICE_DEFAULT_RECORDING, (SDL_AudioDeviceID(0xFFFFFFFE))
-        def SDL_AUDIO_FRAMESIZE(x) = (SDL_AUDIO_BYTESIZE((x).format) * (x).channels)
+        module_function def SDL_AUDIO_FRAMESIZE(x) = (SDL_AUDIO_BYTESIZE((x).format) * (x).channels)
         const_set :SDL_BLENDMODE_NONE, 0x00000000
         const_set :SDL_BLENDMODE_BLEND, 0x00000001
         const_set :SDL_BLENDMODE_BLEND_PREMULTIPLIED, 0x00000010
@@ -170,8 +166,8 @@ module SDL3
         const_set :SDL_PROP_FILE_DIALOG_TITLE_STRING, "SDL.filedialog.title"
         const_set :SDL_PROP_FILE_DIALOG_ACCEPT_STRING, "SDL.filedialog.accept"
         const_set :SDL_PROP_FILE_DIALOG_CANCEL_STRING, "SDL.filedialog.cancel"
-        def SDL_Unsupported() = SDL_SetError("That operation is not supported")
-        def SDL_InvalidParamError(param) = SDL_SetError("Parameter '%s' is invalid", (param))
+        module_function def SDL_Unsupported() = SDL_SetError("That operation is not supported")
+        module_function def SDL_InvalidParamError(param) = SDL_SetError("Parameter '%s' is invalid", (param))
         const_set :SDL_GLOB_CASEINSENSITIVE, (1 << 0)
         const_set :SDL_GPU_TEXTUREUSAGE_SAMPLER, (1 << 0)
         const_set :SDL_GPU_TEXTUREUSAGE_COLOR_TARGET, (1 << 1)
@@ -532,7 +528,7 @@ module SDL3
         const_set :SDL_PROP_TEXTINPUT_AUTOCORRECT_BOOLEAN, "SDL.textinput.autocorrect"
         const_set :SDL_PROP_TEXTINPUT_MULTILINE_BOOLEAN, "SDL.textinput.multiline"
         const_set :SDL_PROP_TEXTINPUT_ANDROID_INPUTTYPE_NUMBER, "SDL.textinput.android.inputtype"
-        def SDL_SCANCODE_TO_KEYCODE(x) = (x | SDLK_SCANCODE_MASK)
+        module_function def SDL_SCANCODE_TO_KEYCODE(x) = (x | SDLK_SCANCODE_MASK)
         const_set :SDL_KMOD_NONE, 0x0000
         const_set :SDL_KMOD_LSHIFT, 0x0001
         const_set :SDL_KMOD_RSHIFT, 0x0002
@@ -563,7 +559,7 @@ module SDL3
         const_set :SDL_BUTTON_RIGHT, 3
         const_set :SDL_BUTTON_X1, 4
         const_set :SDL_BUTTON_X2, 5
-        def SDL_BUTTON_MASK(x) = (1 << ((x)-1))
+        module_function def SDL_BUTTON_MASK(x) = (1 << ((x)-1))
         const_set :SDL_BUTTON_LMASK, SDL_BUTTON_MASK(SDL_BUTTON_LEFT)
         const_set :SDL_BUTTON_MMASK, SDL_BUTTON_MASK(SDL_BUTTON_MIDDLE)
         const_set :SDL_BUTTON_RMASK, SDL_BUTTON_MASK(SDL_BUTTON_RIGHT)
@@ -582,33 +578,33 @@ module SDL3
         const_set :SDL_ALPHA_OPAQUE_FLOAT, 1.0
         const_set :SDL_ALPHA_TRANSPARENT, 0
         const_set :SDL_ALPHA_TRANSPARENT_FLOAT, 0.0
-        def SDL_DEFINE_PIXELFOURCC(a, b, c, d) = SDL_FOURCC(a, b, c, d)
-        def SDL_DEFINE_PIXELFORMAT(type, order, layout, bits, bytes) = ((1 << 28) | ((type) << 24) | ((order) << 20) | ((layout) << 16) | ((bits) << 8) | ((bytes) << 0))
-        def SDL_PIXELFLAG(format) = (((format) >> 28) & 0x0F)
-        def SDL_PIXELTYPE(format) = (((format) >> 24) & 0x0F)
-        def SDL_PIXELORDER(format) = (((format) >> 20) & 0x0F)
-        def SDL_PIXELLAYOUT(format) = (((format) >> 16) & 0x0F)
-        def SDL_BITSPERPIXEL(format) = (SDL_ISPIXELFORMAT_FOURCC(format) ? 0 : (((format) >> 8) & 0xFF))
-        def SDL_BYTESPERPIXEL(format) = (SDL_ISPIXELFORMAT_FOURCC(format) ? ((((format) == SDL_PIXELFORMAT_YUY2) || ((format) == SDL_PIXELFORMAT_UYVY) || ((format) == SDL_PIXELFORMAT_YVYU) || ((format) == SDL_PIXELFORMAT_P010)) ? 2 : 1) : (((format) >> 0) & 0xFF))
-        def SDL_ISPIXELFORMAT_INDEXED(format) = (!SDL_ISPIXELFORMAT_FOURCC(format) && ((SDL_PIXELTYPE(format) == SDL_PIXELTYPE_INDEX1) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_INDEX2) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_INDEX4) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_INDEX8)))
-        def SDL_ISPIXELFORMAT_PACKED(format) = (!SDL_ISPIXELFORMAT_FOURCC(format) && ((SDL_PIXELTYPE(format) == SDL_PIXELTYPE_PACKED8) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_PACKED16) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_PACKED32)))
-        def SDL_ISPIXELFORMAT_ARRAY(format) = (!SDL_ISPIXELFORMAT_FOURCC(format) && ((SDL_PIXELTYPE(format) == SDL_PIXELTYPE_ARRAYU8) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_ARRAYU16) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_ARRAYU32) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_ARRAYF16) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_ARRAYF32)))
-        def SDL_ISPIXELFORMAT_10BIT(format) = (!SDL_ISPIXELFORMAT_FOURCC(format) && ((SDL_PIXELTYPE(format) == SDL_PIXELTYPE_PACKED32) && (SDL_PIXELLAYOUT(format) == SDL_PACKEDLAYOUT_2101010)))
-        def SDL_ISPIXELFORMAT_FLOAT(format) = (!SDL_ISPIXELFORMAT_FOURCC(format) && ((SDL_PIXELTYPE(format) == SDL_PIXELTYPE_ARRAYF16) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_ARRAYF32)))
-        def SDL_ISPIXELFORMAT_ALPHA(format) = ((SDL_ISPIXELFORMAT_PACKED(format) && ((SDL_PIXELORDER(format) == SDL_PACKEDORDER_ARGB) || (SDL_PIXELORDER(format) == SDL_PACKEDORDER_RGBA) || (SDL_PIXELORDER(format) == SDL_PACKEDORDER_ABGR) || (SDL_PIXELORDER(format) == SDL_PACKEDORDER_BGRA))) || (SDL_ISPIXELFORMAT_ARRAY(format) && ((SDL_PIXELORDER(format) == SDL_ARRAYORDER_ARGB) || (SDL_PIXELORDER(format) == SDL_ARRAYORDER_RGBA) || (SDL_PIXELORDER(format) == SDL_ARRAYORDER_ABGR) || (SDL_PIXELORDER(format) == SDL_ARRAYORDER_BGRA))))
-        def SDL_ISPIXELFORMAT_FOURCC(format) = ((format) && (SDL_PIXELFLAG(format) != 1))
-        def SDL_DEFINE_COLORSPACE(type, range, primaries, transfer, matrix, chroma) = ((Uint32(type) << 28) | (Uint32(range) << 24) | (Uint32(chroma) << 20) | (Uint32(primaries) << 10) | (Uint32(transfer) << 5) | (Uint32(matrix) << 0))
-        def SDL_COLORSPACETYPE(cspace) = SDL_ColorType(((cspace) >> 28) & 0x0F)
-        def SDL_COLORSPACERANGE(cspace) = SDL_ColorRange(((cspace) >> 24) & 0x0F)
-        def SDL_COLORSPACECHROMA(cspace) = SDL_ChromaLocation(((cspace) >> 20) & 0x0F)
-        def SDL_COLORSPACEPRIMARIES(cspace) = SDL_ColorPrimaries(((cspace) >> 10) & 0x1F)
-        def SDL_COLORSPACETRANSFER(cspace) = SDL_TransferCharacteristics(((cspace) >> 5) & 0x1F)
-        def SDL_COLORSPACEMATRIX(cspace) = SDL_MatrixCoefficients((cspace) & 0x1F)
-        def SDL_ISCOLORSPACE_MATRIX_BT601(cspace) = (SDL_COLORSPACEMATRIX(cspace) == SDL_MATRIX_COEFFICIENTS_BT601 || SDL_COLORSPACEMATRIX(cspace) == SDL_MATRIX_COEFFICIENTS_BT470BG)
-        def SDL_ISCOLORSPACE_MATRIX_BT709(cspace) = (SDL_COLORSPACEMATRIX(cspace) == SDL_MATRIX_COEFFICIENTS_BT709)
-        def SDL_ISCOLORSPACE_MATRIX_BT2020_NCL(cspace) = (SDL_COLORSPACEMATRIX(cspace) == SDL_MATRIX_COEFFICIENTS_BT2020_NCL)
-        def SDL_ISCOLORSPACE_LIMITED_RANGE(cspace) = (SDL_COLORSPACERANGE(cspace) != SDL_COLOR_RANGE_FULL)
-        def SDL_ISCOLORSPACE_FULL_RANGE(cspace) = (SDL_COLORSPACERANGE(cspace) == SDL_COLOR_RANGE_FULL)
+        module_function def SDL_DEFINE_PIXELFOURCC(a, b, c, d) = SDL_FOURCC(a, b, c, d)
+        module_function def SDL_DEFINE_PIXELFORMAT(type, order, layout, bits, bytes) = ((1 << 28) | ((type) << 24) | ((order) << 20) | ((layout) << 16) | ((bits) << 8) | ((bytes) << 0))
+        module_function def SDL_PIXELFLAG(format) = (((format) >> 28) & 0x0F)
+        module_function def SDL_PIXELTYPE(format) = (((format) >> 24) & 0x0F)
+        module_function def SDL_PIXELORDER(format) = (((format) >> 20) & 0x0F)
+        module_function def SDL_PIXELLAYOUT(format) = (((format) >> 16) & 0x0F)
+        module_function def SDL_BITSPERPIXEL(format) = (SDL_ISPIXELFORMAT_FOURCC(format) ? 0 : (((format) >> 8) & 0xFF))
+        module_function def SDL_BYTESPERPIXEL(format) = (SDL_ISPIXELFORMAT_FOURCC(format) ? ((((format) == SDL_PIXELFORMAT_YUY2) || ((format) == SDL_PIXELFORMAT_UYVY) || ((format) == SDL_PIXELFORMAT_YVYU) || ((format) == SDL_PIXELFORMAT_P010)) ? 2 : 1) : (((format) >> 0) & 0xFF))
+        module_function def SDL_ISPIXELFORMAT_INDEXED(format) = (!SDL_ISPIXELFORMAT_FOURCC(format) && ((SDL_PIXELTYPE(format) == SDL_PIXELTYPE_INDEX1) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_INDEX2) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_INDEX4) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_INDEX8)))
+        module_function def SDL_ISPIXELFORMAT_PACKED(format) = (!SDL_ISPIXELFORMAT_FOURCC(format) && ((SDL_PIXELTYPE(format) == SDL_PIXELTYPE_PACKED8) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_PACKED16) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_PACKED32)))
+        module_function def SDL_ISPIXELFORMAT_ARRAY(format) = (!SDL_ISPIXELFORMAT_FOURCC(format) && ((SDL_PIXELTYPE(format) == SDL_PIXELTYPE_ARRAYU8) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_ARRAYU16) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_ARRAYU32) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_ARRAYF16) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_ARRAYF32)))
+        module_function def SDL_ISPIXELFORMAT_10BIT(format) = (!SDL_ISPIXELFORMAT_FOURCC(format) && ((SDL_PIXELTYPE(format) == SDL_PIXELTYPE_PACKED32) && (SDL_PIXELLAYOUT(format) == SDL_PACKEDLAYOUT_2101010)))
+        module_function def SDL_ISPIXELFORMAT_FLOAT(format) = (!SDL_ISPIXELFORMAT_FOURCC(format) && ((SDL_PIXELTYPE(format) == SDL_PIXELTYPE_ARRAYF16) || (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_ARRAYF32)))
+        module_function def SDL_ISPIXELFORMAT_ALPHA(format) = ((SDL_ISPIXELFORMAT_PACKED(format) && ((SDL_PIXELORDER(format) == SDL_PACKEDORDER_ARGB) || (SDL_PIXELORDER(format) == SDL_PACKEDORDER_RGBA) || (SDL_PIXELORDER(format) == SDL_PACKEDORDER_ABGR) || (SDL_PIXELORDER(format) == SDL_PACKEDORDER_BGRA))) || (SDL_ISPIXELFORMAT_ARRAY(format) && ((SDL_PIXELORDER(format) == SDL_ARRAYORDER_ARGB) || (SDL_PIXELORDER(format) == SDL_ARRAYORDER_RGBA) || (SDL_PIXELORDER(format) == SDL_ARRAYORDER_ABGR) || (SDL_PIXELORDER(format) == SDL_ARRAYORDER_BGRA))))
+        module_function def SDL_ISPIXELFORMAT_FOURCC(format) = ((format) && (SDL_PIXELFLAG(format) != 1))
+        module_function def SDL_DEFINE_COLORSPACE(type, range, primaries, transfer, matrix, chroma) = ((Uint32(type) << 28) | (Uint32(range) << 24) | (Uint32(chroma) << 20) | (Uint32(primaries) << 10) | (Uint32(transfer) << 5) | (Uint32(matrix) << 0))
+        module_function def SDL_COLORSPACETYPE(cspace) = SDL_ColorType(((cspace) >> 28) & 0x0F)
+        module_function def SDL_COLORSPACERANGE(cspace) = SDL_ColorRange(((cspace) >> 24) & 0x0F)
+        module_function def SDL_COLORSPACECHROMA(cspace) = SDL_ChromaLocation(((cspace) >> 20) & 0x0F)
+        module_function def SDL_COLORSPACEPRIMARIES(cspace) = SDL_ColorPrimaries(((cspace) >> 10) & 0x1F)
+        module_function def SDL_COLORSPACETRANSFER(cspace) = SDL_TransferCharacteristics(((cspace) >> 5) & 0x1F)
+        module_function def SDL_COLORSPACEMATRIX(cspace) = SDL_MatrixCoefficients((cspace) & 0x1F)
+        module_function def SDL_ISCOLORSPACE_MATRIX_BT601(cspace) = (SDL_COLORSPACEMATRIX(cspace) == SDL_MATRIX_COEFFICIENTS_BT601 || SDL_COLORSPACEMATRIX(cspace) == SDL_MATRIX_COEFFICIENTS_BT470BG)
+        module_function def SDL_ISCOLORSPACE_MATRIX_BT709(cspace) = (SDL_COLORSPACEMATRIX(cspace) == SDL_MATRIX_COEFFICIENTS_BT709)
+        module_function def SDL_ISCOLORSPACE_MATRIX_BT2020_NCL(cspace) = (SDL_COLORSPACEMATRIX(cspace) == SDL_MATRIX_COEFFICIENTS_BT2020_NCL)
+        module_function def SDL_ISCOLORSPACE_LIMITED_RANGE(cspace) = (SDL_COLORSPACERANGE(cspace) != SDL_COLOR_RANGE_FULL)
+        module_function def SDL_ISCOLORSPACE_FULL_RANGE(cspace) = (SDL_COLORSPACERANGE(cspace) == SDL_COLOR_RANGE_FULL)
         const_set :SDL_PROP_PROCESS_CREATE_ARGS_POINTER, "SDL.process.create.args"
         const_set :SDL_PROP_PROCESS_CREATE_ENVIRONMENT_POINTER, "SDL.process.create.environment"
         const_set :SDL_PROP_PROCESS_CREATE_STDIN_NUMBER, "SDL.process.create.stdin_option"
@@ -717,7 +713,7 @@ module SDL3
         const_set :SDL_SURFACE_LOCK_NEEDED, 0x00000002
         const_set :SDL_SURFACE_LOCKED, 0x00000004
         const_set :SDL_SURFACE_SIMD_ALIGNED, 0x00000008
-        def SDL_MUSTLOCK(s) = (((s).flags & SDL_SURFACE_LOCK_NEEDED) == SDL_SURFACE_LOCK_NEEDED)
+        module_function def SDL_MUSTLOCK(s) = (((s).flags & SDL_SURFACE_LOCK_NEEDED) == SDL_SURFACE_LOCK_NEEDED)
         const_set :SDL_PROP_SURFACE_SDR_WHITE_POINT_FLOAT, "SDL.surface.SDR_white_point"
         const_set :SDL_PROP_SURFACE_HDR_HEADROOM_FLOAT, "SDL.surface.HDR_headroom"
         const_set :SDL_PROP_SURFACE_TONEMAP_OPERATOR_STRING, "SDL.surface.tonemap"
@@ -730,12 +726,12 @@ module SDL3
         const_set :SDL_NS_PER_SECOND, 1000000000
         const_set :SDL_NS_PER_MS, 1000000
         const_set :SDL_NS_PER_US, 1000
-        def SDL_SECONDS_TO_NS(s) = ((Uint64(s)) * SDL_NS_PER_SECOND)
-        def SDL_NS_TO_SECONDS(ns) = ((ns) / SDL_NS_PER_SECOND)
-        def SDL_MS_TO_NS(ms) = ((Uint64(ms)) * SDL_NS_PER_MS)
-        def SDL_NS_TO_MS(ns) = ((ns) / SDL_NS_PER_MS)
-        def SDL_US_TO_NS(us) = ((Uint64(us)) * SDL_NS_PER_US)
-        def SDL_NS_TO_US(ns) = ((ns) / SDL_NS_PER_US)
+        module_function def SDL_SECONDS_TO_NS(s) = ((Uint64(s)) * SDL_NS_PER_SECOND)
+        module_function def SDL_NS_TO_SECONDS(ns) = ((ns) / SDL_NS_PER_SECOND)
+        module_function def SDL_MS_TO_NS(ms) = ((Uint64(ms)) * SDL_NS_PER_MS)
+        module_function def SDL_NS_TO_MS(ns) = ((ns) / SDL_NS_PER_MS)
+        module_function def SDL_US_TO_NS(us) = ((Uint64(us)) * SDL_NS_PER_US)
+        module_function def SDL_NS_TO_US(ns) = ((ns) / SDL_NS_PER_US)
         const_set :SDL_TOUCH_MOUSEID, (SDL_MouseID(-1))
         const_set :SDL_MOUSE_TOUCHID, (SDL_TouchID(-1))
         const_set :SDL_TRAYENTRY_BUTTON, 0x00000001
@@ -746,12 +742,12 @@ module SDL3
         const_set :SDL_MAJOR_VERSION, 3
         const_set :SDL_MINOR_VERSION, 2
         const_set :SDL_MICRO_VERSION, 28
-        def SDL_VERSIONNUM(major, minor, patch) = ((major) * 1000000 + (minor) * 1000 + (patch))
-        def SDL_VERSIONNUM_MAJOR(version) = ((version) / 1000000)
-        def SDL_VERSIONNUM_MINOR(version) = (((version) / 1000) % 1000)
-        def SDL_VERSIONNUM_MICRO(version) = ((version) % 1000)
+        module_function def SDL_VERSIONNUM(major, minor, patch) = ((major) * 1000000 + (minor) * 1000 + (patch))
+        module_function def SDL_VERSIONNUM_MAJOR(version) = ((version) / 1000000)
+        module_function def SDL_VERSIONNUM_MINOR(version) = (((version) / 1000) % 1000)
+        module_function def SDL_VERSIONNUM_MICRO(version) = ((version) % 1000)
         const_set :SDL_VERSION, SDL_VERSIONNUM(SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_MICRO_VERSION)
-        def SDL_VERSION_ATLEAST(x, y, z) = (SDL_VERSION >= SDL_VERSIONNUM(x, y, z))
+        module_function def SDL_VERSION_ATLEAST(x, y, z) = (SDL_VERSION >= SDL_VERSIONNUM(x, y, z))
         const_set :SDL_PROP_GLOBAL_VIDEO_WAYLAND_WL_DISPLAY_POINTER, "SDL.video.wayland.wl_display"
         const_set :SDL_WINDOW_FULLSCREEN, SDL_UINT64_C(0x0000000000000001)
         const_set :SDL_WINDOW_OPENGL, SDL_UINT64_C(0x0000000000000002)
@@ -779,13 +775,13 @@ module SDL3
         const_set :SDL_WINDOW_TRANSPARENT, SDL_UINT64_C(0x0000000040000000)
         const_set :SDL_WINDOW_NOT_FOCUSABLE, SDL_UINT64_C(0x0000000080000000)
         const_set :SDL_WINDOWPOS_UNDEFINED_MASK, 0x1FFF0000
-        def SDL_WINDOWPOS_UNDEFINED_DISPLAY(x) = (SDL_WINDOWPOS_UNDEFINED_MASK|(x))
+        module_function def SDL_WINDOWPOS_UNDEFINED_DISPLAY(x) = (SDL_WINDOWPOS_UNDEFINED_MASK|(x))
         const_set :SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED_DISPLAY(0)
-        def SDL_WINDOWPOS_ISUNDEFINED(x) = (((x)&0xFFFF0000) == SDL_WINDOWPOS_UNDEFINED_MASK)
+        module_function def SDL_WINDOWPOS_ISUNDEFINED(x) = (((x)&0xFFFF0000) == SDL_WINDOWPOS_UNDEFINED_MASK)
         const_set :SDL_WINDOWPOS_CENTERED_MASK, 0x2FFF0000
-        def SDL_WINDOWPOS_CENTERED_DISPLAY(x) = (SDL_WINDOWPOS_CENTERED_MASK|(x))
+        module_function def SDL_WINDOWPOS_CENTERED_DISPLAY(x) = (SDL_WINDOWPOS_CENTERED_MASK|(x))
         const_set :SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED_DISPLAY(0)
-        def SDL_WINDOWPOS_ISCENTERED(x) = (((x)&0xFFFF0000) == SDL_WINDOWPOS_CENTERED_MASK)
+        module_function def SDL_WINDOWPOS_ISCENTERED(x) = (((x)&0xFFFF0000) == SDL_WINDOWPOS_CENTERED_MASK)
         const_set :SDL_GL_CONTEXT_PROFILE_CORE, 0x0001
         const_set :SDL_GL_CONTEXT_PROFILE_COMPATIBILITY, 0x0002
         const_set :SDL_GL_CONTEXT_PROFILE_ES, 0x0004

@@ -8,8 +8,6 @@ module SDL3
 
     def self.included(m)
       m.module_eval {
-        module_function
-
         # Library-specific bindings and helpers
         #
 <%= reindent_lines(@manual_code, _erbout) %>
