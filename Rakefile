@@ -21,6 +21,9 @@ SDL_SPECS = {
   sdl_image: {
     name_suffix: "_image", module_name: "Image"
   }.freeze,
+  sdl_ttf: {
+    name_suffix: "_ttf", module_name: "TTF", root_header_file: "SDL_textengine.h"
+  }.freeze,
 }.freeze
 
 class SDLSpec
@@ -41,7 +44,7 @@ class SDLSpec
   def ast_file = File.join(TEMP_DIR, "#{lib_name}.json")
   def include_dir = File.join(src_dir, "include")
   def headers_dir = File.join(include_dir, include_subdir)
-  def root_header_file = File.join(headers_dir, "#{lib_name}.h")
+  def root_header_file = File.join(headers_dir, spec[:root_header_file] || "#{lib_name}.h")
   def headers_manifest_file = File.join(MANIFEST_DIR, "#{lib_name}_headers")
 
   def module_filename = module_name.downcase

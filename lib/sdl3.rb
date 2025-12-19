@@ -5,7 +5,7 @@ require_relative "sdl3/version"
 module SDL3
   extend Fiddle::Importer
 
-  DLLOAD_TARGETS = %i[SDL Image].freeze
+  DLLOAD_TARGETS = %i[SDL Image TTF].freeze
   private_constant :DLLOAD_TARGETS
 
   def self.dlload(*libs)
