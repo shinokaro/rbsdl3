@@ -10,6 +10,10 @@ module SDL3
 
   def self.dlload(*libs)
     super
+
+    # Map C 'enum' to an int-compatible type (mirrors common ABI layouts)
+    typealias "enum", "int"
+
     DLLOAD_TARGETS.each do |m|
       const_get(m, false).included(self) if const_defined?(m, false)
     end

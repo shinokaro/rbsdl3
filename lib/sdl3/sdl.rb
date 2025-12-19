@@ -10,10 +10,6 @@ module SDL3
       m.module_eval {
         module_function
 
-        # Map C 'enum' to an int-compatible type (mirrors common ABI layouts)
-        #
-        typealias "enum", "int"
-
         # Library-specific bindings and helpers
         #
         # Cast helpers to emulate C-style integer casts used in SDL macros
