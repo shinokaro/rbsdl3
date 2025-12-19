@@ -1,54 +1,54 @@
 # Cast helpers to emulate C-style integer casts used in SDL macros
 #
-module_function def cast(x, t) = [::String === x ? x.ord : ::Kernel.Integer(x)].pack(t).unpack1(t)
+private_class_method module_function def cast(x, t) = [::String === x ? x.ord : ::Kernel.Integer(x)].pack(t).unpack1(t)
 
-module_function def Sint8(x)  = cast(x, "c")
-module_function def Sint16(x) = cast(x, "s")
-module_function def Sint32(x) = cast(x, "l")
-module_function def Sint64(x) = cast(x, "q")
-module_function def Uint8(x)  = cast(x, "C")
-module_function def Uint16(x) = cast(x, "S")
-module_function def Uint32(x) = cast(x, "L")
-module_function def Uint64(x) = cast(x, "Q")
-module_function def int(x)    = cast(x, "i")
-module_function def size_t(x) = cast(x, "J")
+private_class_method module_function def Sint8(x)  = cast(x, "c")
+private_class_method module_function def Sint16(x) = cast(x, "s")
+private_class_method module_function def Sint32(x) = cast(x, "l")
+private_class_method module_function def Sint64(x) = cast(x, "q")
+private_class_method module_function def Uint8(x)  = cast(x, "C")
+private_class_method module_function def Uint16(x) = cast(x, "S")
+private_class_method module_function def Uint32(x) = cast(x, "L")
+private_class_method module_function def Uint64(x) = cast(x, "Q")
+private_class_method module_function def int(x)    = cast(x, "i")
+private_class_method module_function def size_t(x) = cast(x, "J")
 
 # Treat enum values as int for macro-cast emulation (common ABI)
 #
 alias enum int
-module_function :enum
+private_class_method module_function :enum
 
 # Aliases for macro-cast emulation (typedefs and enum carriers)
 #
 # enum carriers
 alias SDL_ChromaLocation enum
-module_function :SDL_ChromaLocation
+private_class_method module_function :SDL_ChromaLocation
 
 alias SDL_ColorPrimaries enum
-module_function :SDL_ColorPrimaries
+private_class_method module_function :SDL_ColorPrimaries
 
 alias SDL_ColorRange enum
-module_function :SDL_ColorRange
+private_class_method module_function :SDL_ColorRange
 
 alias SDL_ColorType enum
-module_function :SDL_ColorType
+private_class_method module_function :SDL_ColorType
 
 alias SDL_MatrixCoefficients enum
-module_function :SDL_MatrixCoefficients
+private_class_method module_function :SDL_MatrixCoefficients
 
 alias SDL_TransferCharacteristics enum
-module_function :SDL_TransferCharacteristics
+private_class_method module_function :SDL_TransferCharacteristics
 
 # Uint32 typedeffs
 alias SDL_AudioDeviceID Uint32
-module_function :SDL_AudioDeviceID
+private_class_method module_function :SDL_AudioDeviceID
 
 alias SDL_MouseID Uint32
-module_function :SDL_MouseID
+private_class_method module_function :SDL_MouseID
 
 # Uint64 typedefs
 alias SDL_TouchID Uint64
-module_function :SDL_TouchID
+private_class_method module_function :SDL_TouchID
 
 # SDL_atomic.h
 #
