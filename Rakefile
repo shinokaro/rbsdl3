@@ -18,6 +18,9 @@ SDL_SPECS = {
   sdl: {
     name_suffix: "", module_name: "SDL"
   }.freeze,
+  sdl_image: {
+    name_suffix: "_image", module_name: "Image"
+  }.freeze,
 }.freeze
 
 class SDLSpec
