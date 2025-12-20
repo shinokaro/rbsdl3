@@ -26,12 +26,16 @@ class AST2Rb
 
       # Function entry
       #
-      in {tag: "function" => tag, name:, "storage-class": sc} if sc != "extern"
-        puts "skipping #{tag}: #{name} - no external linkage (#{sc})"
+      in {tag: "function" => tag, name: /\A[^A-Z].+/ => name}
+        puts "skipping #{tag}: #{name} - not an SDL API"
         :skip
 
-      in {tag: "function" => tag, name:, inline: true}
-        puts "skipping #{tag}: #{name} - inline function"
+      in {tag: "function" => tag, name:, "storage-class": "static", inline: true}
+        puts "skipping #{tag}: #{name} - no external linkage (static; inline)"
+        :skip
+
+      in {tag: "function" => tag, name:, "storage-class": "static"}
+        puts "skipping #{tag}: #{name} - no external linkage (static)"
         :skip
 
       in {tag: "function" => tag, name:, parameters: [*, {type: {tag: /va_list\z/}}, *]}
