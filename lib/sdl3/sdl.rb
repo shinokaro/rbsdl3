@@ -1000,9 +1000,13 @@ module SDL3
         extern "Uint32 SDL_StepBackUTF8(char *, char **)"
         extern "char * SDL_UCS4ToUTF8(Uint32, char *)"
         extern "int SDL_sscanf(char *, char *, ...)"
+        module_function def SDL_vsscanf(...) = raise(NotImplementedError, "cannot bind SDL function (va_list parameters): SDL_vsscanf()")
         extern "int SDL_snprintf(char *, size_t, char *, ...)"
         extern "int SDL_swprintf(wchar_t *, size_t, wchar_t *, ...)"
+        module_function def SDL_vsnprintf(...) = raise(NotImplementedError, "cannot bind SDL function (va_list parameters): SDL_vsnprintf()")
+        module_function def SDL_vswprintf(...) = raise(NotImplementedError, "cannot bind SDL function (va_list parameters): SDL_vswprintf()")
         extern "int SDL_asprintf(char **, char *, ...)"
+        module_function def SDL_vasprintf(...) = raise(NotImplementedError, "cannot bind SDL function (va_list parameters): SDL_vasprintf()")
         extern "void SDL_srand(Uint64)"
         extern "Sint32 SDL_rand(Sint32)"
         extern "float SDL_randf(void)"
@@ -1148,6 +1152,7 @@ module SDL3
         extern "void * SDL_SetAtomicPointer(void **, void *)"
         extern "void * SDL_GetAtomicPointer(void **)"
         extern "bool SDL_SetError(char *, ...)"
+        module_function def SDL_SetErrorV(...) = raise(NotImplementedError, "cannot bind SDL function (va_list parameters): SDL_SetErrorV()")
         extern "bool SDL_OutOfMemory(void)"
         extern "char * SDL_GetError(void)"
         extern "bool SDL_ClearError(void)"
@@ -1288,6 +1293,7 @@ module SDL3
         extern "size_t SDL_ReadIO(SDL_IOStream *, void *, size_t)"
         extern "size_t SDL_WriteIO(SDL_IOStream *, void *, size_t)"
         extern "size_t SDL_IOprintf(SDL_IOStream *, char *, ...)"
+        module_function def SDL_IOvprintf(...) = raise(NotImplementedError, "cannot bind SDL function (va_list parameters): SDL_IOvprintf()")
         extern "bool SDL_FlushIO(SDL_IOStream *)"
         extern "void * SDL_LoadFile_IO(SDL_IOStream *, size_t *, bool)"
         extern "void * SDL_LoadFile(char *, size_t *)"
@@ -2070,6 +2076,8 @@ module SDL3
             "Uint8 data[16]",
           ]
         )
+        module_function def SDL_GUIDToString(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): SDL_GUIDToString()")
+        module_function def SDL_StringToGUID(...) = raise(NotImplementedError, "cannot bind SDL function (by-value return type): SDL_StringToGUID()")
         const_set :SDL_POWERSTATE_ERROR, 4294967295
         const_set :SDL_POWERSTATE_UNKNOWN, 0
         const_set :SDL_POWERSTATE_ON_BATTERY, 1
@@ -2128,6 +2136,7 @@ module SDL3
         extern "char * SDL_GetJoystickNameForID(SDL_JoystickID)"
         extern "char * SDL_GetJoystickPathForID(SDL_JoystickID)"
         extern "int SDL_GetJoystickPlayerIndexForID(SDL_JoystickID)"
+        module_function def SDL_GetJoystickGUIDForID(...) = raise(NotImplementedError, "cannot bind SDL function (by-value return type): SDL_GetJoystickGUIDForID()")
         extern "Uint16 SDL_GetJoystickVendorForID(SDL_JoystickID)"
         extern "Uint16 SDL_GetJoystickProductForID(SDL_JoystickID)"
         extern "Uint16 SDL_GetJoystickProductVersionForID(SDL_JoystickID)"
@@ -2191,12 +2200,14 @@ module SDL3
         extern "char * SDL_GetJoystickPath(SDL_Joystick *)"
         extern "int SDL_GetJoystickPlayerIndex(SDL_Joystick *)"
         extern "bool SDL_SetJoystickPlayerIndex(SDL_Joystick *, int)"
+        module_function def SDL_GetJoystickGUID(...) = raise(NotImplementedError, "cannot bind SDL function (by-value return type): SDL_GetJoystickGUID()")
         extern "Uint16 SDL_GetJoystickVendor(SDL_Joystick *)"
         extern "Uint16 SDL_GetJoystickProduct(SDL_Joystick *)"
         extern "Uint16 SDL_GetJoystickProductVersion(SDL_Joystick *)"
         extern "Uint16 SDL_GetJoystickFirmwareVersion(SDL_Joystick *)"
         extern "char * SDL_GetJoystickSerial(SDL_Joystick *)"
         extern "SDL_JoystickType SDL_GetJoystickType(SDL_Joystick *)"
+        module_function def SDL_GetJoystickGUIDInfo(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): SDL_GetJoystickGUIDInfo()")
         extern "bool SDL_JoystickConnected(SDL_Joystick *)"
         extern "SDL_JoystickID SDL_GetJoystickID(SDL_Joystick *)"
         extern "int SDL_GetNumJoystickAxes(SDL_Joystick *)"
@@ -2335,6 +2346,7 @@ module SDL3
         extern "int SDL_AddGamepadMappingsFromFile(char *)"
         extern "bool SDL_ReloadGamepadMappings(void)"
         extern "char ** SDL_GetGamepadMappings(int *)"
+        module_function def SDL_GetGamepadMappingForGUID(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): SDL_GetGamepadMappingForGUID()")
         extern "char * SDL_GetGamepadMapping(SDL_Gamepad *)"
         extern "bool SDL_SetGamepadMapping(SDL_JoystickID, char *)"
         extern "bool SDL_HasGamepad(void)"
@@ -2343,6 +2355,7 @@ module SDL3
         extern "char * SDL_GetGamepadNameForID(SDL_JoystickID)"
         extern "char * SDL_GetGamepadPathForID(SDL_JoystickID)"
         extern "int SDL_GetGamepadPlayerIndexForID(SDL_JoystickID)"
+        module_function def SDL_GetGamepadGUIDForID(...) = raise(NotImplementedError, "cannot bind SDL function (by-value return type): SDL_GetGamepadGUIDForID()")
         extern "Uint16 SDL_GetGamepadVendorForID(SDL_JoystickID)"
         extern "Uint16 SDL_GetGamepadProductForID(SDL_JoystickID)"
         extern "Uint16 SDL_GetGamepadProductVersionForID(SDL_JoystickID)"
@@ -4087,6 +4100,7 @@ module SDL3
         extern "void SDL_BindGPUGraphicsPipeline(SDL_GPURenderPass *, SDL_GPUGraphicsPipeline *)"
         extern "void SDL_SetGPUViewport(SDL_GPURenderPass *, SDL_GPUViewport *)"
         extern "void SDL_SetGPUScissor(SDL_GPURenderPass *, SDL_Rect *)"
+        module_function def SDL_SetGPUBlendConstants(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): SDL_SetGPUBlendConstants()")
         extern "void SDL_SetGPUStencilReference(SDL_GPURenderPass *, Uint8)"
         extern "void SDL_BindGPUVertexBuffers(SDL_GPURenderPass *, Uint32, SDL_GPUBufferBinding *, Uint32)"
         extern "void SDL_BindGPUIndexBuffer(SDL_GPURenderPass *, SDL_GPUBufferBinding *, SDL_GPUIndexElementSize)"
@@ -4423,6 +4437,7 @@ module SDL3
         extern "void SDL_LogError(int, char *, ...)"
         extern "void SDL_LogCritical(int, char *, ...)"
         extern "void SDL_LogMessage(int, SDL_LogPriority, char *, ...)"
+        module_function def SDL_LogMessageV(...) = raise(NotImplementedError, "cannot bind SDL function (va_list parameters): SDL_LogMessageV()")
         typealias "SDL_LogOutputFunction", "function (*pointer)()"
         const_set :SDL_LogOutputFunction, "void SDL_LogOutputFunction(void *, int, SDL_LogPriority, char *)"
         extern "SDL_LogOutputFunction SDL_GetDefaultLogOutputFunction(void)"

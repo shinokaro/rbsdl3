@@ -40,18 +40,6 @@ class AST2Rb
         msg = "skipping #{tag}: #{name} - no external linkage (static)"
         :skip
 
-      in {tag: "function" => tag, name:, parameters: [*, {type: {tag: /va_list\z/}}, *]}
-        msg = "skipping #{tag}: #{name} - va_list parameter"
-        :skip
-
-      in {tag: "function" => tag, name:, "return-type": {tag: tytag}} if struct_type?(tytag)
-        msg = "skipping #{tag}: #{name} - by-value return (#{tytag})"
-        :skip
-
-      in {tag: "function" => tag, name:, parameters: ps} if !(m = ps.map{ _1[:type][:tag] }.select{struct_type?(_1) }).empty?
-        msg = "skipping #{tag}: #{name} - by-value parameters (#{m.join(", ")})"
-        :skip
-
       in {tag: "function"}
         :function
 
@@ -156,6 +144,21 @@ class AST2Rb
 
     def emit_function(node)
       case node
+      in {tag: "function", name:, parameters: [*, {type: {tag: /va_list\z/}}, *]}
+        q.breakable
+        q.text "module_function def #{name}(...) = "
+        q.text "raise(NotImplementedError, \"cannot bind SDL function (va_list parameters): #{name}()\")"
+
+      in {tag: "function", name:, "return-type": {tag: tytag}} if @classifier.struct_type?(tytag)
+        q.breakable
+        q.text "module_function def #{name}(...) = "
+        q.text "raise(NotImplementedError, \"cannot bind SDL function (by-value return type): #{name}()\")"
+
+      in {tag: "function", name:, parameters: ps} if ps.any? { @classifier.struct_type?(_1[:type][:tag]) }
+        q.breakable
+        q.text "module_function def #{name}(...) = "
+        q.text "raise(NotImplementedError, \"cannot bind SDL function (by-value parameters): #{name}()\")"
+
       in {tag: "function", name:, variadic:, parameters: [], "return-type": _}
         rtype_repr, _ = field_signature(node)
 
