@@ -99,18 +99,6 @@ module SDL3
         extern "bool TTF_GetStringSize(TTF_Font *, char *, size_t, int *, int *)"
         extern "bool TTF_GetStringSizeWrapped(TTF_Font *, char *, size_t, int, int *, int *)"
         extern "bool TTF_MeasureString(TTF_Font *, char *, size_t, int, int *, size_t *)"
-        extern "SDL_Surface * TTF_RenderText_Solid(TTF_Font *, char *, size_t, SDL_Color)"
-        extern "SDL_Surface * TTF_RenderText_Solid_Wrapped(TTF_Font *, char *, size_t, SDL_Color, int)"
-        extern "SDL_Surface * TTF_RenderGlyph_Solid(TTF_Font *, Uint32, SDL_Color)"
-        extern "SDL_Surface * TTF_RenderText_Shaded(TTF_Font *, char *, size_t, SDL_Color, SDL_Color)"
-        extern "SDL_Surface * TTF_RenderText_Shaded_Wrapped(TTF_Font *, char *, size_t, SDL_Color, SDL_Color, int)"
-        extern "SDL_Surface * TTF_RenderGlyph_Shaded(TTF_Font *, Uint32, SDL_Color, SDL_Color)"
-        extern "SDL_Surface * TTF_RenderText_Blended(TTF_Font *, char *, size_t, SDL_Color)"
-        extern "SDL_Surface * TTF_RenderText_Blended_Wrapped(TTF_Font *, char *, size_t, SDL_Color, int)"
-        extern "SDL_Surface * TTF_RenderGlyph_Blended(TTF_Font *, Uint32, SDL_Color)"
-        extern "SDL_Surface * TTF_RenderText_LCD(TTF_Font *, char *, size_t, SDL_Color, SDL_Color)"
-        extern "SDL_Surface * TTF_RenderText_LCD_Wrapped(TTF_Font *, char *, size_t, SDL_Color, SDL_Color, int)"
-        extern "SDL_Surface * TTF_RenderGlyph_LCD(TTF_Font *, Uint32, SDL_Color, SDL_Color)"
         const_set :TTF_Text, struct(
           [
             "char * text",
@@ -181,7 +169,7 @@ module SDL3
             "int length",
             "int line_index",
             "int cluster_index",
-            "SDL_Rect rect",
+            { "rect": SDL_Rect },
           ]
         )
         extern "bool TTF_GetTextSubString(TTF_Text *, int, TTF_SubString *)"
@@ -202,7 +190,7 @@ module SDL3
         const_set :TTF_FillOperation, struct(
           [
             "TTF_DrawCommand cmd",
-            "SDL_Rect rect",
+            { "rect": SDL_Rect },
           ]
         )
         const_set :TTF_CopyOperation, struct(
@@ -211,8 +199,8 @@ module SDL3
             "int text_offset",
             "TTF_Font * glyph_font",
             "Uint32 glyph_index",
-            "SDL_Rect src",
-            "SDL_Rect dst",
+            { "src": SDL_Rect },
+            { "dst": SDL_Rect },
             "void * reserved",
           ]
         )
@@ -226,7 +214,7 @@ module SDL3
         const_set :TTF_TextData, struct(
           [
             "TTF_Font * font",
-            "SDL_FColor color",
+            { "color": SDL_FColor },
             "bool needs_layout_update",
             "TTF_TextLayout * layout",
             "int x",

@@ -111,16 +111,10 @@ def generate_cdecls_code(ast_json_path, source)
   require_relative "rakelib/ast2rb"
 
   out = "".dup
-  source_re = /\A#{Regexp.escape(source)}/
-
+  classifier = AST2Rb::EntryClassifier.new(source)
   PrettyPrint.format(out) { |q|
-    ee = AST2Rb::EntryEmitter.new(q)
+    ee = AST2Rb::EntryEmitter.new(q, classifier)
     AST2Rb.load_file(ast_json_path).each { |entry|
-      if source_re
-        entry[:location] in /<Spelling=(.+?):\d+:\d+>\z/ | /\A(.+):\d+:\d+\z/
-        next unless $1.match?(source_re)
-      end
-
       ee.emit_entry(entry)
     }
   }

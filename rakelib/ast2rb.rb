@@ -9,13 +9,16 @@ class AST2Rb
   end
 
   class EntryClassifier
-    def initialize
+    def initialize(source = "")
       @st_types = []
+      @source = source
     end
 
     def struct_type?(name) = @st_types.include?(name)
 
     def classify(node)
+      msg = nil
+
       case node
 
       # Enum entry
@@ -26,27 +29,27 @@ class AST2Rb
       # Function entry
       #
       in {tag: "function" => tag, name: /\A[^A-Z].+/ => name}
-        puts "skipping #{tag}: #{name} - not an SDL API"
+        msg = "skipping #{tag}: #{name} - not an SDL API"
         :skip
 
       in {tag: "function" => tag, name:, "storage-class": "static", inline: true}
-        puts "skipping #{tag}: #{name} - no external linkage (static; inline)"
+        msg = "skipping #{tag}: #{name} - no external linkage (static; inline)"
         :skip
 
       in {tag: "function" => tag, name:, "storage-class": "static"}
-        puts "skipping #{tag}: #{name} - no external linkage (static)"
+        msg = "skipping #{tag}: #{name} - no external linkage (static)"
         :skip
 
       in {tag: "function" => tag, name:, parameters: [*, {type: {tag: /va_list\z/}}, *]}
-        puts "skipping #{tag}: #{name} - va_list parameter"
+        msg = "skipping #{tag}: #{name} - va_list parameter"
         :skip
 
       in {tag: "function" => tag, name:, "return-type": {tag: tytag}} if struct_type?(tytag)
-        puts "skipping #{tag}: #{name} - by-value return (#{tytag})"
+        msg = "skipping #{tag}: #{name} - by-value return (#{tytag})"
         :skip
 
       in {tag: "function" => tag, name:, parameters: ps} if !(m = ps.map{ _1[:type][:tag] }.select{struct_type?(_1) }).empty?
-        puts "skipping #{tag}: #{name} - by-value parameters (#{m.join(", ")})"
+        msg = "skipping #{tag}: #{name} - by-value parameters (#{m.join(", ")})"
         :skip
 
       in {tag: "function"}
@@ -55,7 +58,7 @@ class AST2Rb
       # Struct / Union entry
       #
       in {tag: "struct" | "union" => tag, name:, fields: []}
-        puts "skipping #{tag}: #{name} - opaque #{tag}"
+        msg = "skipping #{tag}: #{name} - opaque #{tag}"
         :skip
 
       in {tag: "struct" | "union"}
@@ -65,7 +68,7 @@ class AST2Rb
       #
       in {tag: "typedef" => tag, name:, type: {tag: ":struct" | ":union" => tytag, name: orig}} if name == orig
         @st_types << name
-        puts "skipping #{tag}: #{name} - alias to #{tytag[1..]} #{orig} not emitted"
+        msg = "skipping #{tag}: #{name} - alias to #{tytag[1..]} #{orig} not emitted"
         :skip
 
       in {tag: "typedef" => tag, name:, type: {tag: ":struct" | ":union" => tytag, name: orig}}
@@ -74,7 +77,7 @@ class AST2Rb
 
       in {tag: "typedef" => tag, name:, type: {tag: "struct" | "union" => tytag, fields: []}}
         @st_types << name
-        puts "skipping #{tag}: #{name} - opaque #{tytag}"
+        msg = "skipping #{tag}: #{name} - opaque #{tytag}"
         :skip
 
       in {tag: "typedef", name:, type: {tag: "struct" | "union"}}
@@ -86,7 +89,15 @@ class AST2Rb
 
       else
         raise "unsupported c2ffi entry: #{node}"
+
+      end => kind
+
+      if node in {location: /<Spelling=(.+?):\d+:\d+>\z/ | /\A(.+):\d+:\d+\z/}
+        if $1.start_with?(@source)
+          return kind, msg
+        end
       end
+      return :skip, nil
     end
   end
 
@@ -102,7 +113,9 @@ class AST2Rb
     end
 
     def emit_entry(node)
-      case (kind = @classifier.classify(node))
+      kind, msg = @classifier.classify(node)
+      puts msg if msg
+      case kind
       when :skip
         # skip
       when :enum
