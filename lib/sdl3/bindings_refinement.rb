@@ -31,7 +31,7 @@ module SDL3
 
     refine Module do
       def const_set(name, value)
-        const_defined?(name) ? value : super
+        const_defined?(name, false) ? value : super
       end
     end
   end
