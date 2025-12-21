@@ -113,10 +113,10 @@ module SDL3
         module_function def TTF_RenderGlyph_LCD(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): TTF_RenderGlyph_LCD()")
         const_set :TTF_Text, struct(
           [
-            "char * text",
+            "char *text",
             "int num_lines",
             "int refcount",
-            "TTF_TextData * internal",
+            "TTF_TextData *internal",
           ]
         )
         extern "TTF_TextEngine * TTF_CreateSurfaceTextEngine(void)"
@@ -130,14 +130,14 @@ module SDL3
         extern "TTF_TextEngine * TTF_CreateGPUTextEngineWithProperties(SDL_PropertiesID)"
         const_set :TTF_GPUAtlasDrawSequence, struct(
           [
-            "SDL_GPUTexture * atlas_texture",
-            "SDL_FPoint * xy",
-            "SDL_FPoint * uv",
+            "SDL_GPUTexture *atlas_texture",
+            "SDL_FPoint *xy",
+            "SDL_FPoint *uv",
             "int num_vertices",
-            "int * indices",
+            "int *indices",
             "int num_indices",
             "TTF_ImageType image_type",
-            "TTF_GPUAtlasDrawSequence * next",
+            "TTF_GPUAtlasDrawSequence *next",
           ]
         )
         extern "TTF_GPUAtlasDrawSequence * TTF_GetGPUTextDrawData(TTF_Text *)"
@@ -209,11 +209,11 @@ module SDL3
           [
             "TTF_DrawCommand cmd",
             "int text_offset",
-            "TTF_Font * glyph_font",
+            "TTF_Font *glyph_font",
             "Uint32 glyph_index",
             { "src": SDL_Rect },
             { "dst": SDL_Rect },
-            "void * reserved",
+            "void *reserved",
           ]
         )
         const_set :TTF_DrawOperation, union(
@@ -225,28 +225,28 @@ module SDL3
         )
         const_set :TTF_TextData, struct(
           [
-            "TTF_Font * font",
+            "TTF_Font *font",
             { "color": SDL_FColor },
             "bool needs_layout_update",
-            "TTF_TextLayout * layout",
+            "TTF_TextLayout *layout",
             "int x",
             "int y",
             "int w",
             "int h",
             "int num_ops",
-            "TTF_DrawOperation * ops",
+            "TTF_DrawOperation *ops",
             "int num_clusters",
-            "TTF_SubString * clusters",
+            "TTF_SubString *clusters",
             "SDL_PropertiesID props",
             "bool needs_engine_update",
-            "TTF_TextEngine * engine",
-            "void * engine_text",
+            "TTF_TextEngine *engine",
+            "void *engine_text",
           ]
         )
         const_set :TTF_TextEngine, struct(
           [
             "Uint32 version",
-            "void * userdata",
+            "void *userdata",
             "function (*CreateText)()",
             "function (*DestroyText)()",
           ]

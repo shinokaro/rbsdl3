@@ -883,7 +883,7 @@ module SDL3
         const_set :SDL_alignment_test, struct(
           [
             "Uint8 a",
-            "void * b",
+            "void *b",
           ]
         )
         const_set :DUMMY_ENUM_VALUE, 0
@@ -1079,11 +1079,11 @@ module SDL3
           [
             "bool always_ignore",
             "unsigned int trigger_count",
-            "char * condition",
-            "char * filename",
+            "char *condition",
+            "char *filename",
             "int linenum",
-            "char * function",
-            "SDL_AssertData * next",
+            "char *function",
+            "SDL_AssertData *next",
           ]
         )
         extern "SDL_AssertState SDL_ReportAssertion(SDL_AssertData *, char *, char *, int)"
@@ -1104,14 +1104,14 @@ module SDL3
         typealias "SDL_AsyncIOResult", "enum"
         const_set :SDL_AsyncIOOutcome, struct(
           [
-            "SDL_AsyncIO * asyncio",
+            "SDL_AsyncIO *asyncio",
             "SDL_AsyncIOTaskType type",
             "SDL_AsyncIOResult result",
-            "void * buffer",
+            "void *buffer",
             "Uint64 offset",
             "Uint64 bytes_requested",
             "Uint64 bytes_transferred",
-            "void * userdata",
+            "void *userdata",
           ]
         )
         extern "SDL_AsyncIO * SDL_AsyncIOFromFile(char *, char *)"
@@ -1251,7 +1251,7 @@ module SDL3
           [
             { "status": SDL_AtomicInt },
             "SDL_ThreadID thread",
-            "void * reserved",
+            "void *reserved",
           ]
         )
         extern "bool SDL_ShouldInit(SDL_InitState *)"
@@ -1644,7 +1644,7 @@ module SDL3
         const_set :SDL_Palette, struct(
           [
             "int ncolors",
-            "SDL_Color * colors",
+            "SDL_Color *colors",
             "Uint32 version",
             "int refcount",
           ]
@@ -1734,9 +1734,9 @@ module SDL3
             "int w",
             "int h",
             "int pitch",
-            "void * pixels",
+            "void *pixels",
             "int refcount",
-            "void * reserved",
+            "void *reserved",
           ]
         )
         extern "SDL_Surface * SDL_CreateSurface(int, int, SDL_PixelFormat)"
@@ -1876,7 +1876,7 @@ module SDL3
             "float refresh_rate",
             "int refresh_rate_numerator",
             "int refresh_rate_denominator",
-            "SDL_DisplayModeData * internal",
+            "SDL_DisplayModeData *internal",
           ]
         )
         const_set :SDL_ORIENTATION_UNKNOWN, 0
@@ -2057,8 +2057,8 @@ module SDL3
         extern "bool SDL_GL_DestroyContext(SDL_GLContext)"
         const_set :SDL_DialogFileFilter, struct(
           [
-            "char * name",
-            "char * pattern",
+            "char *name",
+            "char *pattern",
           ]
         )
         typealias "SDL_DialogFileCallback", "function (*pointer)()"
@@ -2172,10 +2172,10 @@ module SDL3
             "Uint16 padding2[2]",
             "Uint32 button_mask",
             "Uint32 axis_mask",
-            "char * name",
-            "SDL_VirtualJoystickTouchpadDesc * touchpads",
-            "SDL_VirtualJoystickSensorDesc * sensors",
-            "void * userdata",
+            "char *name",
+            "SDL_VirtualJoystickTouchpadDesc *touchpads",
+            "SDL_VirtualJoystickSensorDesc *sensors",
+            "void *userdata",
             "function (*Update)()",
             "function (*SetPlayerIndex)()",
             "function (*Rumble)()",
@@ -2960,7 +2960,7 @@ module SDL3
             "Uint32 reserved",
             "Uint64 timestamp",
             "SDL_WindowID windowID",
-            "char * text",
+            "char *text",
             "Sint32 start",
             "Sint32 length",
           ]
@@ -2971,7 +2971,7 @@ module SDL3
             "Uint32 reserved",
             "Uint64 timestamp",
             "SDL_WindowID windowID",
-            "char ** candidates",
+            "char **candidates",
             "Sint32 num_candidates",
             "Sint32 selected_candidate",
             "bool horizontal",
@@ -2986,7 +2986,7 @@ module SDL3
             "Uint32 reserved",
             "Uint64 timestamp",
             "SDL_WindowID windowID",
-            "char * text",
+            "char *text",
           ]
         )
         const_set :SDL_MouseDeviceEvent, struct(
@@ -3284,8 +3284,8 @@ module SDL3
             "SDL_WindowID windowID",
             "float x",
             "float y",
-            "char * source",
-            "char * data",
+            "char *source",
+            "char *data",
           ]
         )
         const_set :SDL_ClipboardEvent, struct(
@@ -3295,7 +3295,7 @@ module SDL3
             "Uint64 timestamp",
             "bool owner",
             "Sint32 num_mime_types",
-            "char ** mime_types",
+            "char **mime_types",
           ]
         )
         const_set :SDL_SensorEvent, struct(
@@ -3322,8 +3322,8 @@ module SDL3
             "Uint64 timestamp",
             "SDL_WindowID windowID",
             "Sint32 code",
-            "void * data1",
-            "void * data2",
+            "void *data1",
+            "void *data2",
           ]
         )
         const_set :SDL_Event, union(
@@ -3709,7 +3709,7 @@ module SDL3
         )
         const_set :SDL_GPUTextureTransferInfo, struct(
           [
-            "SDL_GPUTransferBuffer * transfer_buffer",
+            "SDL_GPUTransferBuffer *transfer_buffer",
             "Uint32 offset",
             "Uint32 pixels_per_row",
             "Uint32 rows_per_layer",
@@ -3717,13 +3717,13 @@ module SDL3
         )
         const_set :SDL_GPUTransferBufferLocation, struct(
           [
-            "SDL_GPUTransferBuffer * transfer_buffer",
+            "SDL_GPUTransferBuffer *transfer_buffer",
             "Uint32 offset",
           ]
         )
         const_set :SDL_GPUTextureLocation, struct(
           [
-            "SDL_GPUTexture * texture",
+            "SDL_GPUTexture *texture",
             "Uint32 mip_level",
             "Uint32 layer",
             "Uint32 x",
@@ -3733,7 +3733,7 @@ module SDL3
         )
         const_set :SDL_GPUTextureRegion, struct(
           [
-            "SDL_GPUTexture * texture",
+            "SDL_GPUTexture *texture",
             "Uint32 mip_level",
             "Uint32 layer",
             "Uint32 x",
@@ -3746,7 +3746,7 @@ module SDL3
         )
         const_set :SDL_GPUBlitRegion, struct(
           [
-            "SDL_GPUTexture * texture",
+            "SDL_GPUTexture *texture",
             "Uint32 mip_level",
             "Uint32 layer_or_depth_plane",
             "Uint32 x",
@@ -3757,13 +3757,13 @@ module SDL3
         )
         const_set :SDL_GPUBufferLocation, struct(
           [
-            "SDL_GPUBuffer * buffer",
+            "SDL_GPUBuffer *buffer",
             "Uint32 offset",
           ]
         )
         const_set :SDL_GPUBufferRegion, struct(
           [
-            "SDL_GPUBuffer * buffer",
+            "SDL_GPUBuffer *buffer",
             "Uint32 offset",
             "Uint32 size",
           ]
@@ -3830,9 +3830,9 @@ module SDL3
         )
         const_set :SDL_GPUVertexInputState, struct(
           [
-            "SDL_GPUVertexBufferDescription * vertex_buffer_descriptions",
+            "SDL_GPUVertexBufferDescription *vertex_buffer_descriptions",
             "Uint32 num_vertex_buffers",
-            "SDL_GPUVertexAttribute * vertex_attributes",
+            "SDL_GPUVertexAttribute *vertex_attributes",
             "Uint32 num_vertex_attributes",
           ]
         )
@@ -3862,8 +3862,8 @@ module SDL3
         const_set :SDL_GPUShaderCreateInfo, struct(
           [
             "size_t code_size",
-            "Uint8 * code",
-            "char * entrypoint",
+            "Uint8 *code",
+            "char *entrypoint",
             "SDL_GPUShaderFormat format",
             "SDL_GPUShaderStage stage",
             "Uint32 num_samplers",
@@ -3947,7 +3947,7 @@ module SDL3
         )
         const_set :SDL_GPUGraphicsPipelineTargetInfo, struct(
           [
-            "SDL_GPUColorTargetDescription * color_target_descriptions",
+            "SDL_GPUColorTargetDescription *color_target_descriptions",
             "Uint32 num_color_targets",
             "SDL_GPUTextureFormat depth_stencil_format",
             "bool has_depth_stencil_target",
@@ -3958,8 +3958,8 @@ module SDL3
         )
         const_set :SDL_GPUGraphicsPipelineCreateInfo, struct(
           [
-            "SDL_GPUShader * vertex_shader",
-            "SDL_GPUShader * fragment_shader",
+            "SDL_GPUShader *vertex_shader",
+            "SDL_GPUShader *fragment_shader",
             { "vertex_input_state": SDL_GPUVertexInputState },
             "SDL_GPUPrimitiveType primitive_type",
             { "rasterizer_state": SDL_GPURasterizerState },
@@ -3972,8 +3972,8 @@ module SDL3
         const_set :SDL_GPUComputePipelineCreateInfo, struct(
           [
             "size_t code_size",
-            "Uint8 * code",
-            "char * entrypoint",
+            "Uint8 *code",
+            "char *entrypoint",
             "SDL_GPUShaderFormat format",
             "Uint32 num_samplers",
             "Uint32 num_readonly_storage_textures",
@@ -3989,13 +3989,13 @@ module SDL3
         )
         const_set :SDL_GPUColorTargetInfo, struct(
           [
-            "SDL_GPUTexture * texture",
+            "SDL_GPUTexture *texture",
             "Uint32 mip_level",
             "Uint32 layer_or_depth_plane",
             { "clear_color": SDL_FColor },
             "SDL_GPULoadOp load_op",
             "SDL_GPUStoreOp store_op",
-            "SDL_GPUTexture * resolve_texture",
+            "SDL_GPUTexture *resolve_texture",
             "Uint32 resolve_mip_level",
             "Uint32 resolve_layer",
             "bool cycle",
@@ -4006,7 +4006,7 @@ module SDL3
         )
         const_set :SDL_GPUDepthStencilTargetInfo, struct(
           [
-            "SDL_GPUTexture * texture",
+            "SDL_GPUTexture *texture",
             "float clear_depth",
             "SDL_GPULoadOp load_op",
             "SDL_GPUStoreOp store_op",
@@ -4034,19 +4034,19 @@ module SDL3
         )
         const_set :SDL_GPUBufferBinding, struct(
           [
-            "SDL_GPUBuffer * buffer",
+            "SDL_GPUBuffer *buffer",
             "Uint32 offset",
           ]
         )
         const_set :SDL_GPUTextureSamplerBinding, struct(
           [
-            "SDL_GPUTexture * texture",
-            "SDL_GPUSampler * sampler",
+            "SDL_GPUTexture *texture",
+            "SDL_GPUSampler *sampler",
           ]
         )
         const_set :SDL_GPUStorageBufferReadWriteBinding, struct(
           [
-            "SDL_GPUBuffer * buffer",
+            "SDL_GPUBuffer *buffer",
             "bool cycle",
             "Uint8 padding1",
             "Uint8 padding2",
@@ -4055,7 +4055,7 @@ module SDL3
         )
         const_set :SDL_GPUStorageTextureReadWriteBinding, struct(
           [
-            "SDL_GPUTexture * texture",
+            "SDL_GPUTexture *texture",
             "Uint32 mip_level",
             "Uint32 layer",
             "bool cycle",
@@ -4246,7 +4246,7 @@ module SDL3
             "Uint8 channels",
             "Uint16 period",
             "Uint16 samples",
-            "Uint16 * data",
+            "Uint16 *data",
             "Uint16 attack_length",
             "Uint16 attack_level",
             "Uint16 fade_length",
@@ -4304,13 +4304,13 @@ module SDL3
         typealias "SDL_hid_bus_type", "enum"
         const_set :SDL_hid_device_info, struct(
           [
-            "char * path",
+            "char *path",
             "unsigned short vendor_id",
             "unsigned short product_id",
-            "wchar_t * serial_number",
+            "wchar_t *serial_number",
             "unsigned short release_number",
-            "wchar_t * manufacturer_string",
-            "wchar_t * product_string",
+            "wchar_t *manufacturer_string",
+            "wchar_t *product_string",
             "unsigned short usage_page",
             "unsigned short usage",
             "int interface_number",
@@ -4318,7 +4318,7 @@ module SDL3
             "int interface_subclass",
             "int interface_protocol",
             "SDL_hid_bus_type bus_type",
-            "SDL_hid_device_info * next",
+            "SDL_hid_device_info *next",
           ]
         )
         extern "int SDL_hid_init(void)"
@@ -4387,8 +4387,8 @@ module SDL3
         extern "void SDL_UnloadObject(SDL_SharedObject *)"
         const_set :SDL_Locale, struct(
           [
-            "char * language",
-            "char * country",
+            "char *language",
+            "char *country",
           ]
         )
         extern "SDL_Locale ** SDL_GetPreferredLocales(int *)"
@@ -4449,7 +4449,7 @@ module SDL3
           [
             "SDL_MessageBoxButtonFlags flags",
             "int buttonID",
-            "char * text",
+            "char *text",
           ]
         )
         const_set :SDL_MessageBoxColor, struct(
@@ -4474,12 +4474,12 @@ module SDL3
         const_set :SDL_MessageBoxData, struct(
           [
             "SDL_MessageBoxFlags flags",
-            "SDL_Window * window",
-            "char * title",
-            "char * message",
+            "SDL_Window *window",
+            "char *title",
+            "char *message",
             "int numbuttons",
-            "SDL_MessageBoxButtonData * buttons",
-            "SDL_MessageBoxColorScheme * colorScheme",
+            "SDL_MessageBoxButtonData *buttons",
+            "SDL_MessageBoxColorScheme *colorScheme",
           ]
         )
         extern "bool SDL_ShowMessageBox(SDL_MessageBoxData *, int *)"

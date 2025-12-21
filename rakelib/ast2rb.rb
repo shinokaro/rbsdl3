@@ -264,6 +264,8 @@ class AST2Rb
 
         if @classifier.struct_type?(type_repr)
           q.text "{ \"#{name}#{ary_suffix}\": #{type_repr} }"
+        elsif type_repr.end_with?("*")
+          q.text "\"#{type_repr}#{name}#{ary_suffix}\""
         else
           q.text "\"#{type_repr} #{name}#{ary_suffix}\""
         end

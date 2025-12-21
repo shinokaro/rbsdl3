@@ -77,8 +77,8 @@ module SDL3
             "int w",
             "int h",
             "int count",
-            "SDL_Surface ** frames",
-            "int * delays",
+            "SDL_Surface **frames",
+            "int *delays",
           ]
         )
         extern "IMG_Animation * IMG_LoadAnimation(char *)"
