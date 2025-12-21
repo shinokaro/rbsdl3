@@ -159,16 +159,16 @@ class AST2Rb
         q.text "module_function def #{name}(...) = "
         q.text "raise(NotImplementedError, \"cannot bind SDL function (by-value parameters): #{name}()\")"
 
-      in {tag: "function", name:, variadic:, parameters: [], "return-type": _}
-        rtype_repr, _ = field_signature(node)
+      in {tag: "function", name:, variadic:, parameters: [], "return-type": type}
+        rtype_repr, _ = type_parts(type)
 
         q.breakable
         q.text "extern \"#{rtype_repr} #{name}("
         q.text "void"
         q.text ")\""
 
-      in {tag: "function", name:, variadic:, parameters:, "return-type": _}
-        rtype_repr, _ = field_signature(node)
+      in {tag: "function", name:, variadic:, parameters:, "return-type": type}
+        rtype_repr, _ = type_parts(type)
 
         q.breakable
         q.text "extern \"#{rtype_repr} #{name}("
@@ -191,8 +191,8 @@ class AST2Rb
 
     def emit_function_paramater(node)
       case node
-      in {tag: "parameter", name: _, type: _}
-        type_repr, _ = field_signature(node)
+      in {tag: "parameter", name: _, type:}
+        type_repr, _ = type_parts(type)
 
         q.text type_repr
 
@@ -243,14 +243,14 @@ class AST2Rb
 
     def emit_struct_field(node)
       case node
-      in {tag: "field", name: _, type: {tag: "struct" | "union"} => t_node}
-        _, field_decl = field_signature(node)
+      in {tag: "field", name:, type: {tag: "struct" | "union"} => type}
+        _, ary_suffix = type_parts(type)
 
         q.text "{"
         q.nest INDENT_SIZE do
           q.breakable
-          q.text "#{field_decl}: "
-          emit_struct(t_node)
+          q.text "#{name}#{ary_suffix}: "
+          emit_struct(type)
         end
         q.breakable
         q.text "}"
@@ -259,13 +259,13 @@ class AST2Rb
 
         q.text "\"function (*#{name})()\""
 
-      in {tag: "field", name: _, type: _}
-        type_repr, field_decl = field_signature(node)
+      in {tag: "field", name:, type:}
+        type_repr, ary_suffix = type_parts(type)
 
         if @classifier.struct_type?(type_repr)
-          q.text "{ \"#{field_decl}\": #{type_repr} }"
+          q.text "{ \"#{name}#{ary_suffix}\": #{type_repr} }"
         else
-          q.text "\"#{type_repr} #{field_decl}\""
+          q.text "\"#{type_repr} #{name}#{ary_suffix}\""
         end
 
       end
@@ -298,11 +298,11 @@ class AST2Rb
         q.breakable
         q.text "const_set :#{name}, \"#{value}\""
 
-      in {tag: "typedef", name: _, type: _}
-        type_repr, field_decl = field_signature(node)
+      in {tag: "typedef", name:, type:}
+        type_repr, ary_suffix = type_parts(type)
 
         q.breakable
-        q.text "typealias \"#{field_decl}\", \"#{type_repr}\""
+        q.text "typealias \"#{name}#{ary_suffix}\", \"#{type_repr}\""
 
       end
     end
@@ -350,18 +350,18 @@ class AST2Rb
       end
     end
 
-    def t(node, ptr=[], ary=[])
+    def type_parts(node, ptr=[], ary=[])
       case node
       in {tag: /\A<unknown-/ => tag}
         raise "c2ffi unknown type: #{tag} - node=#{node}"
 
       in {tag: ":array", type: t_node, size:}
         ary << "[#{size}]"
-        return t(t_node, ptr, ary)
+        return type_parts(t_node, ptr, ary)
 
       in {tag: ":pointer", type: t_node}
         ptr << "*"
-        return t(t_node, ptr, ary)
+        return type_parts(t_node, ptr, ary)
 
       in {tag: ":_Bool"}
         "bool"
@@ -382,17 +382,5 @@ class AST2Rb
 
       [ptr.empty? ? base : "#{base} #{ptr.join}", ary.join]
     end
-
-    def field_signature(node)
-      case node
-      in {name:, type: t_node}
-      in {name:, "return-type": t_node}
-      end
-
-      type_repr, ary_suffix = t(t_node)
-      [type_repr, "#{name}#{ary_suffix}"]
-    end
   end
 end
-
-
