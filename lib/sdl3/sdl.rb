@@ -81,7 +81,7 @@ module SDL3
 
         # SDL_main.h
         #
-        extern "void SDL_SetMainReady()"
+        extern "void SDL_SetMainReady(void)"
 
         # SDL_revision.h
         #
