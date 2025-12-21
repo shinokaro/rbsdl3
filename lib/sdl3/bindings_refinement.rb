@@ -5,10 +5,13 @@ module SDL3
   class UnloadedError < Fiddle::DLError; end
 
   module BindingsRefinement
-    UNLOADED_STUB_PROC = proc do |*| 
-      e = UnloadedError.new(<<~MSG.chomp)
-        SDL function unavailable (library not loaded or symbol missing): #{__method__}()
-      MSG
+    UNRESOLVED_STUB_PROC = proc do |*|
+      dlloaded = (h = handler rescue nil) && !h.handlers.empty?
+      if dlloaded
+        ::SDL3::UnloadedError.new("SDL symbol not found: #{__method__}()")
+      else
+        ::SDL3::UnloadedError.new("SDL library not loaded: #{__method__}()")
+      end => e
       e.set_backtrace(caller(2))
       ::Kernel.raise(e)
     end
@@ -19,7 +22,7 @@ module SDL3
           f = super
         rescue Fiddle::DLError
           name, * = parse_signature(signature, type_alias)
-          define_singleton_method(name, &UNLOADED_STUB_PROC)
+          define_singleton_method(name, &UNRESOLVED_STUB_PROC)
         else
           name = f.name
         end
