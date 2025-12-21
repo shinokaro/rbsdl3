@@ -28,40 +28,24 @@ module SDL3
 
         # Treat enum values as int for macro-cast emulation (common ABI)
         #
-        alias enum int
-        private_class_method module_function :enum
+        private_class_method module_function alias_method :enum, :int
 
         # Aliases for macro-cast emulation (typedefs and enum carriers)
         #
         # enum carriers
-        alias SDL_ChromaLocation enum
-        private_class_method module_function :SDL_ChromaLocation
-
-        alias SDL_ColorPrimaries enum
-        private_class_method module_function :SDL_ColorPrimaries
-
-        alias SDL_ColorRange enum
-        private_class_method module_function :SDL_ColorRange
-
-        alias SDL_ColorType enum
-        private_class_method module_function :SDL_ColorType
-
-        alias SDL_MatrixCoefficients enum
-        private_class_method module_function :SDL_MatrixCoefficients
-
-        alias SDL_TransferCharacteristics enum
-        private_class_method module_function :SDL_TransferCharacteristics
+        private_class_method module_function alias_method :SDL_ChromaLocation, :enum
+        private_class_method module_function alias_method :SDL_ColorPrimaries, :enum
+        private_class_method module_function alias_method :SDL_ColorRange, :enum
+        private_class_method module_function alias_method :SDL_ColorType, :enum
+        private_class_method module_function alias_method :SDL_MatrixCoefficients, :enum
+        private_class_method module_function alias_method :SDL_TransferCharacteristics, :enum
 
         # Uint32 typedeffs
-        alias SDL_AudioDeviceID Uint32
-        private_class_method module_function :SDL_AudioDeviceID
-
-        alias SDL_MouseID Uint32
-        private_class_method module_function :SDL_MouseID
+        private_class_method module_function alias_method :SDL_AudioDeviceID, :Uint32
+        private_class_method module_function alias_method :SDL_MouseID, :Uint32
 
         # Uint64 typedefs
-        alias SDL_TouchID Uint64
-        private_class_method module_function :SDL_TouchID
+        private_class_method module_function alias_method :SDL_TouchID, :Uint64
 
         # SDL_atomic.h
         #
