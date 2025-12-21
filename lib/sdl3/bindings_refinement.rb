@@ -12,7 +12,9 @@ module SDL3
       else
         ::SDL3::UnloadedError.new("SDL library not loaded: #{__method__}()")
       end => e
-      e.set_backtrace(caller(2))
+      l = caller_locations(1, 1)&.first
+      s = l && l.path == "(eval)" && l.label == __method__.to_s ? 2 : 1
+      e.set_backtrace(caller(s))
       ::Kernel.raise(e)
     end
 
