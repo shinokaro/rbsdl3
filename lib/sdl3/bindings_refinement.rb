@@ -22,8 +22,14 @@ module SDL3
       def extern(signature, *opts)
         begin
           f = super
-        rescue Fiddle::DLError
-          name, * = parse_signature(signature, type_alias)
+        rescue Fiddle::DLError => e
+          # Re-trigger type-resolution DLErrors here, limiting the stubbing path
+          # to symbol-resolution failures.
+          name, = begin
+                    parse_signature(signature, type_alias)
+                  rescue Fiddle::DLError
+                    raise e
+                  end
           define_singleton_method(name, &UNRESOLVED_STUB_PROC)
         else
           name = f.name
