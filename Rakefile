@@ -58,7 +58,7 @@ namespace :bindings do
   namespace :generate do
     SDL_SPECS.keys.each { |name|
       spec = SDLSpec.new(name)
-      desc "generate lib/#{spec.bindings_relpath}.rb"
+      desc "Generate Ruby bindings: lib/#{spec.bindings_relpath}.rb"
       task name do
         bindings_erb = bindings_renderer(spec.bindings_template_file)
         bindings_erb.instance_eval {
@@ -77,6 +77,9 @@ namespace :bindings do
       end
       task name => "ast:generate:#{name}"
     }
+
+    desc "Generate Ruby bindings for all SDL specs (runs ast:generate:* as prerequisites)"
+    task :all => SDL_SPECS.keys
   end
 end
 
@@ -126,7 +129,7 @@ namespace :sources do
   namespace :checkout do
     SDL_SPECS.keys.each { |name|
       spec = SDLSpec.new(name)
-      desc "Fetch and checkout the specified #{spec.lib_name} release tag (detached HEAD)"
+      desc "Fetch and checkout #{spec.lib_name} release tag (default: latest; detached HEAD)"
       task name, [:tag] do |t, args|
         src_dir = spec.src_dir
         ensure_official_repo!(src_dir, spec.repo_url)
@@ -138,6 +141,9 @@ namespace :sources do
         checkout_tag(src_dir, tag)
       end
     }
+
+    desc "Fetch and checkout latest release tags for all SDL specs (detached HEAD)"
+    task :all => SDL_SPECS.keys
   end
 end
 
