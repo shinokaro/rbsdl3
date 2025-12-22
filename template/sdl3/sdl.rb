@@ -1,7 +1,6 @@
 # Cast helpers to emulate C-style integer casts used in SDL macros
 #
 private_class_method module_function def cast(x, t) = [::String === x ? x.ord : ::Kernel.Integer(x)].pack(t).unpack1(t)
-
 private_class_method module_function def Sint8(x)  = cast(x, "c")
 private_class_method module_function def Sint16(x) = cast(x, "s")
 private_class_method module_function def Sint32(x) = cast(x, "l")
@@ -26,11 +25,9 @@ private_class_method module_function alias_method :SDL_ColorRange, :enum
 private_class_method module_function alias_method :SDL_ColorType, :enum
 private_class_method module_function alias_method :SDL_MatrixCoefficients, :enum
 private_class_method module_function alias_method :SDL_TransferCharacteristics, :enum
-
 # Uint32 typedeffs
 private_class_method module_function alias_method :SDL_AudioDeviceID, :Uint32
 private_class_method module_function alias_method :SDL_MouseID, :Uint32
-
 # Uint64 typedefs
 private_class_method module_function alias_method :SDL_TouchID, :Uint64
 
@@ -45,7 +42,6 @@ module_function def SDL_AtomicDecRef(a) = (SDL_AddAtomicInt(a, -1) == 1)
 #
 const_set :SDL_LIL_ENDIAN, 1234
 const_set :SDL_BIG_ENDIAN, 4321
-
 # Endianness is determined at runtime to reflect the host ABI
 const_set :SDL_BYTEORDER, ([1].pack("L") == [1].pack("V")) ? SDL_LIL_ENDIAN : SDL_BIG_ENDIAN
 const_set :SDL_FLOATWORDORDER, SDL_BYTEORDER
