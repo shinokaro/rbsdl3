@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 require_relative "../sdl3"
 require_relative "sdl"
-require_relative "bindings_refinement"
 
 module SDL3
   module Image
