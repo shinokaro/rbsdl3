@@ -3,24 +3,10 @@ require "fiddle/import"
 require_relative "sdl3/version"
 
 module SDL3
-  class UnloadedError < Fiddle::DLError; end
-
   module BindingsRefinement
-    UNRESOLVED_STUB_PROC = proc do |*|
-      dlloaded = (h = handler rescue nil) && !h.handlers.empty?
-      if dlloaded
-        ::SDL3::UnloadedError.new("SDL symbol not found: #{__method__}()")
-      else
-        ::SDL3::UnloadedError.new("SDL library not loaded: #{__method__}()")
-      end => e
-      l = caller_locations(1, 1)&.first
-      s = l && l.path == "(eval)" && l.label == __method__.to_s ? 2 : 1
-      e.set_backtrace(caller(s))
-      ::Kernel.raise(e)
-    end
-
     refine Fiddle::Importer do
       def extern(signature, *opts)
+        return unless (h = handler rescue nil) && !h.handlers.empty?
         begin
           f = super
         rescue Fiddle::DLError => e
@@ -31,11 +17,18 @@ module SDL3
                   rescue Fiddle::DLError
                     raise e
                   end
-          define_singleton_method(name, &UNRESOLVED_STUB_PROC)
+          module_eval(<<-EOS, __FILE__, __LINE__+1)
+            def #{name}(...)
+              e = ::NotImplementedError.new("SDL symbol not found: #{name}()")
+              e.set_backtrace(caller(1))
+              ::Kernel.raise(e)
+            end
+          EOS
+          module_function(name)
         else
           name = f.name
+          module_eval("private def #{name}(...) = ::SDL3.#{name}(...)")
         end
-        module_eval("private def #{name}(...) = ::SDL3.#{name}(...)")
         f
       end
     end
