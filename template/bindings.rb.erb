@@ -3,26 +3,21 @@ require_relative "../sdl3"
 require_relative "sdl"
 
 module SDL3
-  module <%= @module_name %>
-    using BindingsRefinement
-
-    def self.included(m)
-      m.module_eval {
+  using BindingsRefinement
+  <%= @module_name %> = proc {
 <% if @manual_code -%>
-        # Library-specific bindings and helpers
-        #
+    # Library-specific bindings and helpers
+    #
 <%= reindent_lines(@manual_code, _erbout) %>
 <% end -%>
-        # Ruby wrappers for <%= @lib_name %> macros
-        #
+    # Ruby wrappers for <%= @lib_name %> macros
+    #
 <%= reindent_lines(@macros_code, _erbout) %>
-        # Fiddle declarations for <%= @lib_name %> functions, structs, and enums
-        #
+    # Fiddle declarations for <%= @lib_name %> functions, structs, and enums
+    #
 <%= reindent_lines(@cdecls_code, _erbout) %>
-      }
-    end
-  end
+  }
   private_constant :<%= @module_name %>
 
-  <%= @module_name %>.included(self)
+  <%= @module_name %>.call
 end

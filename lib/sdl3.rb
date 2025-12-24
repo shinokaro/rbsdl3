@@ -47,7 +47,7 @@ module SDL3
 
   extend Fiddle::Importer
 
-  DLLOAD_TARGETS = %i[SDL Image TTF].freeze
+  DLLOAD_TARGETS = %i[SDL SDL_image SDL_ttf].freeze
   private_constant :DLLOAD_TARGETS
 
   def self.dlload(*libs)
@@ -57,7 +57,7 @@ module SDL3
     typealias "enum", "int"
 
     DLLOAD_TARGETS.each do |m|
-      const_get(m, false).included(self) if const_defined?(m, false)
+      const_get(m, false).call if const_defined?(m, false)
     end
   end
 

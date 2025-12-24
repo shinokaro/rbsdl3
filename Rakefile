@@ -16,13 +16,13 @@ C2FFI_BIN = File.expand_path("~/c2ffi/build/bin/c2ffi")
 
 SDL_SPECS = {
   sdl: {
-    name_suffix: "", module_name: "SDL"
+    name_suffix: "", rb_name: "sdl"
   }.freeze,
   sdl_image: {
-    name_suffix: "_image", module_name: "Image"
+    name_suffix: "_image", rb_name: "image"
   }.freeze,
   sdl_ttf: {
-    name_suffix: "_ttf", module_name: "TTF", root_header_file: "SDL_textengine.h"
+    name_suffix: "_ttf", rb_name: "ttf", root_header_file: "SDL_textengine.h"
   }.freeze,
 }.freeze
 
@@ -37,7 +37,7 @@ class SDLSpec
   def suffix = spec.fetch(:name_suffix)
   def lib_name        = "SDL#{suffix}"
   def include_subdir  = "SDL3#{suffix}"
-  def module_name     = spec.fetch(:module_name)
+  def module_name     = "SDL#{suffix}"
 
   def repo_url = "https://github.com/libsdl-org/#{lib_name}.git"
   def src_dir = File.join(TEMP_DIR, lib_name)
@@ -47,7 +47,7 @@ class SDLSpec
   def root_header_file = File.join(headers_dir, spec[:root_header_file] || "#{lib_name}.h")
   def headers_manifest_file = File.join(MANIFEST_DIR, "#{lib_name}_headers")
 
-  def module_filename = module_name.downcase
+  def module_filename = spec.fetch(:rb_name)
   def bindings_relpath = File.join("sdl3", module_filename)
   def bindings_template_file = File.join(TEMPLATE_DIR, "bindings.rb.erb")
   def bindings_manual_code_file = File.join(TEMPLATE_DIR, "#{bindings_relpath}.rb")
