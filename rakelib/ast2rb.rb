@@ -144,47 +144,34 @@ class AST2Rb
 
     def emit_function(node)
       case node
-      in {tag: "function", name:, parameters: [*, {type: {tag: /va_list\z/}}, *]}
-        q.breakable
-        q.text "module_function def #{name}(...) = "
-        q.text "raise(NotImplementedError, \"cannot bind SDL function (va_list parameters): #{name}()\")"
-
-      in {tag: "function", name:, "return-type": {tag: tytag}} if @classifier.struct_type?(tytag)
-        q.breakable
-        q.text "module_function def #{name}(...) = "
-        q.text "raise(NotImplementedError, \"cannot bind SDL function (by-value return type): #{name}()\")"
-
-      in {tag: "function", name:, parameters: ps} if ps.any? { @classifier.struct_type?(_1[:type][:tag]) }
-        q.breakable
-        q.text "module_function def #{name}(...) = "
-        q.text "raise(NotImplementedError, \"cannot bind SDL function (by-value parameters): #{name}()\")"
-
-      in {tag: "function", name:, variadic:, parameters: [], "return-type": type}
-        rtype_repr, _ = type_parts(type)
-
-        q.breakable
-        q.text "extern \"#{rtype_repr} #{name}("
-        q.text "void"
-        q.text ")\""
-
       in {tag: "function", name:, variadic:, parameters:, "return-type": type}
         rtype_repr, _ = type_parts(type)
 
         q.breakable
         q.text "extern \"#{rtype_repr} #{name}("
-
-        e = parameters.to_enum
-        loop do
-          param = e.next
-          emit_function_paramater(param)
-          e.peek
-          q.text ", "
-        rescue StopIteration
-          q.text ", ..." if variadic
-          break
+        if parameters.empty?
+          q.text "void"
+        else
+          e = parameters.to_enum
+          loop do
+            param = e.next
+            emit_function_paramater(param)
+            e.peek
+            q.text ", "
+          rescue StopIteration
+            q.text ", ..." if variadic
+            break
+          end
         end
-
         q.text ")\""
+
+        if @classifier.struct_type?(rtype_repr) ||
+          parameters.any? { @classifier.struct_type?(_1[:type][:tag]) } ||
+          parameters.any? { _1[:type][:tag] =~ /va_list\z/ }
+
+          err_msg = "SDL function unsupported by Fiddle: #{name}()"
+          q.text ", unsupported: \"#{err_msg}\""
+        end
 
       end
     end

@@ -5,8 +5,13 @@ require_relative "sdl3/version"
 module SDL3
   module BindingsRefinement
     refine Fiddle::Importer do
-      def extern(signature, *opts)
+      def extern(signature, *opts, unsupported: nil)
         return unless (h = handler rescue nil) && !h.handlers.empty?
+        return if unsupported&.tap { |msg|
+          name = signature[/(\w+)\(/, 1]
+          define_method(name) { raise NotImplementedError, msg, caller(1) }
+          module_function(name)
+        }
         begin
           f = super
         rescue Fiddle::DLError => e

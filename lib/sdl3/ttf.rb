@@ -98,18 +98,18 @@ module SDL3
         extern "bool TTF_GetStringSize(TTF_Font *, char *, size_t, int *, int *)"
         extern "bool TTF_GetStringSizeWrapped(TTF_Font *, char *, size_t, int, int *, int *)"
         extern "bool TTF_MeasureString(TTF_Font *, char *, size_t, int, int *, size_t *)"
-        module_function def TTF_RenderText_Solid(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): TTF_RenderText_Solid()")
-        module_function def TTF_RenderText_Solid_Wrapped(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): TTF_RenderText_Solid_Wrapped()")
-        module_function def TTF_RenderGlyph_Solid(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): TTF_RenderGlyph_Solid()")
-        module_function def TTF_RenderText_Shaded(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): TTF_RenderText_Shaded()")
-        module_function def TTF_RenderText_Shaded_Wrapped(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): TTF_RenderText_Shaded_Wrapped()")
-        module_function def TTF_RenderGlyph_Shaded(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): TTF_RenderGlyph_Shaded()")
-        module_function def TTF_RenderText_Blended(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): TTF_RenderText_Blended()")
-        module_function def TTF_RenderText_Blended_Wrapped(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): TTF_RenderText_Blended_Wrapped()")
-        module_function def TTF_RenderGlyph_Blended(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): TTF_RenderGlyph_Blended()")
-        module_function def TTF_RenderText_LCD(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): TTF_RenderText_LCD()")
-        module_function def TTF_RenderText_LCD_Wrapped(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): TTF_RenderText_LCD_Wrapped()")
-        module_function def TTF_RenderGlyph_LCD(...) = raise(NotImplementedError, "cannot bind SDL function (by-value parameters): TTF_RenderGlyph_LCD()")
+        extern "SDL_Surface * TTF_RenderText_Solid(TTF_Font *, char *, size_t, SDL_Color)", unsupported: "SDL function unsupported by Fiddle: TTF_RenderText_Solid()"
+        extern "SDL_Surface * TTF_RenderText_Solid_Wrapped(TTF_Font *, char *, size_t, SDL_Color, int)", unsupported: "SDL function unsupported by Fiddle: TTF_RenderText_Solid_Wrapped()"
+        extern "SDL_Surface * TTF_RenderGlyph_Solid(TTF_Font *, Uint32, SDL_Color)", unsupported: "SDL function unsupported by Fiddle: TTF_RenderGlyph_Solid()"
+        extern "SDL_Surface * TTF_RenderText_Shaded(TTF_Font *, char *, size_t, SDL_Color, SDL_Color)", unsupported: "SDL function unsupported by Fiddle: TTF_RenderText_Shaded()"
+        extern "SDL_Surface * TTF_RenderText_Shaded_Wrapped(TTF_Font *, char *, size_t, SDL_Color, SDL_Color, int)", unsupported: "SDL function unsupported by Fiddle: TTF_RenderText_Shaded_Wrapped()"
+        extern "SDL_Surface * TTF_RenderGlyph_Shaded(TTF_Font *, Uint32, SDL_Color, SDL_Color)", unsupported: "SDL function unsupported by Fiddle: TTF_RenderGlyph_Shaded()"
+        extern "SDL_Surface * TTF_RenderText_Blended(TTF_Font *, char *, size_t, SDL_Color)", unsupported: "SDL function unsupported by Fiddle: TTF_RenderText_Blended()"
+        extern "SDL_Surface * TTF_RenderText_Blended_Wrapped(TTF_Font *, char *, size_t, SDL_Color, int)", unsupported: "SDL function unsupported by Fiddle: TTF_RenderText_Blended_Wrapped()"
+        extern "SDL_Surface * TTF_RenderGlyph_Blended(TTF_Font *, Uint32, SDL_Color)", unsupported: "SDL function unsupported by Fiddle: TTF_RenderGlyph_Blended()"
+        extern "SDL_Surface * TTF_RenderText_LCD(TTF_Font *, char *, size_t, SDL_Color, SDL_Color)", unsupported: "SDL function unsupported by Fiddle: TTF_RenderText_LCD()"
+        extern "SDL_Surface * TTF_RenderText_LCD_Wrapped(TTF_Font *, char *, size_t, SDL_Color, SDL_Color, int)", unsupported: "SDL function unsupported by Fiddle: TTF_RenderText_LCD_Wrapped()"
+        extern "SDL_Surface * TTF_RenderGlyph_LCD(TTF_Font *, Uint32, SDL_Color, SDL_Color)", unsupported: "SDL function unsupported by Fiddle: TTF_RenderGlyph_LCD()"
         const_set :TTF_Text, struct(
           [
             "char *text",
