@@ -22,14 +22,30 @@ PP_DEFINE_RE = /\A\s*#\s*define\s+/
 
 SDL_NAME = /\bSDL_[0-9A-Za-z_]+\b/
 
-def normalize_macro_expr(s)
-  s = s.dup
-  s.gsub!(INT_SUFFIX_RE, '\1')
-  s.gsub!(FLOAT_SUFFIX_RE, '\1')
-  s.gsub!(CAST_PAREN_EXPR_RE, '\1(')
-  s.gsub!(CAST_SIMPLE_OPERAND_RE, '\1(\2\3)')
-  s
+module MacroStringRefinement
+  refine String do
+    def strip_block_comments!
+      gsub!(BLOCK_COMMENT, "")
+    end
+
+    def splice_lines!
+      gsub!(/\\#{NL}/, "")
+    end
+
+    def normalize_macro_expr!
+      changed = nil
+      changed = gsub!(INT_SUFFIX_RE, '\1') || changed
+      changed = gsub!(FLOAT_SUFFIX_RE, '\1') || changed
+      changed = gsub!(CAST_PAREN_EXPR_RE, '\1(') || changed
+      changed = gsub!(CAST_SIMPLE_OPERAND_RE, '\1(\2\3)') || changed
+      changed = gsub!(/\s*->\s*/, '.') || changed
+      changed = gsub!(/\s*\.\s*/, '.') || changed
+      changed = gsub!(/\s+/, ' ') || changed
+      changed
+    end
+  end
 end
+using MacroStringRefinement
 
 def row2rb(line)
   case line
@@ -38,7 +54,7 @@ def row2rb(line)
 
   in /#{PP_DEFINE_RE}(?<name>#{SDL_NAME})(?!\()\s+(?<value>.*\S)\s*\z/
     name, value = Regexp.last_match.values_at(:name, :value)
-    value = normalize_macro_expr(value)
+    value.normalize_macro_expr!
     
     "const_set :#{name}, #{value}"
 
@@ -49,10 +65,7 @@ def row2rb(line)
       params.gsub!(re, &:downcase)
       body.gsub!(re, &:downcase)
     end
-
-    body = normalize_macro_expr(body)
-    body.gsub!(/->/, '.')
-    body.gsub!(/\s+/, ' ')
+    body.normalize_macro_expr!
 
     "module_function def #{name}(#{params}) = #{body}"
 
@@ -63,11 +76,10 @@ end
 
 ARGV.each do |path|
   src = File.binread(path)
-  
-  clean = src.gsub(BLOCK_COMMENT, "")
-  spliced = clean.gsub(/\\#{NL}/, "")
+  src.strip_block_comments!
+  src.splice_lines!
 
-  defined = spliced.each_line.map { |line|
+  defined = src.each_line.map { |line|
     row2rb(line)
   }.compact
   next if defined.empty?
