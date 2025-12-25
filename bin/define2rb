@@ -44,13 +44,12 @@ def row2rb(line)
 
   in /#{PP_DEFINE_RE}(?<name>#{SDL_NAME})\((?<params>[^)]*)\)\s+(?<body>.*\S)\s*\z/
     name, params, body = Regexp.last_match.values_at(:name, :params, :body)
-    param_names = params.scan(/[A-Za-z_]\w*/).reject { |id| id == "..." }
-    unless param_names.empty?
-      re = Regexp.union(param_names.map { |n| /\b#{Regexp.escape(n)}\b/ })
-      body.gsub!(re) { |id| id.downcase }
+    unless (param_names = params.scan(/[A-Za-z_]\w*/)).empty?
+      re = Regexp.union(param_names.map { /\b#{Regexp.escape(_1)}\b/ })
+      params.gsub!(re, &:downcase)
+      body.gsub!(re, &:downcase)
     end
 
-    params.downcase!
     body = normalize_macro_expr(body)
     body.gsub!(/->/, '.')
     body.gsub!(/\s+/, ' ')
