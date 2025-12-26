@@ -61,7 +61,7 @@ module Define2Rb
     in /#{PP_DEFINE_RE}(?<name>#{SDL_NAME})\((?<params>[^)]*)\)\s+(?<body>.*\S)\s*\z/
       name, params, body = Regexp.last_match.values_at(:name, :params, :body)
       unless (param_names = params.scan(/[A-Za-z_]\w*/)).empty?
-        re = Regexp.union(param_names.map { /\b#{Regexp.escape(_1)}\b/ })
+        re = Regexp.union(param_names.map { /\b#{Regexp.escape(it)}\b/ })
         params.gsub!(re, &:downcase)
         body.gsub!(re, &:downcase)
       end

@@ -166,8 +166,8 @@ class AST2Rb
         q.text ")\""
 
         if @classifier.struct_type?(rtype_repr) ||
-          parameters.any? { @classifier.struct_type?(_1[:type][:tag]) } ||
-          parameters.any? { _1[:type][:tag] =~ /va_list\z/ }
+          parameters.any? { @classifier.struct_type?(it[:type][:tag]) } ||
+          parameters.any? { it[:type][:tag] =~ /va_list\z/ }
 
           err_msg = "SDL function unsupported by Fiddle: #{name}()"
           q.text ", unsupported: \"#{err_msg}\""
