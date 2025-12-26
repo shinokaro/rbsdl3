@@ -7,12 +7,9 @@ Gem::Specification.new do |spec|
   spec.authors = ["shinokaro"]
   spec.email = ["shinokaro@hotmail.co.jp"]
 
-  spec.summary = "RbSDL3 is an SDL3 binding for Ruby implemented using Fiddle."
+  spec.summary = "rbsdl3 is an SDL3 binding for Ruby implemented using Fiddle."
   spec.description = <<~EOT
-    RbSDL3 is a Ruby binding to SDL3 that links against an SDL dynamic library chosen at runtime.
-    Types, constants, structures, and macros are available on the Ruby side before the library is loaded,
-    and most bindings are automatically generated from SDL’s header files via c2ffi’s AST output,
-    with only a subset of APIs and macros implemented by hand.
+    rbsdl3 is a Ruby binding to SDL3 that links against an SDL dynamic library chosen at runtime.
   EOT
   spec.homepage = "https://github.com/shinokaro/rbsdl3"
   spec.metadata["homepage_uri"] = spec.homepage
