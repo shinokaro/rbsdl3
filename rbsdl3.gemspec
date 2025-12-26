@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
     ls.readlines("\x0", chomp: true).reject do |f|
       (f == gemspec) ||
         f.start_with?(*%w[bin/ test/ spec/ features/ .git appveyor Gemfile
-        Rakefile rakelib/ manifest/ template/])
+        Rakefile rakelib/ manifest/ template/ .ruby-version])
     end
   end
   spec.bindir = "exe"
