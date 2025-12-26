@@ -4,14 +4,12 @@ require "bundler/gem_tasks"
 task default: %i[]
 
 require "erb"
-require "open3"
 
 TEMP_DIR = File.join(__dir__, "tmp")
 MANIFEST_DIR = File.join(__dir__, "manifest")
 TEMPLATE_DIR = File.join(__dir__, "template")
 LIB_DIR = File.join(__dir__, "lib")
 
-DEFINE2RB_BIN = File.join(__dir__, "bin/define2rb")
 C2FFI_BIN = File.expand_path("~/c2ffi/build/bin/c2ffi")
 
 SDL_SPECS = {
@@ -99,14 +97,15 @@ def bindings_renderer(template_file)
 end
 
 def generate_macros_code(header_dir, manifest_file)
-  header_files = File.foreach(manifest_file, chomp: true).map { |basename|
-    File.join(header_dir, basename)
+  require_relative "rakelib/define2rb"
+  out = "".dup
+  File.foreach(manifest_file, chomp: true).each { |basename|
+    path = File.join(header_dir, basename)
+    src = File.binread(path)
+    rb = Define2Rb.src2rb(src)
+    (out << rb << $/) unless rb.empty?
   }
-  o, s = Open3.capture2("ruby", DEFINE2RB_BIN, *header_files)
-  unless s.success?
-    raise "Generation failed: define2rb #{header_dir} (exitstatus=#{s.exitstatus})"
-  end
-  o
+  out
 end
 
 def generate_cdecls_code(ast_json_path, source)
