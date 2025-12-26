@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/shinokaro/rbsdl3"
   spec.metadata["changelog_uri"] = "https://github.com/shinokaro/rbsdl3/CHANGELOG.md"
+  spec.license = "MIT"
 
   gemspec = File.basename(__FILE__)
   spec.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
