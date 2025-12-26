@@ -63,3 +63,4 @@ module SDL3
 
   dlload
 end
+require_relative "sdl3/sdl"
