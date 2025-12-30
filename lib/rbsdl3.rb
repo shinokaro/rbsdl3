@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "fiddle/import"
-require_relative "sdl3/version"
+require_relative "rbsdl3/version"
 
 module SDL3
   module BindingsRefinement
@@ -63,4 +63,4 @@ module SDL3
 
   dlload
 end
-require_relative "sdl3/sdl"
+require_relative "rbsdl3/sdl"

@@ -6,8 +6,8 @@
 
 ### Added
 - Added SDL3 bindings built on `Fiddle::Importer`. Supports runtime linking via `dlload`, allowing the user to choose the target dynamic library at runtime.
-- `require "sdl3"` makes the SDL3 core API available (functions, constants, structs, enums, etc.) by loading `sdl3/sdl` internally.
-- Added optional extension entry points: `require "sdl3/image"` for SDL_image APIs and `require "sdl3/ttf"` for SDL_ttf APIs (both assume the SDL3 core is loaded).
+- `require "rbsdl3"` makes the SDL3 core API available (functions, constants, structs, enums, etc.) by loading `rbsdl3/sdl` internally.
+- Added optional extension entry points: `require "rbsdl3/image"` for SDL_image APIs and `require "rbsdl3/ttf"` for SDL_ttf APIs (both assume the SDL3 core is loaded).
 - Added Ruby-side helpers that mirror a subset of SDL macros (C-style integer casts, FOURCC, version helpers, etc.).
 - Added a stub/annotation mechanism for missing symbols and unsupported APIs: unresolved symbols raise `NotImplementedError`, and selected APIs can be explicitly marked as `unsupported:`.
 

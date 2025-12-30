@@ -11,7 +11,7 @@ rbsdl3 is a binding library for using SDL3 from Ruby. In addition to SDL3 itself
 - Provides Ruby-side constants and struct definitions before any dynamic libraries are loaded.
 - Once the dynamic libraries are loaded, SDL APIs are bound and can be called as methods.
 - If an API symbol is not available at bind time, execution still continues; the corresponding method is defined as a stub that raises `NotImplementedError` when called.
-- Bindings for related libraries can be added as needed, for example with `require "sdl3/image"`.
+- Bindings for related libraries can be added as needed, for example with `require "rbsdl3/image"`.
 
 ## Scope
 
@@ -46,10 +46,10 @@ gem install rbsdl3
 
 ### SDL3 (core)
 
-With `require "sdl3"`, Ruby-side definitions such as constants and structs are available. Calling functions requires `SDL3.dlload`.
+With `require "rbsdl3"`, Ruby-side definitions such as constants and structs are available. Calling functions requires `SDL3.dlload`.
 
 ```ruby
-require "sdl3"
+require "rbsdl3"
 SDL3::SDL_MAJOR_VERSION
 
 SDL3.SDL_GetVersion  #=> raises NoMethodError (not bound yet)
@@ -66,7 +66,7 @@ SDL_GetVersion()
 Related library bindings are added by requiring them individually.
 
 ```ruby
-require "sdl3/image"
+require "rbsdl3/image"
 SDL3::SDL_IMAGE_MAJOR_VERSION
 SDL3::SDL_MAJOR_VERSION
 
@@ -82,7 +82,7 @@ SDL_GetVersion()
 ### Callbacks / function pointers
 
 ```ruby
-require "sdl3"
+require "rbsdl3"
 SDL3.bind(SDL3::SDL_HitTest) { |win, area, data| 0 }
 SDL3["SDL_HitTest"]
 ```

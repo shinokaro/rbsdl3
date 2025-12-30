@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require_relative "../sdl3"
+require_relative "../rbsdl3"
 require_relative "sdl"
 
 module SDL3

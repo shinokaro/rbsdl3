@@ -46,7 +46,7 @@ class SDLSpec
   def headers_manifest_file = File.join(MANIFEST_DIR, "#{lib_name}_headers")
 
   def module_filename = spec.fetch(:rb_name)
-  def bindings_relpath = File.join("sdl3", module_filename)
+  def bindings_relpath = File.join("rbsdl3", module_filename)
   def bindings_template_file = File.join(TEMPLATE_DIR, "bindings.rb.erb")
   def bindings_manual_code_file = File.join(TEMPLATE_DIR, "#{bindings_relpath}.rb")
   def bindings_rb_file = File.join(LIB_DIR, "#{bindings_relpath}.rb")
