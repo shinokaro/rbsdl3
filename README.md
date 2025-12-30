@@ -2,6 +2,9 @@
 
 rbsdl3 is a binding library for using SDL3 from Ruby. In addition to SDL3 itself, it also covers APIs from related libraries such as SDL_image and SDL_ttf. SDL dynamic libraries (DLL/so/dylib) are loaded explicitly by the user at runtime.
 
+- SDL (official): https://www.libsdl.org/
+- SDL3 Documentation (SDL Wiki): https://wiki.libsdl.org/SDL3/FrontPage
+
 ## Features
 
 - Built on Ruby’s standard library, Fiddle.
