@@ -91,6 +91,16 @@ SDL3["SDL_HitTest"]
 
 c2ffi (https://github.com/rpav/c2ffi) is used as the source of the AST output from which most bindings are mechanically generated. Macros are extracted from header files using a custom extraction tool, and macro functions are also automatically converted. Anything that cannot be handled by these methods is bound manually.
 
+To fetch the latest SDL library releases used for generation, run:
+
+- `rake sources:checkout:all`
+
+The downloaded sources are stored under `tmp/` in the development directory.
+
+To generate the binding code from the fetched sources, run:
+
+- `rake bindings:generate:all`
+
 ## Contributing
 
 Bug reports are welcome on GitHub at https://github.com/shinokaro/rbsdl3.
