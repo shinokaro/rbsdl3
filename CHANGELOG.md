@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-## [0.1.0] - 2025-12-30
+## [0.1.0] - 2025-12-31
 
 ### Added
 - Added SDL3 bindings built on `Fiddle::Importer`. Supports runtime linking via `dlload`, allowing the user to choose the target dynamic library at runtime.
