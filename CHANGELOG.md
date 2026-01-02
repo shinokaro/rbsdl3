@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-01-02
+
+### Updated
+- Target SDL version to 3.4.0 (from 3.2.28). Regenerated `rbsdl3/sdl.rb`; newly added APIs in SDL 3.4 are now available via the bindings (see SDL 3.4.0 release notes for the full upstream change list).
+- Target SDL_image version to 3.2.6 (from 3.2.4). Regenerated `rbsdl3/image.rb` (micro update; no intentional functional change in rbsdl3 beyond upstream bugfixes).
+
+### Notes
+- Upstream renamed `SDL_PROP_WINDOW_OPENVR_OVERLAY_ID` to `SDL_PROP_WINDOW_OPENVR_OVERLAY_ID_NUMBER` (same value).
+
 ## [0.1.0] - 2025-12-31
 
 ### Added
