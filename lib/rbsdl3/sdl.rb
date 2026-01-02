@@ -126,6 +126,7 @@ module SDL3
     const_set :SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, (SDL_AudioDeviceID(0xFFFFFFFF))
     const_set :SDL_AUDIO_DEVICE_DEFAULT_RECORDING, (SDL_AudioDeviceID(0xFFFFFFFE))
     module_function def SDL_AUDIO_FRAMESIZE(x) = (SDL_AUDIO_BYTESIZE((x).format) * (x).channels)
+    const_set :SDL_PROP_AUDIOSTREAM_AUTO_CLEANUP_BOOLEAN, "SDL.audiostream.auto_cleanup"
     const_set :SDL_BLENDMODE_NONE, 0x00000000
     const_set :SDL_BLENDMODE_BLEND, 0x00000001
     const_set :SDL_BLENDMODE_BLEND_PREMULTIPLIED, 0x00000010
@@ -172,14 +173,26 @@ module SDL3
     const_set :SDL_GPU_COLORCOMPONENT_A, (1 << 3)
     const_set :SDL_PROP_GPU_DEVICE_CREATE_DEBUGMODE_BOOLEAN, "SDL.gpu.device.create.debugmode"
     const_set :SDL_PROP_GPU_DEVICE_CREATE_PREFERLOWPOWER_BOOLEAN, "SDL.gpu.device.create.preferlowpower"
+    const_set :SDL_PROP_GPU_DEVICE_CREATE_VERBOSE_BOOLEAN, "SDL.gpu.device.create.verbose"
     const_set :SDL_PROP_GPU_DEVICE_CREATE_NAME_STRING, "SDL.gpu.device.create.name"
+    const_set :SDL_PROP_GPU_DEVICE_CREATE_FEATURE_CLIP_DISTANCE_BOOLEAN, "SDL.gpu.device.create.feature.clip_distance"
+    const_set :SDL_PROP_GPU_DEVICE_CREATE_FEATURE_DEPTH_CLAMPING_BOOLEAN, "SDL.gpu.device.create.feature.depth_clamping"
+    const_set :SDL_PROP_GPU_DEVICE_CREATE_FEATURE_INDIRECT_DRAW_FIRST_INSTANCE_BOOLEAN, "SDL.gpu.device.create.feature.indirect_draw_first_instance"
+    const_set :SDL_PROP_GPU_DEVICE_CREATE_FEATURE_ANISOTROPY_BOOLEAN, "SDL.gpu.device.create.feature.anisotropy"
     const_set :SDL_PROP_GPU_DEVICE_CREATE_SHADERS_PRIVATE_BOOLEAN, "SDL.gpu.device.create.shaders.private"
     const_set :SDL_PROP_GPU_DEVICE_CREATE_SHADERS_SPIRV_BOOLEAN, "SDL.gpu.device.create.shaders.spirv"
     const_set :SDL_PROP_GPU_DEVICE_CREATE_SHADERS_DXBC_BOOLEAN, "SDL.gpu.device.create.shaders.dxbc"
     const_set :SDL_PROP_GPU_DEVICE_CREATE_SHADERS_DXIL_BOOLEAN, "SDL.gpu.device.create.shaders.dxil"
     const_set :SDL_PROP_GPU_DEVICE_CREATE_SHADERS_MSL_BOOLEAN, "SDL.gpu.device.create.shaders.msl"
     const_set :SDL_PROP_GPU_DEVICE_CREATE_SHADERS_METALLIB_BOOLEAN, "SDL.gpu.device.create.shaders.metallib"
+    const_set :SDL_PROP_GPU_DEVICE_CREATE_D3D12_ALLOW_FEWER_RESOURCE_SLOTS_BOOLEAN, "SDL.gpu.device.create.d3d12.allowtier1resourcebinding"
     const_set :SDL_PROP_GPU_DEVICE_CREATE_D3D12_SEMANTIC_NAME_STRING, "SDL.gpu.device.create.d3d12.semantic"
+    const_set :SDL_PROP_GPU_DEVICE_CREATE_VULKAN_REQUIRE_HARDWARE_ACCELERATION_BOOLEAN, "SDL.gpu.device.create.vulkan.requirehardwareacceleration"
+    const_set :SDL_PROP_GPU_DEVICE_CREATE_VULKAN_OPTIONS_POINTER, "SDL.gpu.device.create.vulkan.options"
+    const_set :SDL_PROP_GPU_DEVICE_NAME_STRING, "SDL.gpu.device.name"
+    const_set :SDL_PROP_GPU_DEVICE_DRIVER_NAME_STRING, "SDL.gpu.device.driver_name"
+    const_set :SDL_PROP_GPU_DEVICE_DRIVER_VERSION_STRING, "SDL.gpu.device.driver_version"
+    const_set :SDL_PROP_GPU_DEVICE_DRIVER_INFO_STRING, "SDL.gpu.device.driver_info"
     const_set :SDL_PROP_GPU_COMPUTEPIPELINE_CREATE_NAME_STRING, "SDL.gpu.computepipeline.create.name"
     const_set :SDL_PROP_GPU_GRAPHICSPIPELINE_CREATE_NAME_STRING, "SDL.gpu.graphicspipeline.create.name"
     const_set :SDL_PROP_GPU_SAMPLER_CREATE_NAME_STRING, "SDL.gpu.sampler.create.name"
@@ -193,6 +206,7 @@ module SDL3
     const_set :SDL_PROP_GPU_TEXTURE_CREATE_NAME_STRING, "SDL.gpu.texture.create.name"
     const_set :SDL_PROP_GPU_BUFFER_CREATE_NAME_STRING, "SDL.gpu.buffer.create.name"
     const_set :SDL_PROP_GPU_TRANSFERBUFFER_CREATE_NAME_STRING, "SDL.gpu.transferbuffer.create.name"
+    const_set :SDL_HAPTIC_INFINITY, 4294967295
     const_set :SDL_HAPTIC_CONSTANT, (1<<0)
     const_set :SDL_HAPTIC_SINE, (1<<1)
     const_set :SDL_HAPTIC_SQUARE, (1<<2)
@@ -217,7 +231,6 @@ module SDL3
     const_set :SDL_HAPTIC_CARTESIAN, 1
     const_set :SDL_HAPTIC_SPHERICAL, 2
     const_set :SDL_HAPTIC_STEERING_AXIS, 3
-    const_set :SDL_HAPTIC_INFINITY, 4294967295
     const_set :SDL_HINT_ALLOW_ALT_TAB_WHILE_GRABBED, "SDL_ALLOW_ALT_TAB_WHILE_GRABBED"
     const_set :SDL_HINT_ANDROID_ALLOW_RECREATE_ACTIVITY, "SDL_ANDROID_ALLOW_RECREATE_ACTIVITY"
     const_set :SDL_HINT_ANDROID_BLOCK_ON_PAUSE, "SDL_ANDROID_BLOCK_ON_PAUSE"
@@ -236,6 +249,7 @@ module SDL3
     const_set :SDL_HINT_AUDIO_DEVICE_SAMPLE_FRAMES, "SDL_AUDIO_DEVICE_SAMPLE_FRAMES"
     const_set :SDL_HINT_AUDIO_DEVICE_STREAM_NAME, "SDL_AUDIO_DEVICE_STREAM_NAME"
     const_set :SDL_HINT_AUDIO_DEVICE_STREAM_ROLE, "SDL_AUDIO_DEVICE_STREAM_ROLE"
+    const_set :SDL_HINT_AUDIO_DEVICE_RAW_STREAM, "SDL_AUDIO_DEVICE_RAW_STREAM"
     const_set :SDL_HINT_AUDIO_DISK_INPUT_FILE, "SDL_AUDIO_DISK_INPUT_FILE"
     const_set :SDL_HINT_AUDIO_DISK_OUTPUT_FILE, "SDL_AUDIO_DISK_OUTPUT_FILE"
     const_set :SDL_HINT_AUDIO_DISK_TIMESCALE, "SDL_AUDIO_DISK_TIMESCALE"
@@ -252,6 +266,7 @@ module SDL3
     const_set :SDL_HINT_JOYSTICK_DIRECTINPUT, "SDL_JOYSTICK_DIRECTINPUT"
     const_set :SDL_HINT_FILE_DIALOG_DRIVER, "SDL_FILE_DIALOG_DRIVER"
     const_set :SDL_HINT_DISPLAY_USABLE_BOUNDS, "SDL_DISPLAY_USABLE_BOUNDS"
+    const_set :SDL_HINT_INVALID_PARAM_CHECKS, "SDL_INVALID_PARAM_CHECKS"
     const_set :SDL_HINT_EMSCRIPTEN_ASYNCIFY, "SDL_EMSCRIPTEN_ASYNCIFY"
     const_set :SDL_HINT_EMSCRIPTEN_CANVAS_SELECTOR, "SDL_EMSCRIPTEN_CANVAS_SELECTOR"
     const_set :SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT, "SDL_EMSCRIPTEN_KEYBOARD_ELEMENT"
@@ -272,6 +287,7 @@ module SDL3
     const_set :SDL_HINT_GDK_TEXTINPUT_SCOPE, "SDL_GDK_TEXTINPUT_SCOPE"
     const_set :SDL_HINT_GDK_TEXTINPUT_TITLE, "SDL_GDK_TEXTINPUT_TITLE"
     const_set :SDL_HINT_HIDAPI_LIBUSB, "SDL_HIDAPI_LIBUSB"
+    const_set :SDL_HINT_HIDAPI_LIBUSB_GAMECUBE, "SDL_HIDAPI_LIBUSB_GAMECUBE"
     const_set :SDL_HINT_HIDAPI_LIBUSB_WHITELIST, "SDL_HIDAPI_LIBUSB_WHITELIST"
     const_set :SDL_HINT_HIDAPI_UDEV, "SDL_HIDAPI_UDEV"
     const_set :SDL_HINT_GPU_DRIVER, "SDL_GPU_DRIVER"
@@ -311,9 +327,15 @@ module SDL3
     const_set :SDL_HINT_JOYSTICK_HIDAPI_STEAM_HOME_LED, "SDL_JOYSTICK_HIDAPI_STEAM_HOME_LED"
     const_set :SDL_HINT_JOYSTICK_HIDAPI_STEAMDECK, "SDL_JOYSTICK_HIDAPI_STEAMDECK"
     const_set :SDL_HINT_JOYSTICK_HIDAPI_STEAM_HORI, "SDL_JOYSTICK_HIDAPI_STEAM_HORI"
+    const_set :SDL_HINT_JOYSTICK_HIDAPI_LG4FF, "SDL_JOYSTICK_HIDAPI_LG4FF"
+    const_set :SDL_HINT_JOYSTICK_HIDAPI_8BITDO, "SDL_JOYSTICK_HIDAPI_8BITDO"
+    const_set :SDL_HINT_JOYSTICK_HIDAPI_SINPUT, "SDL_JOYSTICK_HIDAPI_SINPUT"
+    const_set :SDL_HINT_JOYSTICK_HIDAPI_ZUIKI, "SDL_JOYSTICK_HIDAPI_ZUIKI"
+    const_set :SDL_HINT_JOYSTICK_HIDAPI_FLYDIGI, "SDL_JOYSTICK_HIDAPI_FLYDIGI"
     const_set :SDL_HINT_JOYSTICK_HIDAPI_SWITCH, "SDL_JOYSTICK_HIDAPI_SWITCH"
     const_set :SDL_HINT_JOYSTICK_HIDAPI_SWITCH_HOME_LED, "SDL_JOYSTICK_HIDAPI_SWITCH_HOME_LED"
     const_set :SDL_HINT_JOYSTICK_HIDAPI_SWITCH_PLAYER_LED, "SDL_JOYSTICK_HIDAPI_SWITCH_PLAYER_LED"
+    const_set :SDL_HINT_JOYSTICK_HIDAPI_SWITCH2, "SDL_JOYSTICK_HIDAPI_SWITCH2"
     const_set :SDL_HINT_JOYSTICK_HIDAPI_VERTICAL_JOY_CONS, "SDL_JOYSTICK_HIDAPI_VERTICAL_JOY_CONS"
     const_set :SDL_HINT_JOYSTICK_HIDAPI_WII, "SDL_JOYSTICK_HIDAPI_WII"
     const_set :SDL_HINT_JOYSTICK_HIDAPI_WII_PLAYER_LED, "SDL_JOYSTICK_HIDAPI_WII_PLAYER_LED"
@@ -323,6 +345,8 @@ module SDL3
     const_set :SDL_HINT_JOYSTICK_HIDAPI_XBOX_360_WIRELESS, "SDL_JOYSTICK_HIDAPI_XBOX_360_WIRELESS"
     const_set :SDL_HINT_JOYSTICK_HIDAPI_XBOX_ONE, "SDL_JOYSTICK_HIDAPI_XBOX_ONE"
     const_set :SDL_HINT_JOYSTICK_HIDAPI_XBOX_ONE_HOME_LED, "SDL_JOYSTICK_HIDAPI_XBOX_ONE_HOME_LED"
+    const_set :SDL_HINT_JOYSTICK_HIDAPI_GIP, "SDL_JOYSTICK_HIDAPI_GIP"
+    const_set :SDL_HINT_JOYSTICK_HIDAPI_GIP_RESET_FOR_METADATA, "SDL_JOYSTICK_HIDAPI_GIP_RESET_FOR_METADATA"
     const_set :SDL_HINT_JOYSTICK_IOKIT, "SDL_JOYSTICK_IOKIT"
     const_set :SDL_HINT_JOYSTICK_LINUX_CLASSIC, "SDL_JOYSTICK_LINUX_CLASSIC"
     const_set :SDL_HINT_JOYSTICK_LINUX_DEADZONES, "SDL_JOYSTICK_LINUX_DEADZONES"
@@ -343,17 +367,20 @@ module SDL3
     const_set :SDL_HINT_KEYCODE_OPTIONS, "SDL_KEYCODE_OPTIONS"
     const_set :SDL_HINT_KMSDRM_DEVICE_INDEX, "SDL_KMSDRM_DEVICE_INDEX"
     const_set :SDL_HINT_KMSDRM_REQUIRE_DRM_MASTER, "SDL_KMSDRM_REQUIRE_DRM_MASTER"
+    const_set :SDL_HINT_KMSDRM_ATOMIC, "SDL_KMSDRM_ATOMIC"
     const_set :SDL_HINT_LOGGING, "SDL_LOGGING"
     const_set :SDL_HINT_MAC_BACKGROUND_APP, "SDL_MAC_BACKGROUND_APP"
     const_set :SDL_HINT_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK, "SDL_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK"
     const_set :SDL_HINT_MAC_OPENGL_ASYNC_DISPATCH, "SDL_MAC_OPENGL_ASYNC_DISPATCH"
     const_set :SDL_HINT_MAC_OPTION_AS_ALT, "SDL_MAC_OPTION_AS_ALT"
     const_set :SDL_HINT_MAC_SCROLL_MOMENTUM, "SDL_MAC_SCROLL_MOMENTUM"
+    const_set :SDL_HINT_MAC_PRESS_AND_HOLD, "SDL_MAC_PRESS_AND_HOLD"
     const_set :SDL_HINT_MAIN_CALLBACK_RATE, "SDL_MAIN_CALLBACK_RATE"
     const_set :SDL_HINT_MOUSE_AUTO_CAPTURE, "SDL_MOUSE_AUTO_CAPTURE"
     const_set :SDL_HINT_MOUSE_DOUBLE_CLICK_RADIUS, "SDL_MOUSE_DOUBLE_CLICK_RADIUS"
     const_set :SDL_HINT_MOUSE_DOUBLE_CLICK_TIME, "SDL_MOUSE_DOUBLE_CLICK_TIME"
     const_set :SDL_HINT_MOUSE_DEFAULT_SYSTEM_CURSOR, "SDL_MOUSE_DEFAULT_SYSTEM_CURSOR"
+    const_set :SDL_HINT_MOUSE_DPI_SCALE_CURSORS, "SDL_MOUSE_DPI_SCALE_CURSORS"
     const_set :SDL_HINT_MOUSE_EMULATE_WARP_WITH_RELATIVE, "SDL_MOUSE_EMULATE_WARP_WITH_RELATIVE"
     const_set :SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "SDL_MOUSE_FOCUS_CLICKTHROUGH"
     const_set :SDL_HINT_MOUSE_NORMAL_SPEED_SCALE, "SDL_MOUSE_NORMAL_SPEED_SCALE"
@@ -375,6 +402,7 @@ module SDL3
     const_set :SDL_HINT_QUIT_ON_LAST_WINDOW_CLOSE, "SDL_QUIT_ON_LAST_WINDOW_CLOSE"
     const_set :SDL_HINT_RENDER_DIRECT3D_THREADSAFE, "SDL_RENDER_DIRECT3D_THREADSAFE"
     const_set :SDL_HINT_RENDER_DIRECT3D11_DEBUG, "SDL_RENDER_DIRECT3D11_DEBUG"
+    const_set :SDL_HINT_RENDER_DIRECT3D11_WARP, "SDL_RENDER_DIRECT3D11_WARP"
     const_set :SDL_HINT_RENDER_VULKAN_DEBUG, "SDL_RENDER_VULKAN_DEBUG"
     const_set :SDL_HINT_RENDER_GPU_DEBUG, "SDL_RENDER_GPU_DEBUG"
     const_set :SDL_HINT_RENDER_GPU_LOW_POWER, "SDL_RENDER_GPU_LOW_POWER"
@@ -385,6 +413,10 @@ module SDL3
     const_set :SDL_HINT_RETURN_KEY_HIDES_IME, "SDL_RETURN_KEY_HIDES_IME"
     const_set :SDL_HINT_ROG_GAMEPAD_MICE, "SDL_ROG_GAMEPAD_MICE"
     const_set :SDL_HINT_ROG_GAMEPAD_MICE_EXCLUDED, "SDL_ROG_GAMEPAD_MICE_EXCLUDED"
+    const_set :SDL_HINT_PS2_GS_WIDTH, "SDL_PS2_GS_WIDTH"
+    const_set :SDL_HINT_PS2_GS_HEIGHT, "SDL_PS2_GS_HEIGHT"
+    const_set :SDL_HINT_PS2_GS_PROGRESSIVE, "SDL_PS2_GS_PROGRESSIVE"
+    const_set :SDL_HINT_PS2_GS_MODE, "SDL_PS2_GS_MODE"
     const_set :SDL_HINT_RPI_VIDEO_LAYER, "SDL_RPI_VIDEO_LAYER"
     const_set :SDL_HINT_SCREENSAVER_INHIBIT_ACTIVITY_NAME, "SDL_SCREENSAVER_INHIBIT_ACTIVITY_NAME"
     const_set :SDL_HINT_SHUTDOWN_DBUS_ON_QUIT, "SDL_SHUTDOWN_DBUS_ON_QUIT"
@@ -405,6 +437,8 @@ module SDL3
     const_set :SDL_HINT_VIDEO_FORCE_EGL, "SDL_VIDEO_FORCE_EGL"
     const_set :SDL_HINT_VIDEO_MAC_FULLSCREEN_SPACES, "SDL_VIDEO_MAC_FULLSCREEN_SPACES"
     const_set :SDL_HINT_VIDEO_MAC_FULLSCREEN_MENU_VISIBILITY, "SDL_VIDEO_MAC_FULLSCREEN_MENU_VISIBILITY"
+    const_set :SDL_HINT_VIDEO_METAL_AUTO_RESIZE_DRAWABLE, "SDL_VIDEO_METAL_AUTO_RESIZE_DRAWABLE"
+    const_set :SDL_HINT_VIDEO_MATCH_EXCLUSIVE_MODE_ON_MOVE, "SDL_VIDEO_MATCH_EXCLUSIVE_MODE_ON_MOVE"
     const_set :SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS"
     const_set :SDL_HINT_VIDEO_OFFSCREEN_SAVE_FRAMES, "SDL_VIDEO_OFFSCREEN_SAVE_FRAMES"
     const_set :SDL_HINT_VIDEO_SYNC_WINDOW_OPERATIONS, "SDL_VIDEO_SYNC_WINDOW_OPERATIONS"
@@ -444,6 +478,7 @@ module SDL3
     const_set :SDL_HINT_WINDOWS_ENABLE_MESSAGELOOP, "SDL_WINDOWS_ENABLE_MESSAGELOOP"
     const_set :SDL_HINT_WINDOWS_GAMEINPUT, "SDL_WINDOWS_GAMEINPUT"
     const_set :SDL_HINT_WINDOWS_RAW_KEYBOARD, "SDL_WINDOWS_RAW_KEYBOARD"
+    const_set :SDL_HINT_WINDOWS_RAW_KEYBOARD_EXCLUDE_HOTKEYS, "SDL_WINDOWS_RAW_KEYBOARD_EXCLUDE_HOTKEYS"
     const_set :SDL_HINT_WINDOWS_FORCE_SEMAPHORE_KERNEL, "SDL_WINDOWS_FORCE_SEMAPHORE_KERNEL"
     const_set :SDL_HINT_WINDOWS_INTRESOURCE_ICON, "SDL_WINDOWS_INTRESOURCE_ICON"
     const_set :SDL_HINT_WINDOWS_INTRESOURCE_ICON_SMALL, "SDL_WINDOWS_INTRESOURCE_ICON_SMALL"
@@ -477,6 +512,7 @@ module SDL3
     const_set :SDL_PROP_IOSTREAM_ANDROID_AASSET_POINTER, "SDL.iostream.android.aasset"
     const_set :SDL_PROP_IOSTREAM_MEMORY_POINTER, "SDL.iostream.memory.base"
     const_set :SDL_PROP_IOSTREAM_MEMORY_SIZE_NUMBER, "SDL.iostream.memory.size"
+    const_set :SDL_PROP_IOSTREAM_MEMORY_FREE_FUNC_POINTER, "SDL.iostream.memory.free"
     const_set :SDL_PROP_IOSTREAM_DYNAMIC_MEMORY_POINTER, "SDL.iostream.dynamic.memory"
     const_set :SDL_PROP_IOSTREAM_DYNAMIC_CHUNKSIZE_NUMBER, "SDL.iostream.dynamic.chunksize"
     const_set :SDL_JOYSTICK_AXIS_MAX, 32767
@@ -551,6 +587,7 @@ module SDL3
     const_set :SDL_PEN_INPUT_BUTTON_4, (1 << 4)
     const_set :SDL_PEN_INPUT_BUTTON_5, (1 << 5)
     const_set :SDL_PEN_INPUT_ERASER_TIP, (1 << 30)
+    const_set :SDL_PEN_INPUT_IN_PROXIMITY, (1 << 31)
     const_set :SDL_ALPHA_OPAQUE, 255
     const_set :SDL_ALPHA_OPAQUE_FLOAT, 1.0
     const_set :SDL_ALPHA_TRANSPARENT, 0
@@ -584,6 +621,7 @@ module SDL3
     module_function def SDL_ISCOLORSPACE_FULL_RANGE(cspace) = (SDL_COLORSPACERANGE(cspace) == SDL_COLOR_RANGE_FULL)
     const_set :SDL_PROP_PROCESS_CREATE_ARGS_POINTER, "SDL.process.create.args"
     const_set :SDL_PROP_PROCESS_CREATE_ENVIRONMENT_POINTER, "SDL.process.create.environment"
+    const_set :SDL_PROP_PROCESS_CREATE_WORKING_DIRECTORY_STRING, "SDL.process.create.working_directory"
     const_set :SDL_PROP_PROCESS_CREATE_STDIN_NUMBER, "SDL.process.create.stdin_option"
     const_set :SDL_PROP_PROCESS_CREATE_STDIN_POINTER, "SDL.process.create.stdin_source"
     const_set :SDL_PROP_PROCESS_CREATE_STDOUT_NUMBER, "SDL.process.create.stdout_option"
@@ -592,17 +630,23 @@ module SDL3
     const_set :SDL_PROP_PROCESS_CREATE_STDERR_POINTER, "SDL.process.create.stderr_source"
     const_set :SDL_PROP_PROCESS_CREATE_STDERR_TO_STDOUT_BOOLEAN, "SDL.process.create.stderr_to_stdout"
     const_set :SDL_PROP_PROCESS_CREATE_BACKGROUND_BOOLEAN, "SDL.process.create.background"
+    const_set :SDL_PROP_PROCESS_CREATE_CMDLINE_STRING, "SDL.process.create.cmdline"
     const_set :SDL_PROP_PROCESS_PID_NUMBER, "SDL.process.pid"
     const_set :SDL_PROP_PROCESS_STDIN_POINTER, "SDL.process.stdin"
     const_set :SDL_PROP_PROCESS_STDOUT_POINTER, "SDL.process.stdout"
     const_set :SDL_PROP_PROCESS_STDERR_POINTER, "SDL.process.stderr"
     const_set :SDL_PROP_PROCESS_BACKGROUND_BOOLEAN, "SDL.process.background"
     const_set :SDL_SOFTWARE_RENDERER, "software"
+    const_set :SDL_GPU_RENDERER, "gpu"
     const_set :SDL_PROP_RENDERER_CREATE_NAME_STRING, "SDL.renderer.create.name"
     const_set :SDL_PROP_RENDERER_CREATE_WINDOW_POINTER, "SDL.renderer.create.window"
     const_set :SDL_PROP_RENDERER_CREATE_SURFACE_POINTER, "SDL.renderer.create.surface"
     const_set :SDL_PROP_RENDERER_CREATE_OUTPUT_COLORSPACE_NUMBER, "SDL.renderer.create.output_colorspace"
     const_set :SDL_PROP_RENDERER_CREATE_PRESENT_VSYNC_NUMBER, "SDL.renderer.create.present_vsync"
+    const_set :SDL_PROP_RENDERER_CREATE_GPU_DEVICE_POINTER, "SDL.renderer.create.gpu.device"
+    const_set :SDL_PROP_RENDERER_CREATE_GPU_SHADERS_SPIRV_BOOLEAN, "SDL.renderer.create.gpu.shaders_spirv"
+    const_set :SDL_PROP_RENDERER_CREATE_GPU_SHADERS_DXIL_BOOLEAN, "SDL.renderer.create.gpu.shaders_dxil"
+    const_set :SDL_PROP_RENDERER_CREATE_GPU_SHADERS_MSL_BOOLEAN, "SDL.renderer.create.gpu.shaders_msl"
     const_set :SDL_PROP_RENDERER_CREATE_VULKAN_INSTANCE_POINTER, "SDL.renderer.create.vulkan.instance"
     const_set :SDL_PROP_RENDERER_CREATE_VULKAN_SURFACE_NUMBER, "SDL.renderer.create.vulkan.surface"
     const_set :SDL_PROP_RENDERER_CREATE_VULKAN_PHYSICAL_DEVICE_POINTER, "SDL.renderer.create.vulkan.physical_device"
@@ -615,6 +659,7 @@ module SDL3
     const_set :SDL_PROP_RENDERER_VSYNC_NUMBER, "SDL.renderer.vsync"
     const_set :SDL_PROP_RENDERER_MAX_TEXTURE_SIZE_NUMBER, "SDL.renderer.max_texture_size"
     const_set :SDL_PROP_RENDERER_TEXTURE_FORMATS_POINTER, "SDL.renderer.texture_formats"
+    const_set :SDL_PROP_RENDERER_TEXTURE_WRAPPING_BOOLEAN, "SDL.renderer.texture_wrapping"
     const_set :SDL_PROP_RENDERER_OUTPUT_COLORSPACE_NUMBER, "SDL.renderer.output_colorspace"
     const_set :SDL_PROP_RENDERER_HDR_ENABLED_BOOLEAN, "SDL.renderer.HDR_enabled"
     const_set :SDL_PROP_RENDERER_SDR_WHITE_POINT_FLOAT, "SDL.renderer.SDR_white_point"
@@ -638,6 +683,7 @@ module SDL3
     const_set :SDL_PROP_TEXTURE_CREATE_ACCESS_NUMBER, "SDL.texture.create.access"
     const_set :SDL_PROP_TEXTURE_CREATE_WIDTH_NUMBER, "SDL.texture.create.width"
     const_set :SDL_PROP_TEXTURE_CREATE_HEIGHT_NUMBER, "SDL.texture.create.height"
+    const_set :SDL_PROP_TEXTURE_CREATE_PALETTE_POINTER, "SDL.texture.create.palette"
     const_set :SDL_PROP_TEXTURE_CREATE_SDR_WHITE_POINT_FLOAT, "SDL.texture.create.SDR_white_point"
     const_set :SDL_PROP_TEXTURE_CREATE_HDR_HEADROOM_FLOAT, "SDL.texture.create.HDR_headroom"
     const_set :SDL_PROP_TEXTURE_CREATE_D3D11_TEXTURE_POINTER, "SDL.texture.create.d3d11.texture"
@@ -656,6 +702,11 @@ module SDL3
     const_set :SDL_PROP_TEXTURE_CREATE_OPENGLES2_TEXTURE_U_NUMBER, "SDL.texture.create.opengles2.texture_u"
     const_set :SDL_PROP_TEXTURE_CREATE_OPENGLES2_TEXTURE_V_NUMBER, "SDL.texture.create.opengles2.texture_v"
     const_set :SDL_PROP_TEXTURE_CREATE_VULKAN_TEXTURE_NUMBER, "SDL.texture.create.vulkan.texture"
+    const_set :SDL_PROP_TEXTURE_CREATE_VULKAN_LAYOUT_NUMBER, "SDL.texture.create.vulkan.layout"
+    const_set :SDL_PROP_TEXTURE_CREATE_GPU_TEXTURE_POINTER, "SDL.texture.create.gpu.texture"
+    const_set :SDL_PROP_TEXTURE_CREATE_GPU_TEXTURE_UV_POINTER, "SDL.texture.create.gpu.texture_uv"
+    const_set :SDL_PROP_TEXTURE_CREATE_GPU_TEXTURE_U_POINTER, "SDL.texture.create.gpu.texture_u"
+    const_set :SDL_PROP_TEXTURE_CREATE_GPU_TEXTURE_V_POINTER, "SDL.texture.create.gpu.texture_v"
     const_set :SDL_PROP_TEXTURE_COLORSPACE_NUMBER, "SDL.texture.colorspace"
     const_set :SDL_PROP_TEXTURE_FORMAT_NUMBER, "SDL.texture.format"
     const_set :SDL_PROP_TEXTURE_ACCESS_NUMBER, "SDL.texture.access"
@@ -682,6 +733,10 @@ module SDL3
     const_set :SDL_PROP_TEXTURE_OPENGLES2_TEXTURE_V_NUMBER, "SDL.texture.opengles2.texture_v"
     const_set :SDL_PROP_TEXTURE_OPENGLES2_TEXTURE_TARGET_NUMBER, "SDL.texture.opengles2.target"
     const_set :SDL_PROP_TEXTURE_VULKAN_TEXTURE_NUMBER, "SDL.texture.vulkan.texture"
+    const_set :SDL_PROP_TEXTURE_GPU_TEXTURE_POINTER, "SDL.texture.gpu.texture"
+    const_set :SDL_PROP_TEXTURE_GPU_TEXTURE_UV_POINTER, "SDL.texture.gpu.texture_uv"
+    const_set :SDL_PROP_TEXTURE_GPU_TEXTURE_U_POINTER, "SDL.texture.gpu.texture_u"
+    const_set :SDL_PROP_TEXTURE_GPU_TEXTURE_V_POINTER, "SDL.texture.gpu.texture_v"
     const_set :SDL_RENDERER_VSYNC_DISABLED, 0
     const_set :SDL_RENDERER_VSYNC_ADAPTIVE, (-1)
     const_set :SDL_DEBUG_TEXT_FONT_CHARACTER_SIZE, 8
@@ -696,6 +751,7 @@ module SDL3
     const_set :SDL_PROP_SURFACE_TONEMAP_OPERATOR_STRING, "SDL.surface.tonemap"
     const_set :SDL_PROP_SURFACE_HOTSPOT_X_NUMBER, "SDL.surface.hotspot.x"
     const_set :SDL_PROP_SURFACE_HOTSPOT_Y_NUMBER, "SDL.surface.hotspot.y"
+    const_set :SDL_PROP_SURFACE_ROTATION_FLOAT, "SDL.surface.rotation"
     const_set :SDL_ANDROID_EXTERNAL_STORAGE_READ, 0x01
     const_set :SDL_ANDROID_EXTERNAL_STORAGE_WRITE, 0x02
     const_set :SDL_MS_PER_SECOND, 1000
@@ -717,8 +773,8 @@ module SDL3
     const_set :SDL_TRAYENTRY_DISABLED, 0x80000000
     const_set :SDL_TRAYENTRY_CHECKED, 0x40000000
     const_set :SDL_MAJOR_VERSION, 3
-    const_set :SDL_MINOR_VERSION, 2
-    const_set :SDL_MICRO_VERSION, 28
+    const_set :SDL_MINOR_VERSION, 4
+    const_set :SDL_MICRO_VERSION, 0
     module_function def SDL_VERSIONNUM(major, minor, patch) = ((major) * 1000000 + (minor) * 1000 + (patch))
     module_function def SDL_VERSIONNUM_MAJOR(version) = ((version) / 1000000)
     module_function def SDL_VERSIONNUM_MINOR(version) = (((version) / 1000) % 1000)
@@ -747,6 +803,7 @@ module SDL3
     const_set :SDL_WINDOW_TOOLTIP, SDL_UINT64_C(0x0000000000040000)
     const_set :SDL_WINDOW_POPUP_MENU, SDL_UINT64_C(0x0000000000080000)
     const_set :SDL_WINDOW_KEYBOARD_GRABBED, SDL_UINT64_C(0x0000000000100000)
+    const_set :SDL_WINDOW_FILL_DOCUMENT, SDL_UINT64_C(0x0000000000200000)
     const_set :SDL_WINDOW_VULKAN, SDL_UINT64_C(0x0000000010000000)
     const_set :SDL_WINDOW_METAL, SDL_UINT64_C(0x0000000020000000)
     const_set :SDL_WINDOW_TRANSPARENT, SDL_UINT64_C(0x0000000040000000)
@@ -772,6 +829,8 @@ module SDL3
     const_set :SDL_GL_CONTEXT_RESET_LOSE_CONTEXT, 0x0001
     const_set :SDL_PROP_DISPLAY_HDR_ENABLED_BOOLEAN, "SDL.display.HDR_enabled"
     const_set :SDL_PROP_DISPLAY_KMSDRM_PANEL_ORIENTATION_NUMBER, "SDL.display.KMSDRM.panel_orientation"
+    const_set :SDL_PROP_DISPLAY_WAYLAND_WL_OUTPUT_POINTER, "SDL.display.wayland.wl_output"
+    const_set :SDL_PROP_DISPLAY_WINDOWS_HMONITOR_POINTER, "SDL.display.windows.hmonitor"
     const_set :SDL_PROP_WINDOW_CREATE_ALWAYS_ON_TOP_BOOLEAN, "SDL.window.create.always_on_top"
     const_set :SDL_PROP_WINDOW_CREATE_BORDERLESS_BOOLEAN, "SDL.window.create.borderless"
     const_set :SDL_PROP_WINDOW_CREATE_CONSTRAIN_POPUP_BOOLEAN, "SDL.window.create.constrain_popup"
@@ -801,12 +860,15 @@ module SDL3
     const_set :SDL_PROP_WINDOW_CREATE_Y_NUMBER, "SDL.window.create.y"
     const_set :SDL_PROP_WINDOW_CREATE_COCOA_WINDOW_POINTER, "SDL.window.create.cocoa.window"
     const_set :SDL_PROP_WINDOW_CREATE_COCOA_VIEW_POINTER, "SDL.window.create.cocoa.view"
+    const_set :SDL_PROP_WINDOW_CREATE_WINDOWSCENE_POINTER, "SDL.window.create.uikit.windowscene"
     const_set :SDL_PROP_WINDOW_CREATE_WAYLAND_SURFACE_ROLE_CUSTOM_BOOLEAN, "SDL.window.create.wayland.surface_role_custom"
     const_set :SDL_PROP_WINDOW_CREATE_WAYLAND_CREATE_EGL_WINDOW_BOOLEAN, "SDL.window.create.wayland.create_egl_window"
     const_set :SDL_PROP_WINDOW_CREATE_WAYLAND_WL_SURFACE_POINTER, "SDL.window.create.wayland.wl_surface"
     const_set :SDL_PROP_WINDOW_CREATE_WIN32_HWND_POINTER, "SDL.window.create.win32.hwnd"
     const_set :SDL_PROP_WINDOW_CREATE_WIN32_PIXEL_FORMAT_HWND_POINTER, "SDL.window.create.win32.pixel_format_hwnd"
     const_set :SDL_PROP_WINDOW_CREATE_X11_WINDOW_NUMBER, "SDL.window.create.x11.window"
+    const_set :SDL_PROP_WINDOW_CREATE_EMSCRIPTEN_CANVAS_ID_STRING, "SDL.window.create.emscripten.canvas_id"
+    const_set :SDL_PROP_WINDOW_CREATE_EMSCRIPTEN_KEYBOARD_ELEMENT_STRING, "SDL.window.create.emscripten.keyboard_element"
     const_set :SDL_PROP_WINDOW_SHAPE_POINTER, "SDL.window.shape"
     const_set :SDL_PROP_WINDOW_HDR_ENABLED_BOOLEAN, "SDL.window.HDR_enabled"
     const_set :SDL_PROP_WINDOW_SDR_WHITE_LEVEL_FLOAT, "SDL.window.SDR_white_level"
@@ -823,7 +885,7 @@ module SDL3
     const_set :SDL_PROP_WINDOW_KMSDRM_GBM_DEVICE_POINTER, "SDL.window.kmsdrm.gbm_dev"
     const_set :SDL_PROP_WINDOW_COCOA_WINDOW_POINTER, "SDL.window.cocoa.window"
     const_set :SDL_PROP_WINDOW_COCOA_METAL_VIEW_TAG_NUMBER, "SDL.window.cocoa.metal_view_tag"
-    const_set :SDL_PROP_WINDOW_OPENVR_OVERLAY_ID, "SDL.window.openvr.overlay_id"
+    const_set :SDL_PROP_WINDOW_OPENVR_OVERLAY_ID_NUMBER, "SDL.window.openvr.overlay_id"
     const_set :SDL_PROP_WINDOW_VIVANTE_DISPLAY_POINTER, "SDL.window.vivante.display"
     const_set :SDL_PROP_WINDOW_VIVANTE_WINDOW_POINTER, "SDL.window.vivante.window"
     const_set :SDL_PROP_WINDOW_VIVANTE_SURFACE_POINTER, "SDL.window.vivante.surface"
@@ -842,6 +904,8 @@ module SDL3
     const_set :SDL_PROP_WINDOW_X11_DISPLAY_POINTER, "SDL.window.x11.display"
     const_set :SDL_PROP_WINDOW_X11_SCREEN_NUMBER, "SDL.window.x11.screen"
     const_set :SDL_PROP_WINDOW_X11_WINDOW_NUMBER, "SDL.window.x11.window"
+    const_set :SDL_PROP_WINDOW_EMSCRIPTEN_CANVAS_ID_STRING, "SDL.window.emscripten.canvas_id"
+    const_set :SDL_PROP_WINDOW_EMSCRIPTEN_KEYBOARD_ELEMENT_STRING, "SDL.window.emscripten.keyboard_element"
     const_set :SDL_WINDOW_SURFACE_VSYNC_DISABLED, 0
     const_set :SDL_WINDOW_SURFACE_VSYNC_ADAPTIVE, (-1)
 
@@ -1124,6 +1188,7 @@ module SDL3
     extern "bool SDL_CompareAndSwapAtomicU32(SDL_AtomicU32 *, Uint32, Uint32)"
     extern "Uint32 SDL_SetAtomicU32(SDL_AtomicU32 *, Uint32)"
     extern "Uint32 SDL_GetAtomicU32(SDL_AtomicU32 *)"
+    extern "Uint32 SDL_AddAtomicU32(SDL_AtomicU32 *, int)"
     extern "bool SDL_CompareAndSwapAtomicPointer(void **, void *, void *)"
     extern "void * SDL_SetAtomicPointer(void **, void *)"
     extern "void * SDL_GetAtomicPointer(void **)"
@@ -1359,6 +1424,10 @@ module SDL3
     extern "bool SDL_SetAudioStreamInputChannelMap(SDL_AudioStream *, int *, int)"
     extern "bool SDL_SetAudioStreamOutputChannelMap(SDL_AudioStream *, int *, int)"
     extern "bool SDL_PutAudioStreamData(SDL_AudioStream *, void *, int)"
+    typealias "SDL_AudioStreamDataCompleteCallback", "function (*pointer)()"
+    const_set :SDL_AudioStreamDataCompleteCallback, "void SDL_AudioStreamDataCompleteCallback(void *, void *, int)"
+    extern "bool SDL_PutAudioStreamDataNoCopy(SDL_AudioStream *, void *, int, SDL_AudioStreamDataCompleteCallback, void *)"
+    extern "bool SDL_PutAudioStreamPlanarData(SDL_AudioStream *, void **, int, int)"
     extern "int SDL_GetAudioStreamData(SDL_AudioStream *, void *, int)"
     extern "int SDL_GetAudioStreamAvailable(SDL_AudioStream *)"
     extern "int SDL_GetAudioStreamQueued(SDL_AudioStream *)"
@@ -1599,7 +1668,7 @@ module SDL3
     const_set :SDL_COLORSPACE_BT2020_LIMITED, 554706441
     const_set :SDL_COLORSPACE_BT2020_FULL, 571483657
     const_set :SDL_COLORSPACE_RGB_DEFAULT, 301991328
-    const_set :SDL_COLORSPACE_YUV_DEFAULT, 570426566
+    const_set :SDL_COLORSPACE_YUV_DEFAULT, 554703046
     typealias "SDL_Colorspace", "enum"
     const_set :SDL_Color, struct(
       [
@@ -1698,10 +1767,12 @@ module SDL3
     const_set :SDL_SCALEMODE_INVALID, 4294967295
     const_set :SDL_SCALEMODE_NEAREST, 0
     const_set :SDL_SCALEMODE_LINEAR, 1
+    const_set :SDL_SCALEMODE_PIXELART, 2
     typealias "SDL_ScaleMode", "enum"
     const_set :SDL_FLIP_NONE, 0
     const_set :SDL_FLIP_HORIZONTAL, 1
     const_set :SDL_FLIP_VERTICAL, 2
+    const_set :SDL_FLIP_HORIZONTAL_AND_VERTICAL, 3
     typealias "SDL_FlipMode", "enum"
     const_set :SDL_Surface, struct(
       [
@@ -1730,10 +1801,16 @@ module SDL3
     extern "void SDL_RemoveSurfaceAlternateImages(SDL_Surface *)"
     extern "bool SDL_LockSurface(SDL_Surface *)"
     extern "void SDL_UnlockSurface(SDL_Surface *)"
+    extern "SDL_Surface * SDL_LoadSurface_IO(SDL_IOStream *, bool)"
+    extern "SDL_Surface * SDL_LoadSurface(char *)"
     extern "SDL_Surface * SDL_LoadBMP_IO(SDL_IOStream *, bool)"
     extern "SDL_Surface * SDL_LoadBMP(char *)"
     extern "bool SDL_SaveBMP_IO(SDL_Surface *, SDL_IOStream *, bool)"
     extern "bool SDL_SaveBMP(SDL_Surface *, char *)"
+    extern "SDL_Surface * SDL_LoadPNG_IO(SDL_IOStream *, bool)"
+    extern "SDL_Surface * SDL_LoadPNG(char *)"
+    extern "bool SDL_SavePNG_IO(SDL_Surface *, SDL_IOStream *, bool)"
+    extern "bool SDL_SavePNG(SDL_Surface *, char *)"
     extern "bool SDL_SetSurfaceRLE(SDL_Surface *, bool)"
     extern "bool SDL_SurfaceHasRLE(SDL_Surface *)"
     extern "bool SDL_SetSurfaceColorKey(SDL_Surface *, bool, Uint32)"
@@ -1748,6 +1825,7 @@ module SDL3
     extern "bool SDL_SetSurfaceClipRect(SDL_Surface *, SDL_Rect *)"
     extern "bool SDL_GetSurfaceClipRect(SDL_Surface *, SDL_Rect *)"
     extern "bool SDL_FlipSurface(SDL_Surface *, SDL_FlipMode)"
+    extern "SDL_Surface * SDL_RotateSurface(SDL_Surface *, float)"
     extern "SDL_Surface * SDL_DuplicateSurface(SDL_Surface *)"
     extern "SDL_Surface * SDL_ScaleSurface(SDL_Surface *, int, int, SDL_ScaleMode)"
     extern "SDL_Surface * SDL_ConvertSurface(SDL_Surface *, SDL_PixelFormat)"
@@ -1788,6 +1866,10 @@ module SDL3
     const_set :SDL_CAMERA_POSITION_FRONT_FACING, 1
     const_set :SDL_CAMERA_POSITION_BACK_FACING, 2
     typealias "SDL_CameraPosition", "enum"
+    const_set :SDL_CAMERA_PERMISSION_STATE_DENIED, 4294967295
+    const_set :SDL_CAMERA_PERMISSION_STATE_PENDING, 0
+    const_set :SDL_CAMERA_PERMISSION_STATE_APPROVED, 1
+    typealias "SDL_CameraPermissionState", "enum"
     extern "int SDL_GetNumCameraDrivers(void)"
     extern "char * SDL_GetCameraDriver(int)"
     extern "char * SDL_GetCurrentCameraDriver(void)"
@@ -1796,7 +1878,7 @@ module SDL3
     extern "char * SDL_GetCameraName(SDL_CameraID)"
     extern "SDL_CameraPosition SDL_GetCameraPosition(SDL_CameraID)"
     extern "SDL_Camera * SDL_OpenCamera(SDL_CameraID, SDL_CameraSpec *)"
-    extern "int SDL_GetCameraPermissionState(SDL_Camera *)"
+    extern "SDL_CameraPermissionState SDL_GetCameraPermissionState(SDL_Camera *)"
     extern "SDL_CameraID SDL_GetCameraID(SDL_Camera *)"
     extern "SDL_PropertiesID SDL_GetCameraProperties(SDL_Camera *)"
     extern "bool SDL_GetCameraFormat(SDL_Camera *, SDL_CameraSpec *)"
@@ -1836,6 +1918,7 @@ module SDL3
     extern "bool SDL_HasLASX(void)"
     extern "int SDL_GetSystemRAM(void)"
     extern "size_t SDL_GetSIMDAlignment(void)"
+    extern "int SDL_GetSystemPageSize(void)"
     typealias "SDL_DisplayID", "Uint32"
     typealias "SDL_WindowID", "Uint32"
     const_set :SDL_SYSTEM_THEME_UNKNOWN, 0
@@ -1866,6 +1949,13 @@ module SDL3
     const_set :SDL_FLASH_BRIEFLY, 1
     const_set :SDL_FLASH_UNTIL_FOCUSED, 2
     typealias "SDL_FlashOperation", "enum"
+    const_set :SDL_PROGRESS_STATE_INVALID, 4294967295
+    const_set :SDL_PROGRESS_STATE_NONE, 0
+    const_set :SDL_PROGRESS_STATE_INDETERMINATE, 1
+    const_set :SDL_PROGRESS_STATE_NORMAL, 2
+    const_set :SDL_PROGRESS_STATE_PAUSED, 3
+    const_set :SDL_PROGRESS_STATE_ERROR, 4
+    typealias "SDL_ProgressState", "enum"
     typealias "SDL_GLContext", "SDL_GLContextState *"
     typealias "SDL_EGLDisplay", "void *"
     typealias "SDL_EGLConfig", "void *"
@@ -1963,6 +2053,7 @@ module SDL3
     extern "bool SDL_SetWindowBordered(SDL_Window *, bool)"
     extern "bool SDL_SetWindowResizable(SDL_Window *, bool)"
     extern "bool SDL_SetWindowAlwaysOnTop(SDL_Window *, bool)"
+    extern "bool SDL_SetWindowFillDocument(SDL_Window *, bool)"
     extern "bool SDL_ShowWindow(SDL_Window *)"
     extern "bool SDL_HideWindow(SDL_Window *)"
     extern "bool SDL_RaiseWindow(SDL_Window *)"
@@ -2007,6 +2098,10 @@ module SDL3
     extern "bool SDL_SetWindowHitTest(SDL_Window *, SDL_HitTest, void *)"
     extern "bool SDL_SetWindowShape(SDL_Window *, SDL_Surface *)"
     extern "bool SDL_FlashWindow(SDL_Window *, SDL_FlashOperation)"
+    extern "bool SDL_SetWindowProgressState(SDL_Window *, SDL_ProgressState)"
+    extern "SDL_ProgressState SDL_GetWindowProgressState(SDL_Window *)"
+    extern "bool SDL_SetWindowProgressValue(SDL_Window *, float)"
+    extern "float SDL_GetWindowProgressValue(SDL_Window *)"
     extern "void SDL_DestroyWindow(SDL_Window *)"
     extern "bool SDL_ScreenSaverEnabled(void)"
     extern "bool SDL_EnableScreenSaver(void)"
@@ -2216,7 +2311,8 @@ module SDL3
     const_set :SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_LEFT, 8
     const_set :SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT, 9
     const_set :SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR, 10
-    const_set :SDL_GAMEPAD_TYPE_COUNT, 11
+    const_set :SDL_GAMEPAD_TYPE_GAMECUBE, 11
+    const_set :SDL_GAMEPAD_TYPE_COUNT, 12
     typealias "SDL_GamepadType", "enum"
     const_set :SDL_GAMEPAD_BUTTON_INVALID, 4294967295
     const_set :SDL_GAMEPAD_BUTTON_SOUTH, 0
@@ -2708,7 +2804,15 @@ module SDL3
     const_set :SDL_MOUSEWHEEL_NORMAL, 0
     const_set :SDL_MOUSEWHEEL_FLIPPED, 1
     typealias "SDL_MouseWheelDirection", "enum"
+    const_set :SDL_CursorFrameInfo, struct(
+      [
+        "SDL_Surface *surface",
+        "Uint32 duration",
+      ]
+    )
     typealias "SDL_MouseButtonFlags", "Uint32"
+    typealias "SDL_MouseMotionTransformCallback", "function (*pointer)()"
+    const_set :SDL_MouseMotionTransformCallback, "void SDL_MouseMotionTransformCallback(void *, Uint64, SDL_Window *, SDL_MouseID, float *, float *)"
     extern "bool SDL_HasMouse(void)"
     extern "SDL_MouseID * SDL_GetMice(int *)"
     extern "char * SDL_GetMouseNameForID(SDL_MouseID)"
@@ -2718,11 +2822,13 @@ module SDL3
     extern "SDL_MouseButtonFlags SDL_GetRelativeMouseState(float *, float *)"
     extern "void SDL_WarpMouseInWindow(SDL_Window *, float, float)"
     extern "bool SDL_WarpMouseGlobal(float, float)"
+    extern "bool SDL_SetRelativeMouseTransform(SDL_MouseMotionTransformCallback, void *)"
     extern "bool SDL_SetWindowRelativeMouseMode(SDL_Window *, bool)"
     extern "bool SDL_GetWindowRelativeMouseMode(SDL_Window *)"
     extern "bool SDL_CaptureMouse(bool)"
     extern "SDL_Cursor * SDL_CreateCursor(Uint8 *, Uint8 *, int, int, int, int)"
     extern "SDL_Cursor * SDL_CreateColorCursor(SDL_Surface *, int, int)"
+    extern "SDL_Cursor * SDL_CreateAnimatedCursor(SDL_CursorFrameInfo *, int, int, int)"
     extern "SDL_Cursor * SDL_CreateSystemCursor(SDL_SystemCursor)"
     extern "bool SDL_SetCursor(SDL_Cursor *)"
     extern "SDL_Cursor * SDL_GetCursor(void)"
@@ -2761,6 +2867,12 @@ module SDL3
     const_set :SDL_PEN_AXIS_TANGENTIAL_PRESSURE, 6
     const_set :SDL_PEN_AXIS_COUNT, 7
     typealias "SDL_PenAxis", "enum"
+    const_set :SDL_PEN_DEVICE_TYPE_INVALID, 4294967295
+    const_set :SDL_PEN_DEVICE_TYPE_UNKNOWN, 0
+    const_set :SDL_PEN_DEVICE_TYPE_DIRECT, 1
+    const_set :SDL_PEN_DEVICE_TYPE_INDIRECT, 2
+    typealias "SDL_PenDeviceType", "enum"
+    extern "SDL_PenDeviceType SDL_GetPenDeviceType(SDL_PenID)"
     const_set :SDL_EVENT_FIRST, 0
     const_set :SDL_EVENT_QUIT, 256
     const_set :SDL_EVENT_TERMINATING, 257
@@ -2778,8 +2890,9 @@ module SDL3
     const_set :SDL_EVENT_DISPLAY_DESKTOP_MODE_CHANGED, 341
     const_set :SDL_EVENT_DISPLAY_CURRENT_MODE_CHANGED, 342
     const_set :SDL_EVENT_DISPLAY_CONTENT_SCALE_CHANGED, 343
+    const_set :SDL_EVENT_DISPLAY_USABLE_BOUNDS_CHANGED, 344
     const_set :SDL_EVENT_DISPLAY_FIRST, 337
-    const_set :SDL_EVENT_DISPLAY_LAST, 343
+    const_set :SDL_EVENT_DISPLAY_LAST, 344
     const_set :SDL_EVENT_WINDOW_SHOWN, 514
     const_set :SDL_EVENT_WINDOW_HIDDEN, 515
     const_set :SDL_EVENT_WINDOW_EXPOSED, 516
@@ -2815,6 +2928,8 @@ module SDL3
     const_set :SDL_EVENT_KEYBOARD_ADDED, 773
     const_set :SDL_EVENT_KEYBOARD_REMOVED, 774
     const_set :SDL_EVENT_TEXT_EDITING_CANDIDATES, 775
+    const_set :SDL_EVENT_SCREEN_KEYBOARD_SHOWN, 776
+    const_set :SDL_EVENT_SCREEN_KEYBOARD_HIDDEN, 777
     const_set :SDL_EVENT_MOUSE_MOTION, 1024
     const_set :SDL_EVENT_MOUSE_BUTTON_DOWN, 1025
     const_set :SDL_EVENT_MOUSE_BUTTON_UP, 1026
@@ -2846,6 +2961,9 @@ module SDL3
     const_set :SDL_EVENT_FINGER_UP, 1793
     const_set :SDL_EVENT_FINGER_MOTION, 1794
     const_set :SDL_EVENT_FINGER_CANCELED, 1795
+    const_set :SDL_EVENT_PINCH_BEGIN, 1808
+    const_set :SDL_EVENT_PINCH_UPDATE, 1809
+    const_set :SDL_EVENT_PINCH_END, 1810
     const_set :SDL_EVENT_CLIPBOARD_UPDATE, 2304
     const_set :SDL_EVENT_DROP_FILE, 4096
     const_set :SDL_EVENT_DROP_TEXT, 4097
@@ -3189,6 +3307,15 @@ module SDL3
         "SDL_WindowID windowID",
       ]
     )
+    const_set :SDL_PinchFingerEvent, struct(
+      [
+        "SDL_EventType type",
+        "Uint32 reserved",
+        "Uint64 timestamp",
+        "float scale",
+        "SDL_WindowID windowID",
+      ]
+    )
     const_set :SDL_PenProximityEvent, struct(
       [
         "SDL_EventType type",
@@ -3334,6 +3461,7 @@ module SDL3
         { "quit": SDL_QuitEvent },
         { "user": SDL_UserEvent },
         { "tfinger": SDL_TouchFingerEvent },
+        { "pinch": SDL_PinchFingerEvent },
         { "pproximity": SDL_PenProximityEvent },
         { "ptouch": SDL_PenTouchEvent },
         { "pmotion": SDL_PenMotionEvent },
@@ -3370,6 +3498,7 @@ module SDL3
     extern "bool SDL_EventEnabled(Uint32)"
     extern "Uint32 SDL_RegisterEvents(int)"
     extern "SDL_Window * SDL_GetWindowFromEvent(SDL_Event *)"
+    extern "int SDL_GetEventDescription(SDL_Event *, char *, int)"
     extern "char * SDL_GetBasePath(void)"
     extern "char * SDL_GetPrefPath(char *, char *)"
     const_set :SDL_FOLDER_HOME, 0
@@ -3895,7 +4024,7 @@ module SDL3
         "SDL_GPUSampleCount sample_count",
         "Uint32 sample_mask",
         "bool enable_mask",
-        "Uint8 padding1",
+        "bool enable_alpha_to_coverage",
         "Uint8 padding2",
         "Uint8 padding3",
       ]
@@ -3990,8 +4119,8 @@ module SDL3
         "SDL_GPUStoreOp stencil_store_op",
         "bool cycle",
         "Uint8 clear_stencil",
-        "Uint8 padding1",
-        "Uint8 padding2",
+        "Uint8 mip_level",
+        "Uint8 layer",
       ]
     )
     const_set :SDL_GPUBlitInfo, struct(
@@ -4044,11 +4173,23 @@ module SDL3
     extern "bool SDL_GPUSupportsProperties(SDL_PropertiesID)"
     extern "SDL_GPUDevice * SDL_CreateGPUDevice(SDL_GPUShaderFormat, bool, char *)"
     extern "SDL_GPUDevice * SDL_CreateGPUDeviceWithProperties(SDL_PropertiesID)"
+    const_set :SDL_GPUVulkanOptions, struct(
+      [
+        "Uint32 vulkan_api_version",
+        "void *feature_list",
+        "void *vulkan_10_physical_device_features",
+        "Uint32 device_extension_count",
+        "char **device_extension_names",
+        "Uint32 instance_extension_count",
+        "char **instance_extension_names",
+      ]
+    )
     extern "void SDL_DestroyGPUDevice(SDL_GPUDevice *)"
     extern "int SDL_GetNumGPUDrivers(void)"
     extern "char * SDL_GetGPUDriver(int)"
     extern "char * SDL_GetGPUDeviceDriver(SDL_GPUDevice *)"
     extern "SDL_GPUShaderFormat SDL_GetGPUShaderFormats(SDL_GPUDevice *)"
+    extern "SDL_PropertiesID SDL_GetGPUDeviceProperties(SDL_GPUDevice *)"
     extern "SDL_GPUComputePipeline * SDL_CreateGPUComputePipeline(SDL_GPUDevice *, SDL_GPUComputePipelineCreateInfo *)"
     extern "SDL_GPUGraphicsPipeline * SDL_CreateGPUGraphicsPipeline(SDL_GPUDevice *, SDL_GPUGraphicsPipelineCreateInfo *)"
     extern "SDL_GPUSampler * SDL_CreateGPUSampler(SDL_GPUDevice *, SDL_GPUSamplerCreateInfo *)"
@@ -4132,15 +4273,20 @@ module SDL3
     extern "bool SDL_GPUTextureSupportsFormat(SDL_GPUDevice *, SDL_GPUTextureFormat, SDL_GPUTextureType, SDL_GPUTextureUsageFlags)"
     extern "bool SDL_GPUTextureSupportsSampleCount(SDL_GPUDevice *, SDL_GPUTextureFormat, SDL_GPUSampleCount)"
     extern "Uint32 SDL_CalculateGPUTextureFormatSize(SDL_GPUTextureFormat, Uint32, Uint32, Uint32)"
+    extern "SDL_PixelFormat SDL_GetPixelFormatFromGPUTextureFormat(SDL_GPUTextureFormat)"
+    extern "SDL_GPUTextureFormat SDL_GetGPUTextureFormatFromPixelFormat(SDL_PixelFormat)"
+    typealias "SDL_HapticEffectType", "Uint16"
+    typealias "SDL_HapticDirectionType", "Uint8"
+    typealias "SDL_HapticEffectID", "int"
     const_set :SDL_HapticDirection, struct(
       [
-        "Uint8 type",
+        "SDL_HapticDirectionType type",
         "Sint32 dir[3]",
       ]
     )
     const_set :SDL_HapticConstant, struct(
       [
-        "Uint16 type",
+        "SDL_HapticEffectType type",
         { "direction": SDL_HapticDirection },
         "Uint32 length",
         "Uint16 delay",
@@ -4155,7 +4301,7 @@ module SDL3
     )
     const_set :SDL_HapticPeriodic, struct(
       [
-        "Uint16 type",
+        "SDL_HapticEffectType type",
         { "direction": SDL_HapticDirection },
         "Uint32 length",
         "Uint16 delay",
@@ -4173,7 +4319,7 @@ module SDL3
     )
     const_set :SDL_HapticCondition, struct(
       [
-        "Uint16 type",
+        "SDL_HapticEffectType type",
         { "direction": SDL_HapticDirection },
         "Uint32 length",
         "Uint16 delay",
@@ -4189,7 +4335,7 @@ module SDL3
     )
     const_set :SDL_HapticRamp, struct(
       [
-        "Uint16 type",
+        "SDL_HapticEffectType type",
         { "direction": SDL_HapticDirection },
         "Uint32 length",
         "Uint16 delay",
@@ -4205,7 +4351,7 @@ module SDL3
     )
     const_set :SDL_HapticLeftRight, struct(
       [
-        "Uint16 type",
+        "SDL_HapticEffectType type",
         "Uint32 length",
         "Uint16 large_magnitude",
         "Uint16 small_magnitude",
@@ -4213,7 +4359,7 @@ module SDL3
     )
     const_set :SDL_HapticCustom, struct(
       [
-        "Uint16 type",
+        "SDL_HapticEffectType type",
         { "direction": SDL_HapticDirection },
         "Uint32 length",
         "Uint16 delay",
@@ -4231,7 +4377,7 @@ module SDL3
     )
     const_set :SDL_HapticEffect, union(
       [
-        "Uint16 type",
+        "SDL_HapticEffectType type",
         { "constant": SDL_HapticConstant },
         { "periodic": SDL_HapticPeriodic },
         { "condition": SDL_HapticCondition },
@@ -4257,12 +4403,12 @@ module SDL3
     extern "Uint32 SDL_GetHapticFeatures(SDL_Haptic *)"
     extern "int SDL_GetNumHapticAxes(SDL_Haptic *)"
     extern "bool SDL_HapticEffectSupported(SDL_Haptic *, SDL_HapticEffect *)"
-    extern "int SDL_CreateHapticEffect(SDL_Haptic *, SDL_HapticEffect *)"
-    extern "bool SDL_UpdateHapticEffect(SDL_Haptic *, int, SDL_HapticEffect *)"
-    extern "bool SDL_RunHapticEffect(SDL_Haptic *, int, Uint32)"
-    extern "bool SDL_StopHapticEffect(SDL_Haptic *, int)"
-    extern "void SDL_DestroyHapticEffect(SDL_Haptic *, int)"
-    extern "bool SDL_GetHapticEffectStatus(SDL_Haptic *, int)"
+    extern "SDL_HapticEffectID SDL_CreateHapticEffect(SDL_Haptic *, SDL_HapticEffect *)"
+    extern "bool SDL_UpdateHapticEffect(SDL_Haptic *, SDL_HapticEffectID, SDL_HapticEffect *)"
+    extern "bool SDL_RunHapticEffect(SDL_Haptic *, SDL_HapticEffectID, Uint32)"
+    extern "bool SDL_StopHapticEffect(SDL_Haptic *, SDL_HapticEffectID)"
+    extern "void SDL_DestroyHapticEffect(SDL_Haptic *, SDL_HapticEffectID)"
+    extern "bool SDL_GetHapticEffectStatus(SDL_Haptic *, SDL_HapticEffectID)"
     extern "bool SDL_SetHapticGain(SDL_Haptic *, int)"
     extern "bool SDL_SetHapticAutocenter(SDL_Haptic *, int)"
     extern "bool SDL_PauseHaptic(SDL_Haptic *)"
@@ -4304,6 +4450,7 @@ module SDL3
     extern "void SDL_hid_free_enumeration(SDL_hid_device_info *)"
     extern "SDL_hid_device * SDL_hid_open(unsigned short, unsigned short, wchar_t *)"
     extern "SDL_hid_device * SDL_hid_open_path(char *)"
+    extern "SDL_PropertiesID SDL_hid_get_properties(SDL_hid_device *)"
     extern "int SDL_hid_write(SDL_hid_device *, unsigned char *, size_t)"
     extern "int SDL_hid_read_timeout(SDL_hid_device *, unsigned char *, size_t, int)"
     extern "int SDL_hid_read(SDL_hid_device *, unsigned char *, size_t)"
@@ -4491,6 +4638,11 @@ module SDL3
     const_set :SDL_TEXTUREACCESS_STREAMING, 1
     const_set :SDL_TEXTUREACCESS_TARGET, 2
     typealias "SDL_TextureAccess", "enum"
+    const_set :SDL_TEXTURE_ADDRESS_INVALID, 4294967295
+    const_set :SDL_TEXTURE_ADDRESS_AUTO, 0
+    const_set :SDL_TEXTURE_ADDRESS_CLAMP, 1
+    const_set :SDL_TEXTURE_ADDRESS_WRAP, 2
+    typealias "SDL_TextureAddressMode", "enum"
     const_set :SDL_LOGICAL_PRESENTATION_DISABLED, 0
     const_set :SDL_LOGICAL_PRESENTATION_STRETCH, 1
     const_set :SDL_LOGICAL_PRESENTATION_LETTERBOX, 2
@@ -4510,6 +4662,8 @@ module SDL3
     extern "bool SDL_CreateWindowAndRenderer(char *, int, int, SDL_WindowFlags, SDL_Window **, SDL_Renderer **)"
     extern "SDL_Renderer * SDL_CreateRenderer(SDL_Window *, char *)"
     extern "SDL_Renderer * SDL_CreateRendererWithProperties(SDL_PropertiesID)"
+    extern "SDL_Renderer * SDL_CreateGPURenderer(SDL_GPUDevice *, SDL_Window *)"
+    extern "SDL_GPUDevice * SDL_GetGPURendererDevice(SDL_Renderer *)"
     extern "SDL_Renderer * SDL_CreateSoftwareRenderer(SDL_Surface *)"
     extern "SDL_Renderer * SDL_GetRenderer(SDL_Window *)"
     extern "SDL_Window * SDL_GetRenderWindow(SDL_Renderer *)"
@@ -4523,6 +4677,8 @@ module SDL3
     extern "SDL_PropertiesID SDL_GetTextureProperties(SDL_Texture *)"
     extern "SDL_Renderer * SDL_GetRendererFromTexture(SDL_Texture *)"
     extern "bool SDL_GetTextureSize(SDL_Texture *, float *, float *)"
+    extern "bool SDL_SetTexturePalette(SDL_Texture *, SDL_Palette *)"
+    extern "SDL_Palette * SDL_GetTexturePalette(SDL_Texture *)"
     extern "bool SDL_SetTextureColorMod(SDL_Texture *, Uint8, Uint8, Uint8)"
     extern "bool SDL_SetTextureColorModFloat(SDL_Texture *, float, float, float)"
     extern "bool SDL_GetTextureColorMod(SDL_Texture *, Uint8 *, Uint8 *, Uint8 *)"
@@ -4580,8 +4736,11 @@ module SDL3
     extern "bool SDL_RenderTextureAffine(SDL_Renderer *, SDL_Texture *, SDL_FRect *, SDL_FPoint *, SDL_FPoint *, SDL_FPoint *)"
     extern "bool SDL_RenderTextureTiled(SDL_Renderer *, SDL_Texture *, SDL_FRect *, float, SDL_FRect *)"
     extern "bool SDL_RenderTexture9Grid(SDL_Renderer *, SDL_Texture *, SDL_FRect *, float, float, float, float, float, SDL_FRect *)"
+    extern "bool SDL_RenderTexture9GridTiled(SDL_Renderer *, SDL_Texture *, SDL_FRect *, float, float, float, float, float, SDL_FRect *, float)"
     extern "bool SDL_RenderGeometry(SDL_Renderer *, SDL_Texture *, SDL_Vertex *, int, int *, int)"
     extern "bool SDL_RenderGeometryRaw(SDL_Renderer *, SDL_Texture *, float *, int, SDL_FColor *, int, float *, int, int, void *, int, int)"
+    extern "bool SDL_SetRenderTextureAddressMode(SDL_Renderer *, SDL_TextureAddressMode, SDL_TextureAddressMode)"
+    extern "bool SDL_GetRenderTextureAddressMode(SDL_Renderer *, SDL_TextureAddressMode *, SDL_TextureAddressMode *)"
     extern "SDL_Surface * SDL_RenderReadPixels(SDL_Renderer *, SDL_Rect *)"
     extern "bool SDL_RenderPresent(SDL_Renderer *)"
     extern "void SDL_DestroyTexture(SDL_Texture *)"
@@ -4594,6 +4753,24 @@ module SDL3
     extern "bool SDL_GetRenderVSync(SDL_Renderer *, int *)"
     extern "bool SDL_RenderDebugText(SDL_Renderer *, float, float, char *)"
     extern "bool SDL_RenderDebugTextFormat(SDL_Renderer *, float, float, char *, ...)"
+    extern "bool SDL_SetDefaultTextureScaleMode(SDL_Renderer *, SDL_ScaleMode)"
+    extern "bool SDL_GetDefaultTextureScaleMode(SDL_Renderer *, SDL_ScaleMode *)"
+    const_set :SDL_GPURenderStateCreateInfo, struct(
+      [
+        "SDL_GPUShader *fragment_shader",
+        "Sint32 num_sampler_bindings",
+        "SDL_GPUTextureSamplerBinding *sampler_bindings",
+        "Sint32 num_storage_textures",
+        "SDL_GPUTexture **storage_textures",
+        "Sint32 num_storage_buffers",
+        "SDL_GPUBuffer **storage_buffers",
+        "SDL_PropertiesID props",
+      ]
+    )
+    extern "SDL_GPURenderState * SDL_CreateGPURenderState(SDL_Renderer *, SDL_GPURenderStateCreateInfo *)"
+    extern "bool SDL_SetGPURenderStateFragmentUniforms(SDL_GPURenderState *, Uint32, void *, Uint32)"
+    extern "bool SDL_SetGPURenderState(SDL_Renderer *, SDL_GPURenderState *)"
+    extern "void SDL_DestroyGPURenderState(SDL_GPURenderState *)"
     const_set :SDL_StorageInterface, struct(
       [
         "Uint32 version",
