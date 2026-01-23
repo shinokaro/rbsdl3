@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-01-24
+
+### Updated
+- Target SDL_image version to 3.4.0 (from 3.2.6). Regenerated `rbsdl3/image.rb`; newly added APIs in SDL_image 3.4 are now available via the bindings (see the SDL_image 3.4.0 release notes for the full upstream change list).
+
 ## [0.2.0] - 2026-01-02
 
 ### Updated
