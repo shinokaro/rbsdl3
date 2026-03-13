@@ -47,7 +47,7 @@ module SDL3
 
   extend Fiddle::Importer
 
-  DLLOAD_TARGETS = %i[SDL SDL_image SDL_ttf].freeze
+  DLLOAD_TARGETS = %i[SDL SDL_image SDL_mixer SDL_ttf].freeze
   private_constant :DLLOAD_TARGETS
 
   def self.dlload(*libs)
