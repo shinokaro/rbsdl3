@@ -187,8 +187,11 @@ module SDL3
     const_set :SDL_PROP_GPU_DEVICE_CREATE_SHADERS_METALLIB_BOOLEAN, "SDL.gpu.device.create.shaders.metallib"
     const_set :SDL_PROP_GPU_DEVICE_CREATE_D3D12_ALLOW_FEWER_RESOURCE_SLOTS_BOOLEAN, "SDL.gpu.device.create.d3d12.allowtier1resourcebinding"
     const_set :SDL_PROP_GPU_DEVICE_CREATE_D3D12_SEMANTIC_NAME_STRING, "SDL.gpu.device.create.d3d12.semantic"
+    const_set :SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_VERSION_NUMBER, "SDL.gpu.device.create.d3d12.agility_sdk_version"
+    const_set :SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_PATH_STRING, "SDL.gpu.device.create.d3d12.agility_sdk_path"
     const_set :SDL_PROP_GPU_DEVICE_CREATE_VULKAN_REQUIRE_HARDWARE_ACCELERATION_BOOLEAN, "SDL.gpu.device.create.vulkan.requirehardwareacceleration"
     const_set :SDL_PROP_GPU_DEVICE_CREATE_VULKAN_OPTIONS_POINTER, "SDL.gpu.device.create.vulkan.options"
+    const_set :SDL_PROP_GPU_DEVICE_CREATE_METAL_ALLOW_MACFAMILY1_BOOLEAN, "SDL.gpu.device.create.metal.allowmacfamily1"
     const_set :SDL_PROP_GPU_DEVICE_NAME_STRING, "SDL.gpu.device.name"
     const_set :SDL_PROP_GPU_DEVICE_DRIVER_NAME_STRING, "SDL.gpu.device.driver_name"
     const_set :SDL_PROP_GPU_DEVICE_DRIVER_VERSION_STRING, "SDL.gpu.device.driver_version"
@@ -395,6 +398,7 @@ module SDL3
     const_set :SDL_HINT_OPENGL_LIBRARY, "SDL_OPENGL_LIBRARY"
     const_set :SDL_HINT_EGL_LIBRARY, "SDL_EGL_LIBRARY"
     const_set :SDL_HINT_OPENGL_ES_DRIVER, "SDL_OPENGL_ES_DRIVER"
+    const_set :SDL_HINT_OPENGL_FORCE_SRGB_FRAMEBUFFER, "SDL_OPENGL_FORCE_SRGB_FRAMEBUFFER"
     const_set :SDL_HINT_OPENVR_LIBRARY, "SDL_OPENVR_LIBRARY"
     const_set :SDL_HINT_ORIENTATIONS, "SDL_ORIENTATIONS"
     const_set :SDL_HINT_POLL_SENTINEL, "SDL_POLL_SENTINEL"
@@ -1032,7 +1036,7 @@ module SDL3
     const_set :SDL_TRAYENTRY_CHECKED, 0x40000000
     const_set :SDL_MAJOR_VERSION, 3
     const_set :SDL_MINOR_VERSION, 4
-    const_set :SDL_MICRO_VERSION, 0
+    const_set :SDL_MICRO_VERSION, 2
     module_function def SDL_VERSIONNUM(major, minor, patch) = ((major) * 1000000 + (minor) * 1000 + (patch))
     module_function def SDL_VERSIONNUM_MAJOR(version) = ((version) / 1000000)
     module_function def SDL_VERSIONNUM_MINOR(version) = (((version) / 1000) % 1000)
