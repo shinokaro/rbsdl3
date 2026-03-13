@@ -12,6 +12,42 @@ module SDL3
     const_set :SDL_TTF_MICRO_VERSION, 2
     const_set :SDL_TTF_VERSION, SDL_VERSIONNUM(SDL_TTF_MAJOR_VERSION, SDL_TTF_MINOR_VERSION, SDL_TTF_MICRO_VERSION)
     module_function def SDL_TTF_VERSION_ATLEAST(x, y, z) = ((SDL_TTF_MAJOR_VERSION >= x) && (SDL_TTF_MAJOR_VERSION > x || SDL_TTF_MINOR_VERSION >= y) && (SDL_TTF_MAJOR_VERSION > x || SDL_TTF_MINOR_VERSION > y || SDL_TTF_MICRO_VERSION >= z))
+    const_set :TTF_PROP_FONT_CREATE_FILENAME_STRING, "SDL_ttf.font.create.filename"
+    const_set :TTF_PROP_FONT_CREATE_IOSTREAM_POINTER, "SDL_ttf.font.create.iostream"
+    const_set :TTF_PROP_FONT_CREATE_IOSTREAM_OFFSET_NUMBER, "SDL_ttf.font.create.iostream.offset"
+    const_set :TTF_PROP_FONT_CREATE_IOSTREAM_AUTOCLOSE_BOOLEAN, "SDL_ttf.font.create.iostream.autoclose"
+    const_set :TTF_PROP_FONT_CREATE_SIZE_FLOAT, "SDL_ttf.font.create.size"
+    const_set :TTF_PROP_FONT_CREATE_FACE_NUMBER, "SDL_ttf.font.create.face"
+    const_set :TTF_PROP_FONT_CREATE_HORIZONTAL_DPI_NUMBER, "SDL_ttf.font.create.hdpi"
+    const_set :TTF_PROP_FONT_CREATE_VERTICAL_DPI_NUMBER, "SDL_ttf.font.create.vdpi"
+    const_set :TTF_PROP_FONT_CREATE_EXISTING_FONT, "SDL_ttf.font.create.existing_font"
+    const_set :TTF_PROP_FONT_OUTLINE_LINE_CAP_NUMBER, "SDL_ttf.font.outline.line_cap"
+    const_set :TTF_PROP_FONT_OUTLINE_LINE_JOIN_NUMBER, "SDL_ttf.font.outline.line_join"
+    const_set :TTF_PROP_FONT_OUTLINE_MITER_LIMIT_NUMBER, "SDL_ttf.font.outline.miter_limit"
+    const_set :TTF_STYLE_NORMAL, 0x00
+    const_set :TTF_STYLE_BOLD, 0x01
+    const_set :TTF_STYLE_ITALIC, 0x02
+    const_set :TTF_STYLE_UNDERLINE, 0x04
+    const_set :TTF_STYLE_STRIKETHROUGH, 0x08
+    const_set :TTF_FONT_WEIGHT_THIN, 100
+    const_set :TTF_FONT_WEIGHT_EXTRA_LIGHT, 200
+    const_set :TTF_FONT_WEIGHT_LIGHT, 300
+    const_set :TTF_FONT_WEIGHT_NORMAL, 400
+    const_set :TTF_FONT_WEIGHT_MEDIUM, 500
+    const_set :TTF_FONT_WEIGHT_SEMI_BOLD, 600
+    const_set :TTF_FONT_WEIGHT_BOLD, 700
+    const_set :TTF_FONT_WEIGHT_EXTRA_BOLD, 800
+    const_set :TTF_FONT_WEIGHT_BLACK, 900
+    const_set :TTF_FONT_WEIGHT_EXTRA_BLACK, 950
+    const_set :TTF_PROP_RENDERER_TEXT_ENGINE_RENDERER, "SDL_ttf.renderer_text_engine.create.renderer"
+    const_set :TTF_PROP_RENDERER_TEXT_ENGINE_ATLAS_TEXTURE_SIZE, "SDL_ttf.renderer_text_engine.create.atlas_texture_size"
+    const_set :TTF_PROP_GPU_TEXT_ENGINE_DEVICE, "SDL_ttf.gpu_text_engine.create.device"
+    const_set :TTF_PROP_GPU_TEXT_ENGINE_ATLAS_TEXTURE_SIZE, "SDL_ttf.gpu_text_engine.create.atlas_texture_size"
+    const_set :TTF_SUBSTRING_DIRECTION_MASK, 0x000000FF
+    const_set :TTF_SUBSTRING_TEXT_START, 0x00000100
+    const_set :TTF_SUBSTRING_LINE_START, 0x00000200
+    const_set :TTF_SUBSTRING_LINE_END, 0x00000400
+    const_set :TTF_SUBSTRING_TEXT_END, 0x00000800
 
     # Fiddle declarations for SDL_ttf functions, structs, and enums
     #

@@ -12,6 +12,37 @@ module SDL3
     const_set :SDL_MIXER_MICRO_VERSION, 0
     const_set :SDL_MIXER_VERSION, SDL_VERSIONNUM(SDL_MIXER_MAJOR_VERSION, SDL_MIXER_MINOR_VERSION, SDL_MIXER_MICRO_VERSION)
     module_function def SDL_MIXER_VERSION_ATLEAST(x, y, z) = ((SDL_MIXER_MAJOR_VERSION >= x) && (SDL_MIXER_MAJOR_VERSION > x || SDL_MIXER_MINOR_VERSION >= y) && (SDL_MIXER_MAJOR_VERSION > x || SDL_MIXER_MINOR_VERSION > y || SDL_MIXER_MICRO_VERSION >= z))
+    const_set :MIX_PROP_MIXER_DEVICE_NUMBER, "SDL_mixer.mixer.device"
+    const_set :MIX_PROP_AUDIO_LOAD_IOSTREAM_POINTER, "SDL_mixer.audio.load.iostream"
+    const_set :MIX_PROP_AUDIO_LOAD_CLOSEIO_BOOLEAN, "SDL_mixer.audio.load.closeio"
+    const_set :MIX_PROP_AUDIO_LOAD_PREDECODE_BOOLEAN, "SDL_mixer.audio.load.predecode"
+    const_set :MIX_PROP_AUDIO_LOAD_PREFERRED_MIXER_POINTER, "SDL_mixer.audio.load.preferred_mixer"
+    const_set :MIX_PROP_AUDIO_LOAD_SKIP_METADATA_TAGS_BOOLEAN, "SDL_mixer.audio.load.skip_metadata_tags"
+    const_set :MIX_PROP_AUDIO_DECODER_STRING, "SDL_mixer.audio.decoder"
+    const_set :MIX_PROP_METADATA_TITLE_STRING, "SDL_mixer.metadata.title"
+    const_set :MIX_PROP_METADATA_ARTIST_STRING, "SDL_mixer.metadata.artist"
+    const_set :MIX_PROP_METADATA_ALBUM_STRING, "SDL_mixer.metadata.album"
+    const_set :MIX_PROP_METADATA_COPYRIGHT_STRING, "SDL_mixer.metadata.copyright"
+    const_set :MIX_PROP_METADATA_TRACK_NUMBER, "SDL_mixer.metadata.track"
+    const_set :MIX_PROP_METADATA_TOTAL_TRACKS_NUMBER, "SDL_mixer.metadata.total_tracks"
+    const_set :MIX_PROP_METADATA_YEAR_NUMBER, "SDL_mixer.metadata.year"
+    const_set :MIX_PROP_METADATA_DURATION_FRAMES_NUMBER, "SDL_mixer.metadata.duration_frames"
+    const_set :MIX_PROP_METADATA_DURATION_INFINITE_BOOLEAN, "SDL_mixer.metadata.duration_infinite"
+    const_set :MIX_DURATION_UNKNOWN, -1
+    const_set :MIX_DURATION_INFINITE, -2
+    const_set :MIX_PROP_PLAY_LOOPS_NUMBER, "SDL_mixer.play.loops"
+    const_set :MIX_PROP_PLAY_MAX_FRAME_NUMBER, "SDL_mixer.play.max_frame"
+    const_set :MIX_PROP_PLAY_MAX_MILLISECONDS_NUMBER, "SDL_mixer.play.max_milliseconds"
+    const_set :MIX_PROP_PLAY_START_FRAME_NUMBER, "SDL_mixer.play.start_frame"
+    const_set :MIX_PROP_PLAY_START_MILLISECOND_NUMBER, "SDL_mixer.play.start_millisecond"
+    const_set :MIX_PROP_PLAY_LOOP_START_FRAME_NUMBER, "SDL_mixer.play.loop_start_frame"
+    const_set :MIX_PROP_PLAY_LOOP_START_MILLISECOND_NUMBER, "SDL_mixer.play.loop_start_millisecond"
+    const_set :MIX_PROP_PLAY_FADE_IN_FRAMES_NUMBER, "SDL_mixer.play.fade_in_frames"
+    const_set :MIX_PROP_PLAY_FADE_IN_MILLISECONDS_NUMBER, "SDL_mixer.play.fade_in_milliseconds"
+    const_set :MIX_PROP_PLAY_FADE_IN_START_GAIN_FLOAT, "SDL_mixer.play.fade_in_start_gain"
+    const_set :MIX_PROP_PLAY_APPEND_SILENCE_FRAMES_NUMBER, "SDL_mixer.play.append_silence_frames"
+    const_set :MIX_PROP_PLAY_APPEND_SILENCE_MILLISECONDS_NUMBER, "SDL_mixer.play.append_silence_milliseconds"
+    const_set :MIX_PROP_PLAY_HALT_WHEN_EXHAUSTED_BOOLEAN, "SDL_mixer.play.halt_when_exhausted"
 
     # Fiddle declarations for SDL_mixer functions, structs, and enums
     #

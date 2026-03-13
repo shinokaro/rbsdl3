@@ -12,6 +12,35 @@ module SDL3
     const_set :SDL_IMAGE_MICRO_VERSION, 0
     const_set :SDL_IMAGE_VERSION, SDL_VERSIONNUM(SDL_IMAGE_MAJOR_VERSION, SDL_IMAGE_MINOR_VERSION, SDL_IMAGE_MICRO_VERSION)
     module_function def SDL_IMAGE_VERSION_ATLEAST(x, y, z) = ((SDL_IMAGE_MAJOR_VERSION >= x) && (SDL_IMAGE_MAJOR_VERSION > x || SDL_IMAGE_MINOR_VERSION >= y) && (SDL_IMAGE_MAJOR_VERSION > x || SDL_IMAGE_MINOR_VERSION > y || SDL_IMAGE_MICRO_VERSION >= z))
+    const_set :IMG_PROP_ANIMATION_ENCODER_CREATE_FILENAME_STRING, "SDL_image.animation_encoder.create.filename"
+    const_set :IMG_PROP_ANIMATION_ENCODER_CREATE_IOSTREAM_POINTER, "SDL_image.animation_encoder.create.iostream"
+    const_set :IMG_PROP_ANIMATION_ENCODER_CREATE_IOSTREAM_AUTOCLOSE_BOOLEAN, "SDL_image.animation_encoder.create.iostream.autoclose"
+    const_set :IMG_PROP_ANIMATION_ENCODER_CREATE_TYPE_STRING, "SDL_image.animation_encoder.create.type"
+    const_set :IMG_PROP_ANIMATION_ENCODER_CREATE_QUALITY_NUMBER, "SDL_image.animation_encoder.create.quality"
+    const_set :IMG_PROP_ANIMATION_ENCODER_CREATE_TIMEBASE_NUMERATOR_NUMBER, "SDL_image.animation_encoder.create.timebase.numerator"
+    const_set :IMG_PROP_ANIMATION_ENCODER_CREATE_TIMEBASE_DENOMINATOR_NUMBER, "SDL_image.animation_encoder.create.timebase.denominator"
+    const_set :IMG_PROP_ANIMATION_ENCODER_CREATE_AVIF_MAX_THREADS_NUMBER, "SDL_image.animation_encoder.create.avif.max_threads"
+    const_set :IMG_PROP_ANIMATION_ENCODER_CREATE_AVIF_KEYFRAME_INTERVAL_NUMBER, "SDL_image.animation_encoder.create.avif.keyframe_interval"
+    const_set :IMG_PROP_ANIMATION_ENCODER_CREATE_GIF_USE_LUT_BOOLEAN, "SDL_image.animation_encoder.create.gif.use_lut"
+    const_set :IMG_PROP_ANIMATION_DECODER_CREATE_FILENAME_STRING, "SDL_image.animation_decoder.create.filename"
+    const_set :IMG_PROP_ANIMATION_DECODER_CREATE_IOSTREAM_POINTER, "SDL_image.animation_decoder.create.iostream"
+    const_set :IMG_PROP_ANIMATION_DECODER_CREATE_IOSTREAM_AUTOCLOSE_BOOLEAN, "SDL_image.animation_decoder.create.iostream.autoclose"
+    const_set :IMG_PROP_ANIMATION_DECODER_CREATE_TYPE_STRING, "SDL_image.animation_decoder.create.type"
+    const_set :IMG_PROP_ANIMATION_DECODER_CREATE_TIMEBASE_NUMERATOR_NUMBER, "SDL_image.animation_decoder.create.timebase.numerator"
+    const_set :IMG_PROP_ANIMATION_DECODER_CREATE_TIMEBASE_DENOMINATOR_NUMBER, "SDL_image.animation_decoder.create.timebase.denominator"
+    const_set :IMG_PROP_ANIMATION_DECODER_CREATE_AVIF_MAX_THREADS_NUMBER, "SDL_image.animation_decoder.create.avif.max_threads"
+    const_set :IMG_PROP_ANIMATION_DECODER_CREATE_AVIF_ALLOW_INCREMENTAL_BOOLEAN, "SDL_image.animation_decoder.create.avif.allow_incremental"
+    const_set :IMG_PROP_ANIMATION_DECODER_CREATE_AVIF_ALLOW_PROGRESSIVE_BOOLEAN, "SDL_image.animation_decoder.create.avif.allow_progressive"
+    const_set :IMG_PROP_ANIMATION_DECODER_CREATE_GIF_TRANSPARENT_COLOR_INDEX_NUMBER, "SDL_image.animation_encoder.create.gif.transparent_color_index"
+    const_set :IMG_PROP_ANIMATION_DECODER_CREATE_GIF_NUM_COLORS_NUMBER, "SDL_image.animation_encoder.create.gif.num_colors"
+    const_set :IMG_PROP_METADATA_IGNORE_PROPS_BOOLEAN, "SDL_image.metadata.ignore_props"
+    const_set :IMG_PROP_METADATA_DESCRIPTION_STRING, "SDL_image.metadata.description"
+    const_set :IMG_PROP_METADATA_COPYRIGHT_STRING, "SDL_image.metadata.copyright"
+    const_set :IMG_PROP_METADATA_TITLE_STRING, "SDL_image.metadata.title"
+    const_set :IMG_PROP_METADATA_AUTHOR_STRING, "SDL_image.metadata.author"
+    const_set :IMG_PROP_METADATA_CREATION_TIME_STRING, "SDL_image.metadata.creation_time"
+    const_set :IMG_PROP_METADATA_FRAME_COUNT_NUMBER, "SDL_image.metadata.frame_count"
+    const_set :IMG_PROP_METADATA_LOOP_COUNT_NUMBER, "SDL_image.metadata.loop_count"
 
     # Fiddle declarations for SDL_image functions, structs, and enums
     #
