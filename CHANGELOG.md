@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-03-13
+
+### Added
+- Added optional extension entry point: `require "rbsdl3/mixer"` for SDL_mixer APIs.
+- Target SDL_mixer version to 3.2.0. Generated `rbsdl3/mixer.rb`; SDL_mixer 3.2.0 APIs are now available via the bindings.
+
+### Updated
+- Extended macro extraction to include `SDLK_`, `IMG_`, `MIX_`, and `TTF_` prefixes, so the generated bindings now include previously omitted constants.
+- Added SDL_mixer to the default dynamic library load targets.
+
 ## [0.3.0] - 2026-01-24
 
 ### Updated
