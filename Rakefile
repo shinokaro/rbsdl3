@@ -19,6 +19,9 @@ SDL_SPECS = {
   sdl_image: {
     name_suffix: "_image", rb_name: "image"
   }.freeze,
+  sdl_mixer: {
+    name_suffix: "_mixer", rb_name: "mixer",
+  }.freeze,
   sdl_ttf: {
     name_suffix: "_ttf", rb_name: "ttf", root_header_file: "SDL_textengine.h"
   }.freeze,
