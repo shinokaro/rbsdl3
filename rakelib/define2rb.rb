@@ -18,7 +18,7 @@ module Define2Rb
   CAST_SIMPLE_OPERAND_RE = /\((\s*#{TYPE}\s*)\)\s*(#{UNARY})\s*(#{ATOM})/
   PP_DEFINE_RE = /\A\s*#\s*define\s+/
 
-  SDL_NAME = /\bSDL_[0-9A-Za-z_]+\b/
+  SDL_NAME = /\b(?:SDL_|SDLK_)[0-9A-Za-z_]+\b/
 
   module MacroStringRefinement
     refine String do
