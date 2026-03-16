@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rbsdl3 (0.1.0)
+    rbsdl3 (0.4.0)
       fiddle (~> 1.1.7)
 
 GEM

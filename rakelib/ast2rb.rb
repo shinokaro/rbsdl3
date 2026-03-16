@@ -122,67 +122,49 @@ class AST2Rb
     private
 
     def emit_enum(node)
-      case node
-      in {tag: "enum", fields:}
+      node => {tag: "enum", fields:}
 
-        fields.each do |n|
-          emit_enum_field(n)
-        end
+      fields.each do |field|
+        field => {tag: "field", name:, value:}
 
+        q.breakable
+        emit_const(name) { q.text "#{value}" }
       end
     end
 
-    def emit_enum_field(node)
-      case node
-      in {tag: "field", name:, value:}
-
-        q.breakable
-        q.text "const_set :#{name}, #{value}"
-
-      end
+    def emit_const(name)
+      q.text "const_set :#{name}, "
+      yield
     end
 
     def emit_function(node)
-      case node
-      in {tag: "function", name:, variadic:, parameters:, "return-type": type}
-        rtype_repr, _ = type_parts(type)
+      node => {tag: "function", name:, variadic:, parameters:, "return-type": rty}
+      rtype_repr, _ = type_parts(rty)
 
-        q.breakable
-        q.text "extern \"#{rtype_repr} #{name}("
-        if parameters.empty?
-          q.text "void"
-        else
-          e = parameters.to_enum
-          loop do
-            param = e.next
-            emit_function_paramater(param)
-            e.peek
-            q.text ", "
-          rescue StopIteration
-            q.text ", ..." if variadic
-            break
-          end
+      q.breakable
+      q.text "extern \"#{rtype_repr} #{name}("
+      if parameters.empty?
+        q.text "void"
+      else
+        e = parameters.to_enum
+        loop do
+          e.next => {tag: "parameter", name: _, type: pty}
+          q.text type_parts(pty)[0]
+          e.peek
+          q.text ", "
+        rescue StopIteration
+          q.text ", ..." if variadic
+          break
         end
-        q.text ")\""
-
-        if @classifier.struct_type?(rtype_repr)
-          || parameters.any? { @classifier.struct_type?(it[:type][:tag]) }
-          || parameters.any? { it[:type][:tag] =~ /va_list\z/ }
-
-          err_msg = "SDL function unsupported by Fiddle: #{name}()"
-          q.text ", unsupported: \"#{err_msg}\""
-        end
-
       end
-    end
+      q.text ")\""
 
-    def emit_function_paramater(node)
-      case node
-      in {tag: "parameter", name: _, type:}
-        type_repr, _ = type_parts(type)
+      if @classifier.struct_type?(rtype_repr)
+        || parameters.any? { @classifier.struct_type?(it[:type][:tag]) }
+        || parameters.any? { it[:type][:tag] =~ /va_list\z/ }
 
-        q.text type_repr
-
+        err_msg = "SDL function unsupported by Fiddle: #{name}()"
+        q.text ", unsupported: \"#{err_msg}\""
       end
     end
 
@@ -195,9 +177,7 @@ class AST2Rb
       in {tag: "struct" | "union", name:}
 
         q.breakable
-        q.text "const_set :#{name}, " 
-        emit_struct_layout(node)
-
+        emit_const(name) { emit_struct_layout(node) }
       end
     end
 
@@ -261,39 +241,34 @@ class AST2Rb
     end
 
     def emit_typedef(node)
-      case node
-      in {tag: "typedef", name:, type: {tag: "struct" | "union"} => t_node}
+      node => {tag: "typedef", name:, type: {tag: tytag} => t_node, location:}
 
+      case tytag
+      when "struct", "union"
         q.breakable
         emit_struct(t_node)
         q.text " => #{name}"
-
-      in {tag: "typedef", name:, type: {tag: "enum"} => t_node}
-
+      when "enum"
         emit_enum(t_node)
         q.breakable
-        q.text "typealias \"#{name}\", \"enum\""
-
-      in {tag: "typedef", name:, type: {tag: ":enum"}}
-
+        emit_typealias(name, "enum")
+      when ":enum"
         q.breakable
-        q.text "typealias \"#{name}\", \"enum\""
-
-      in {tag: "typedef", name:, type: {tag: ":function-pointer"}, location:}
-
+        emit_typealias(name, "enum")
+      when ":function-pointer"
         q.breakable
-        q.text "typealias \"#{name}\", \"function (*pointer)()\""
-        value = canonical_function_signature(location)
+        emit_typealias(name, "function (*pointer)()")
         q.breakable
-        q.text "const_set :#{name}, \"#{value}\""
-
-      in {tag: "typedef", name:, type:}
-        type_repr, ary_suffix = type_parts(type)
-
+        emit_const(name) { q.text canonical_function_signature(location).dump }
+      else
+        type_repr, ary_suffix = type_parts(t_node)
         q.breakable
-        q.text "typealias \"#{name}#{ary_suffix}\", \"#{type_repr}\""
-
+        emit_typealias(name + ary_suffix, type_repr)
       end
+    end
+
+    def emit_typealias(new, orig)
+      q.text "typealias #{new.dump}, #{orig.dump}"
     end
 
     def parse_source_location(location)
