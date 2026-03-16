@@ -9,6 +9,7 @@
 - Target SDL_mixer version to 3.2.0. Generated `rbsdl3/mixer.rb`; SDL_mixer 3.2.0 APIs are now available via the bindings.
 
 ### Updated
+- Target SDL version to 3.4.2 (from 3.4.0). Regenerated `rbsdl3/sdl.rb`; newly added constants in SDL 3.4.2 are now available via the bindings (see SDL 3.4.2 release notes for the full upstream change list).
 - Extended macro extraction to include `SDLK_`, `IMG_`, `MIX_`, and `TTF_` prefixes, so the generated bindings now include previously omitted constants.
 - Added SDL_mixer to the default dynamic library load targets.
 
