@@ -115,12 +115,15 @@ def generate_cdecls_code(ast_json_path, source)
   require "prettyprint"
   require_relative "rakelib/ast2rb"
 
-  out = "".dup
+  st_types = Set.new
+  type_collector = AST2Rb::StructTypeCollector.new(st_types)
   classifier = AST2Rb::EntryClassifier.new(source)
+  out = "".dup
   PrettyPrint.format(out) { |q|
-    ee = AST2Rb::EntryEmitter.new(q, classifier)
+    entry_emitter = AST2Rb::EntryEmitter.new(q, classifier, st_types)
     AST2Rb.load_file(ast_json_path).each { |entry|
-      ee.emit_entry(entry)
+      type_collector.collect(entry)
+      entry_emitter.emit_entry(entry)
     }
   }
   out.lstrip!

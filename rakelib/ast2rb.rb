@@ -8,13 +8,28 @@ class AST2Rb
     end
   end
 
-  class EntryClassifier
-    def initialize(source = "")
-      @st_types = []
-      @source = source
+  class StructTypeCollector
+    def initialize(registry)
+      @registry = registry
     end
 
-    def struct_type?(name) = @st_types.include?(name)
+    def collect(node)
+      case node
+
+      in { tag: "typedef", name:, type: {tag: ":struct" | ":union" | "struct" | "union" } }
+        @registry << name
+
+      else
+        nil
+
+      end
+    end
+  end
+
+  class EntryClassifier
+    def initialize(source = "")
+      @source = source
+    end
 
     def classify(node)
       msg = nil
@@ -55,21 +70,17 @@ class AST2Rb
       # Typedef entry
       #
       in {tag: "typedef" => tag, name:, type: {tag: ":struct" | ":union" => tytag, name: orig}} if name == orig
-        @st_types << name
         msg = "skipping #{tag}: #{name} - alias to #{tytag[1..]} #{orig} not emitted"
         :skip
 
       in {tag: "typedef" => tag, name:, type: {tag: ":struct" | ":union" => tytag, name: orig}}
-        @st_types << name
         :typedef
 
       in {tag: "typedef" => tag, name:, type: {tag: "struct" | "union" => tytag, fields: []}}
-        @st_types << name
         msg = "skipping #{tag}: #{name} - opaque #{tytag}"
         :skip
 
       in {tag: "typedef", name:, type: {tag: "struct" | "union"}}
-        @st_types << name
         :typedef
 
       in {tag: "typedef"}
@@ -95,9 +106,10 @@ class AST2Rb
     attr_reader :q
     private :q
 
-    def initialize(out_pp, classifier = EntryClassifier.new)
+    def initialize(out_pp, classifier, struct_types)
       @q = out_pp
       @classifier = classifier
+      @struct_types = struct_types
     end
 
     def emit_entry(node)
@@ -159,8 +171,8 @@ class AST2Rb
       end
       q.text ")\""
 
-      if @classifier.struct_type?(rtype_repr)
-        || parameters.any? { @classifier.struct_type?(it[:type][:tag]) }
+      if @struct_types.include?(rtype_repr)
+        || parameters.any? { @struct_types.include?(it[:type][:tag]) }
         || parameters.any? { it[:type][:tag] =~ /va_list\z/ }
 
         err_msg = "SDL function unsupported by Fiddle: #{name}()"
@@ -229,7 +241,7 @@ class AST2Rb
       in {tag: "field", name:, type:}
         type_repr, ary_suffix = type_parts(type)
 
-        if @classifier.struct_type?(type_repr)
+        if @struct_types.include?(type_repr)
           q.text "{ \"#{name}#{ary_suffix}\": #{type_repr} }"
         elsif type_repr.end_with?("*")
           q.text "\"#{type_repr}#{name}#{ary_suffix}\""
