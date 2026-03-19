@@ -117,12 +117,14 @@ def generate_cdecls_code(ast_json_path, source)
 
   st_types = Set.new
   type_collector = AST2Rb::StructTypeCollector.new(st_types)
-  classifier = AST2Rb::EntryClassifier.new(source)
+  source_policy = AST2Rb::EntrySourcePolicy.new(source)
+  classifier = AST2Rb::EntryClassifier.new
   out = "".dup
   PrettyPrint.format(out) { |q|
     entry_emitter = AST2Rb::EntryEmitter.new(q, classifier, st_types)
     AST2Rb.load_file(ast_json_path).each { |entry|
       type_collector.collect(entry)
+      next unless source_policy.match?(entry)
       entry_emitter.emit_entry(entry)
     }
   }

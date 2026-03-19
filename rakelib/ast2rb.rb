@@ -26,11 +26,18 @@ class AST2Rb
     end
   end
 
-  class EntryClassifier
-    def initialize(source = "")
+  class EntrySourcePolicy
+    def initialize(source)
       @source = source
     end
 
+    def match?(node)
+      (node in { location: /<Spelling=(.+?):\d+:\d+>\z/ | /\A(.+):\d+:\d+\z/ })
+      && $1.start_with?(@source)
+    end
+  end
+
+  class EntryClassifier
     def classify(node)
       msg = nil
 
@@ -91,12 +98,7 @@ class AST2Rb
 
       end => kind
 
-      if node in {location: /<Spelling=(.+?):\d+:\d+>\z/ | /\A(.+):\d+:\d+\z/}
-        if $1.start_with?(@source)
-          return kind, msg
-        end
-      end
-      return :skip, nil
+      return kind, msg
     end
   end
 
