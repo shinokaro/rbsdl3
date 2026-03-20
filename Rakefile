@@ -118,6 +118,9 @@ def generate_cdecls_code(ast_json_path, source)
   st_types = Set.new
   type_collector = AST2Rb::StructTypeCollector.new(st_types)
   source_policy = AST2Rb::EntrySourcePolicy.new(source)
+  function_name_policy = AST2Rb::FunctionNamePolicy.new
+  function_linkage_policy = AST2Rb::FunctionLinkagePolicy.new
+  type_emission_policy = AST2Rb::TypeEmissionPolicy.new
   classifier = AST2Rb::EntryClassifier.new
   out = "".dup
   PrettyPrint.format(out) { |q|
@@ -125,6 +128,9 @@ def generate_cdecls_code(ast_json_path, source)
     AST2Rb.load_file(ast_json_path).each { |entry|
       type_collector.collect(entry)
       next unless source_policy.match?(entry)
+      next if function_name_policy.skip?(entry)
+      next if function_linkage_policy.skip?(entry)
+      next if type_emission_policy.skip?(entry)
       entry_emitter.emit_entry(entry)
     }
   }

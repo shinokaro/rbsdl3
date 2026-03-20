@@ -37,58 +37,54 @@ class AST2Rb
     end
   end
 
-  class EntryClassifier
-    def classify(node)
-      msg = nil
+  class FunctionNamePolicy
+    def skip?(node)
+      node in { tag: "function", name: /\A[^A-Z].+/ }
+    end
+  end
 
+  class FunctionLinkagePolicy
+    def skip?(node)
+      node in { tag: "function", "storage-class": "static" }
+    end
+  end
+
+  class TypeEmissionPolicy
+    def skip?(node)
       case node
 
-      # Enum entry
-      #
+      # Opaque type declarations
+      # 
+      in { tag: "struct" | "union", fields: [] }
+        true
+
+      in { tag: "typedef", type: { tag: "struct" | "union", fields: [] } }
+        true
+
+      # Typedefs that only restate an existing named struct/union
+      # 
+      in { tag: "typedef", name:, type: { tag: ":struct" | ":union", name: orig } } if name == orig
+        true
+
+      else
+        false
+
+      end
+    end
+  end
+
+  class EntryClassifier
+    def classify(node)
+      case node
+
       in {tag: "enum"}
         :enum
-
-      # Function entry
-      #
-      in {tag: "function" => tag, name: /\A[^A-Z].+/ => name}
-        msg = "skipping #{tag}: #{name} - not an SDL API"
-        :skip
-
-      in {tag: "function" => tag, name:, "storage-class": "static", inline: true}
-        msg = "skipping #{tag}: #{name} - no external linkage (static; inline)"
-        :skip
-
-      in {tag: "function" => tag, name:, "storage-class": "static"}
-        msg = "skipping #{tag}: #{name} - no external linkage (static)"
-        :skip
 
       in {tag: "function"}
         :function
 
-      # Struct / Union entry
-      #
-      in {tag: "struct" | "union" => tag, name:, fields: []}
-        msg = "skipping #{tag}: #{name} - opaque #{tag}"
-        :skip
-
       in {tag: "struct" | "union"}
         :struct
-
-      # Typedef entry
-      #
-      in {tag: "typedef" => tag, name:, type: {tag: ":struct" | ":union" => tytag, name: orig}} if name == orig
-        msg = "skipping #{tag}: #{name} - alias to #{tytag[1..]} #{orig} not emitted"
-        :skip
-
-      in {tag: "typedef" => tag, name:, type: {tag: ":struct" | ":union" => tytag, name: orig}}
-        :typedef
-
-      in {tag: "typedef" => tag, name:, type: {tag: "struct" | "union" => tytag, fields: []}}
-        msg = "skipping #{tag}: #{name} - opaque #{tytag}"
-        :skip
-
-      in {tag: "typedef", name:, type: {tag: "struct" | "union"}}
-        :typedef
 
       in {tag: "typedef"}
         :typedef
@@ -96,9 +92,7 @@ class AST2Rb
       else
         raise "unsupported c2ffi entry: #{node}"
 
-      end => kind
-
-      return kind, msg
+      end
     end
   end
 
@@ -115,11 +109,8 @@ class AST2Rb
     end
 
     def emit_entry(node)
-      kind, msg = @classifier.classify(node)
-      puts msg if msg
+      kind = @classifier.classify(node)
       case kind
-      when :skip
-        # skip
       when :enum
         emit_enum(node)
       when :function
