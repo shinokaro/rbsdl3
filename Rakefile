@@ -65,10 +65,6 @@ namespace :bindings do
         bindings_erb.instance_eval {
           @lib_name = spec.lib_name
           @module_name = spec.module_name
-          manual_code_file = spec.bindings_manual_code_file
-          if File.exist?(manual_code_file)
-            @manual_code = File.binread(manual_code_file)
-          end
           @macros_code = generate_macros_code(spec.headers_dir, spec.headers_manifest_file)
           @cdecls_code = generate_cdecls_code(spec.ast_file, spec.headers_dir)
         }

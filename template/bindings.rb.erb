@@ -5,11 +5,6 @@ require_relative "sdl"
 module SDL3
   using BindingsRefinement
   <%= @module_name %> = proc {
-<% if @manual_code -%>
-    # Library-specific bindings and helpers
-    #
-<%= reindent_lines(@manual_code, _erbout) %>
-<% end -%>
     # Ruby wrappers for <%= @lib_name %> macros
     #
 <%= reindent_lines(@macros_code, _erbout) %>
