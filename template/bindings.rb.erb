@@ -5,9 +5,6 @@ require_relative "sdl"
 module SDL3
   using BindingsRefinement
   <%= @module_name %> = proc {
-    # Ruby wrappers for <%= @lib_name %> macros
-    #
-<%= reindent_lines(@macros_code, _erbout) %>
     # Fiddle declarations for <%= @lib_name %> functions, structs, and enums
     #
 <%= reindent_lines(@cdecls_code, _erbout) %>
@@ -15,4 +12,8 @@ module SDL3
   private_constant :<%= @module_name %>
 
   <%= @module_name %>.call
+
+  # Ruby wrappers for <%= @lib_name %> macros
+  #
+<%= reindent_lines(@macros_code, _erbout) -%>
 end
