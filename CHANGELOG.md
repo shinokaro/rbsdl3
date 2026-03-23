@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+- Added SDL_main support to the default bindings load path.
+
+### Updated
+- Refactored macro handling and binding generation internals with no intentional API changes.
+
 ## [0.4.0] - 2026-03-13
 
 ### Added
